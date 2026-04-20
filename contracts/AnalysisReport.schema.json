@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://doc-pipeline.dev/schemas/AnalysisReport.schema.json",
+  "title": "AnalysisReport",
+  "description": "Analyze stage output — claims, entities, relations, citations extracted from CanonicalDoc.",
+  "type": "object",
+  "required": ["version", "source_sha256", "analyzed_at", "claims", "entities"],
+  "properties": {
+    "version": { "const": "0.1.0" },
+    "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "analyzed_at": { "type": "string", "format": "date-time" },
+    "analyzer": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" },
+        "model": { "type": "string" }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "node_refs"],
+        "properties": {
+          "id": { "type": "string" },
+          "text": { "type": "string" },
+          "kind": { "enum": ["factual", "normative", "definitional", "measurement", "recommendation"] },
+          "node_refs": {
+            "type": "array",
+            "description": "CanonicalDoc node ids supporting this claim",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "kind"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "kind": { "enum": ["person", "org", "product", "standard", "measurement", "location", "concept", "other"] },
+          "aliases": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["subject", "predicate", "object"],
+        "properties": {
+          "subject": { "type": "string" },
+          "predicate": { "type": "string" },
+          "object": { "type": "string" },
+          "evidence_node_refs": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "citations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "raw"],
+        "properties": {
+          "id": { "type": "string" },
+          "raw": { "type": "string" },
+          "doi": { "type": "string" },
+          "url": { "type": "string" },
+          "cited_by_claim_ids": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "missing_required_fields": {
+      "type": "array",
+      "description": "Populated when InputFormat declares required fields that are absent",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

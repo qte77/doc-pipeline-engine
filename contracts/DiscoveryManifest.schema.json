@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://doc-pipeline.dev/schemas/DiscoveryManifest.schema.json",
+  "title": "DiscoveryManifest",
+  "description": "Output of the Discover stage — enumerates source files with hash and detected file-type.",
+  "type": "object",
+  "required": ["version", "source", "discovered_at", "files"],
+  "properties": {
+    "version": { "const": "0.1.0" },
+    "source": {
+      "type": "object",
+      "required": ["root", "kind"],
+      "properties": {
+        "root": { "type": "string", "description": "Absolute path to the ingest root" },
+        "kind": { "enum": ["folder", "url", "repo"] }
+      }
+    },
+    "discovered_at": { "type": "string", "format": "date-time" },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "size_bytes", "sha256", "file_type"],
+        "properties": {
+          "path": { "type": "string", "description": "Path relative to source.root" },
+          "size_bytes": { "type": "integer", "minimum": 0 },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "file_type": { "enum": ["pdf", "docx", "xlsx", "txt", "md", "image", "unknown"] },
+          "mime": { "type": "string" },
+          "detected_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}
