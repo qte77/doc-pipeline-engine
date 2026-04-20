@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://doc-pipeline.dev/schemas/FormatConformance.schema.json",
+  "title": "FormatConformance",
+  "description": "Output of the G_format_out gate — did the rendered document conform to the declared OutputFormat?",
+  "type": "object",
+  "required": ["version", "output_format_id", "output_format_version", "checked_at", "conformant"],
+  "properties": {
+    "version": { "const": "0.1.0" },
+    "output_format_id": { "type": "string" },
+    "output_format_version": { "type": "string" },
+    "checked_at": { "type": "string", "format": "date-time" },
+    "conformant": { "type": "boolean" },
+    "schema_valid": { "type": "boolean" },
+    "missing_sections": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Required sections declared in required_sections.yaml but absent in output"
+    },
+    "extra_sections": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "section_order_ok": { "type": "boolean" },
+    "violations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule", "message"],
+        "properties": {
+          "rule": { "type": "string" },
+          "message": { "type": "string" },
+          "severity": { "enum": ["warn", "error"] }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

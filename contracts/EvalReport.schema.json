@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://doc-pipeline.dev/schemas/EvalReport.schema.json",
+  "title": "EvalReport",
+  "description": "Evaluate stage output — scores + gate verdict. v0.1 = smoke; v0.2 = RAGAs/TruLens; v0.3 = HELM-style.",
+  "type": "object",
+  "required": ["version", "evaluated_at", "tier", "verdict", "scores"],
+  "properties": {
+    "version": { "const": "0.1.0" },
+    "evaluated_at": { "type": "string", "format": "date-time" },
+    "tier": { "enum": ["quick", "comprehensive"] },
+    "harness": {
+      "type": "object",
+      "properties": {
+        "name": { "enum": ["smoke", "ragas", "trulens", "deepeval", "helm", "custom"] },
+        "version": { "type": "string" }
+      }
+    },
+    "verdict": { "enum": ["pass", "warn", "fail"] },
+    "scores": {
+      "type": "object",
+      "description": "Named metrics. Smoke eval includes at least schema_valid and faithfulness.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["value"],
+        "properties": {
+          "value": { "type": "number" },
+          "threshold": { "type": "number" },
+          "passed": { "type": "boolean" },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "message"],
+        "properties": {
+          "severity": { "enum": ["info", "warn", "error"] },
+          "message": { "type": "string" },
+          "node_refs": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

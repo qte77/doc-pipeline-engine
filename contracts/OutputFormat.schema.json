@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://doc-pipeline.dev/schemas/OutputFormat.schema.json",
+  "title": "OutputFormat",
+  "description": "Meta-schema every domain pack's output_formats/<id>/format.json must satisfy.",
+  "type": "object",
+  "required": ["id", "version", "tier", "renderer", "template", "required_sections"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$",
+      "description": "<pack>/<format-id>, e.g. generic/technical-report-md"
+    },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "tier": { "enum": ["quick", "comprehensive", "both"] },
+    "renderer": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": { "enum": ["jinja-markdown", "pandoc", "docx", "xlsx", "custom"] },
+        "custom_path": { "type": "string", "description": "For kind=custom, path to renderer.py" },
+        "pandoc_format": { "type": "string", "description": "For kind=pandoc: html, pdf, docx, ..." }
+      }
+    },
+    "template": { "type": "string", "description": "Path to template file" },
+    "schema": { "type": "string", "description": "Path to output schema.json (validates rendered output's frontmatter + structure)" },
+    "required_sections": {
+      "type": "string",
+      "description": "Path to required_sections.yaml"
+    },
+    "citation_style": {
+      "type": "string",
+      "description": "Path to citation_style.json (optional)"
+    },
+    "example": { "type": "string", "description": "Path to example/ with one reference output" },
+    "extends": { "type": "string", "description": "Optional parent format id" },
+    "pack_version_min": {
+      "type": "string",
+      "description": "Minimum pack version that supports this format"
+    }
+  },
+  "additionalProperties": false
+}

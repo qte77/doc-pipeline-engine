@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://doc-pipeline.dev/schemas/ExtractionBundle.schema.json",
+  "title": "ExtractionBundle",
+  "description": "Uniform output schema every Adapter must emit. Contains text, layout tree, tables, figures, images.",
+  "type": "object",
+  "required": ["version", "source_path", "source_sha256", "adapter", "extracted_at", "content"],
+  "properties": {
+    "version": { "const": "0.1.0" },
+    "source_path": { "type": "string" },
+    "source_sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "adapter": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "extracted_at": { "type": "string", "format": "date-time" },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Adapter self-reported confidence; gate G_extract rejects < pack threshold (default 0.7)"
+    },
+    "content": {
+      "type": "object",
+      "required": ["text", "layout"],
+      "properties": {
+        "text": { "type": "string", "description": "Plain-text concatenation of all text blocks" },
+        "layout": {
+          "type": "array",
+          "description": "Flat list of layout blocks in reading order",
+          "items": {
+            "type": "object",
+            "required": ["kind", "bbox", "page", "text"],
+            "properties": {
+              "kind": { "enum": ["heading", "paragraph", "list", "caption", "table", "figure", "code", "formula", "footnote"] },
+              "page": { "type": "integer", "minimum": 1 },
+              "bbox": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 4,
+                "maxItems": 4,
+                "description": "[x0, y0, x1, y1] in page units"
+              },
+              "level": { "type": "integer", "description": "Heading level 1..6 (if kind=heading)" },
+              "text": { "type": "string" }
+            }
+          }
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["page", "rows"],
+            "properties": {
+              "page": { "type": "integer", "minimum": 1 },
+              "caption": { "type": "string" },
+              "rows": {
+                "type": "array",
+                "items": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        },
+        "figures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["page"],
+            "properties": {
+              "page": { "type": "integer", "minimum": 1 },
+              "caption": { "type": "string" },
+              "image_path": { "type": "string", "description": "Path to extracted image relative to bundle" }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Docinfo: title, author, creation date, producer, keywords, etc.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
