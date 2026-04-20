@@ -22,7 +22,7 @@ samples/        Known-good sample inputs used by happy-path + failure tests
 - Happy-path test runs through stages Discover → Extract → RecognizeInputFormat → Normalize → Analyze → QuickDraft → Evaluate → Publish.
 - Failure tests: F1 (corrupt PDF), F2 (adapter disagreement), F4 (schema drift), F5 (policy violation), F11 (format miss), F12 (required-section miss).
 
-See `~/.claude/plans/doc-pipeline-engine-init.md` for the full v0.1 design doc.
+See [`docs/plans/v0.1-init.md`](docs/plans/v0.1-init.md) for the full v0.1 design doc.
 
 ## Quickstart
 
