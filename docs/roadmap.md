@@ -6,9 +6,15 @@
 
 Schemas define the interface between every pipeline stage. Nothing runs without them.
 
+**Delivered**:
+
 - 10 JSON schemas in `contracts/` (5 core, 5 reserved stubs)
 - Gate validator (`src/doc_pipeline_engine/base/contracts.py`)
-- Schema round-trip tests
+- Schema round-trip tests (38 tests)
+- Sample download script (~95 files across 8 categories)
+- Architecture and roadmap docs
+- Apache-2.0 license with NOTICE for third-party content
+- CI: CodeQL, Dependabot, CodeFactor
 
 ## 0.2.0 — Runner
 
@@ -85,10 +91,12 @@ Evaluation harnesses and quality gates.
 
 - RAGAs / TruLens / DeepEval harness wrappers
 - InputFormat / OutputFormat schemas wired
-- Failure tests (F1–F12)
+- Failure tests: F1 (corrupt PDF), F2 (adapter disagreement), F4 (schema drift), F5 (policy violation), F11 (format miss), F12 (required-section miss)
 - Orchestration bench (P1–P4)
 
 ## Future
+
+- Orchestration pattern evaluation (P1 skill chain, P2 subagents, P3 team mode, P4 hybrid)
 
 - Fine-tuning pipeline
 - Graph-RAG
