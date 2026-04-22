@@ -1,45 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://doc-pipeline.dev/schemas/FormatMatch.schema.json",
   "title": "FormatMatch",
-  "description": "RecognizeInputFormat stage output — matched InputFormat + confidence + evidence.",
+  "description": "RecognizeInputFormat stage output. Reserved stub — wired in v0.2.",
   "type": "object",
-  "required": ["version", "matched_at", "matches"],
+  "required": ["version", "matches"],
   "properties": {
     "version": { "const": "0.1.0" },
-    "matched_at": { "type": "string", "format": "date-time" },
     "matches": {
       "type": "array",
-      "description": "Ranked candidates; best match first. Empty if no matcher fired.",
       "items": {
         "type": "object",
-        "required": ["format_id", "format_version", "confidence", "evidence"],
+        "required": ["format_id", "confidence"],
         "properties": {
-          "format_id": { "type": "string", "description": "e.g. generic/ieee-paper" },
-          "format_version": { "type": "string" },
-          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-          "evidence": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["matcher", "signal"],
-              "properties": {
-                "matcher": { "enum": ["by_filename", "by_metadata", "by_layout", "by_content"] },
-                "signal": { "type": "string" },
-                "score": { "type": "number", "minimum": 0, "maximum": 1 }
-              }
-            }
-          }
+          "format_id": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
         }
-      }
-    },
-    "selected": {
-      "type": "object",
-      "description": "The chosen format for the rest of the pipeline; may be null if strict mode rejected.",
-      "properties": {
-        "format_id": { "type": "string" },
-        "format_version": { "type": "string" },
-        "fallback": { "type": "boolean", "description": "True when generic/any-document was used as permissive fallback" }
       }
     }
   },

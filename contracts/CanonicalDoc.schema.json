@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://doc-pipeline.dev/schemas/CanonicalDoc.schema.json",
   "title": "CanonicalDoc",
   "description": "Normalized L0/L1/L2 content tree — the single most load-bearing contract. Feeds RAG, analysis, and future doc-graph.",
   "$defs": {

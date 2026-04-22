@@ -1,3 +1,17 @@
+# Copyright 2026 qte77
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 """Schema round-trip tests: every contract loads as valid JSON Schema, and
 a minimal valid instance round-trips. Also: known-invalid instances fail.
 
@@ -12,7 +26,7 @@ from datetime import datetime, timezone
 import jsonschema
 import pytest
 
-from workers.base.contracts import (
+from doc_pipeline_engine.base.contracts import (
     CONTRACTS_DIR,
     SCHEMA_NAMES,
     is_valid,
@@ -41,7 +55,7 @@ def test_schema_is_valid_jsonschema(name: str) -> None:
 def _min_discovery() -> dict:
     return {
         "version": "0.1.0",
-        "source": {"root": "/tmp/x", "kind": "folder"},
+        "source": {"root": "/data/ingest", "kind": "folder"},
         "discovered_at": NOW,
         "files": [
             {
@@ -57,15 +71,8 @@ def _min_discovery() -> dict:
 def _min_classification() -> dict:
     return {
         "version": "0.1.0",
-        "classified_at": NOW,
         "items": [
-            {
-                "path": "a.pdf",
-                "sha256": SHA_ZERO,
-                "domain": "generic",
-                "doc_kind": "paper",
-                "confidence": 0.9,
-            }
+            {"path": "a.pdf", "domain": "generic", "confidence": 0.9}
         ],
     }
 
@@ -137,14 +144,8 @@ def _min_evaluation_report() -> dict:
 def _min_format_match() -> dict:
     return {
         "version": "0.1.0",
-        "matched_at": NOW,
         "matches": [
-            {
-                "format_id": "generic/any-document",
-                "format_version": "0.1.0",
-                "confidence": 0.5,
-                "evidence": [{"matcher": "by_content", "signal": "fallback"}],
-            }
+            {"format_id": "generic/any-document", "confidence": 0.5}
         ],
     }
 
@@ -153,8 +154,6 @@ def _min_format_conformance() -> dict:
     return {
         "version": "0.1.0",
         "output_format_id": "generic/technical-report-md",
-        "output_format_version": "0.1.0",
-        "checked_at": NOW,
         "conformant": True,
     }
 
@@ -164,7 +163,6 @@ def _min_input_format() -> dict:
         "id": "generic/any-document",
         "version": "0.1.0",
         "file_types": ["pdf", "docx", "txt", "md"],
-        "matchers": {"by_content": "matchers/by_content.yaml"},
     }
 
 
@@ -173,9 +171,6 @@ def _min_output_format() -> dict:
         "id": "generic/technical-report-md",
         "version": "0.1.0",
         "tier": "quick",
-        "renderer": {"kind": "jinja-markdown"},
-        "template": "template.md.j2",
-        "required_sections": "required_sections.yaml",
     }
 
 
@@ -234,9 +229,9 @@ def test_input_format_id_must_be_pack_slash_format() -> None:
     assert not is_valid("InputFormat", bad)
 
 
-def test_output_format_needs_renderer_kind() -> None:
+def test_output_format_needs_tier() -> None:
     bad = _min_output_format()
-    del bad["renderer"]
+    del bad["tier"]
     assert not is_valid("OutputFormat", bad)
 
 

@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://doc-pipeline.dev/schemas/DiscoveryManifest.schema.json",
   "title": "DiscoveryManifest",
   "description": "Output of the Discover stage — enumerates source files with hash and detected file-type.",
   "type": "object",

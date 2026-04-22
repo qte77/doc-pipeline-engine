@@ -1,64 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://doc-pipeline.dev/schemas/InputFormat.schema.json",
   "title": "InputFormat",
-  "description": "Meta-schema every domain pack's input_formats/<id>/format.json must satisfy.",
+  "description": "Meta-schema for domain pack input format definitions. Reserved stub — wired in v0.3.",
   "type": "object",
-  "required": ["id", "version", "file_types", "matchers"],
+  "required": ["id", "version", "file_types"],
   "properties": {
     "id": {
       "type": "string",
-      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$",
-      "description": "<pack>/<format-id>, e.g. generic/ieee-paper"
+      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
     },
     "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
-    "title": { "type": "string" },
-    "description": { "type": "string" },
     "file_types": {
       "type": "array",
       "minItems": 1,
-      "items": { "enum": ["pdf", "docx", "xlsx", "txt", "md", "image"] }
-    },
-    "extends": {
-      "type": "string",
-      "description": "Optional parent format id (cross-pack allowed)"
-    },
-    "strict": {
-      "type": "boolean",
-      "default": false,
-      "description": "If true, G_format_in fails when no matcher fires; if false, falls back to generic/any-document"
-    },
-    "match_threshold": {
-      "type": "number",
-      "minimum": 0,
-      "maximum": 1,
-      "default": 0.6,
-      "description": "Combined matcher-score threshold for a positive match"
-    },
-    "matchers": {
-      "type": "object",
-      "description": "At least one matcher type must be present. Each matcher lives in its own file under matchers/.",
-      "minProperties": 1,
-      "properties": {
-        "by_filename": { "type": "string", "description": "Path to by_filename.json" },
-        "by_metadata": { "type": "string", "description": "Path to by_metadata.json" },
-        "by_layout":   { "type": "string", "description": "Path to by_layout.yaml" },
-        "by_content":  { "type": "string", "description": "Path to by_content.yaml" }
-      },
-      "additionalProperties": false
-    },
-    "required_fields": {
-      "type": "array",
-      "items": { "type": "string" },
-      "description": "Claim/entity/section paths (dot-notation) whose absence is flagged in AnalysisReport.missing_required_fields"
-    },
-    "schema": {
-      "type": "string",
-      "description": "Path to schema.json — JSON schema the ExtractionBundle must satisfy for this format"
-    },
-    "example": {
-      "type": "string",
-      "description": "Path to example/ with one known-good sample"
+      "items": { "type": "string" }
     }
   },
   "additionalProperties": false

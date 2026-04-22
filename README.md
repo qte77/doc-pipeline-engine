@@ -1,39 +1,22 @@
 # doc-pipeline-engine
 
-Data plane for the `doc-pipeline` Claude Code plugin. Holds adapters (docling, GLM-OCR, PaddleOCR-VL, Claude CLI), stage contracts, domain packs, policies, and eval harnesses.
+[![License](https://img.shields.io/badge/license-Apache_2.0-58f4c2.svg)](LICENSE)
+![Version](https://img.shields.io/badge/version-0.1.0-58f4c2.svg)
+[![CodeQL](https://github.com/qte77/doc-pipeline-engine/actions/workflows/codeql.yaml/badge.svg)](https://github.com/qte77/doc-pipeline-engine/actions/workflows/codeql.yaml)
 
-## Repo layout
-
-```
-contracts/      JSON schemas — the deterministic gate format between stages
-workers/        Adapter implementations (stubs in v0.1, except claude_cli_adapter)
-domains/        Domain packs (generic, mech-elec-cert, med-research-patents)
-policies/       Data-locality policies (local-only, claude-api-extracted-only, cloud-redacted)
-eval/           RAGAs / TruLens / DeepEval harnesses and orchestration-bench
-tests/          pytest
-samples/        Known-good sample inputs used by happy-path + failure tests
-```
-
-## v0.1 scope
-
-- Contracts-first: the 10 JSON schemas in `contracts/` are the load-bearing design.
-- Only the `generic` domain pack is fully wired; `mech-elec-cert` and `med-research-patents` are declared stubs.
-- Only `claude_cli_adapter` is wired in v0.1; docling/GLM-OCR/PaddleOCR-VL are stubs.
-- Happy-path test runs through stages Discover → Extract → RecognizeInputFormat → Normalize → Analyze → QuickDraft → Evaluate → Publish.
-- Failure tests: F1 (corrupt PDF), F2 (adapter disagreement), F4 (schema drift), F5 (policy violation), F11 (format miss), F12 (required-section miss).
-
-See [`docs/plans/v0.1-init.md`](docs/plans/v0.1-init.md) for the full v0.1 design doc.
+Modular document processing engine with contract-gated pipeline stages. Standalone module — usable independently or as a component in larger systems (e.g. polyforge, office-polyforge).
 
 ## Quickstart
 
 ```bash
-make install        # dev deps
+make install        # uv sync
 make test-contracts # schema round-trip tests
-make happy-path     # E2E on samples/generic/sample.pdf
-make test-failure   # F1, F2, F4, F5, F11, F12
 ```
 
-## Related
+## Docs
 
-- Control-plane plugin: `/workspaces/qte77/claude-code-plugins/plugins/doc-pipeline/`
-- Research landscape: `/workspaces/qte77/ai-agents-research/`
+- [Architecture](docs/architecture.md) — stage graph, runner vs stream, package layout
+- [Roadmap](docs/roadmap.md) — milestones with reasoning and implementation notes
+- [Scraping Landscape](docs/scraping-landscape.md) — web scraping and extraction tool survey
+- [Changelog](CHANGELOG.md) — release history ([semver](https://semver.org/))
+- [v0.1 design](docs/plans/v0.1-init.md) — original planning doc

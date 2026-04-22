@@ -1,0 +1,103 @@
+doc-pipeline-engine
+Copyright 2026 qte77
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+The samples/ directory contains third-party documents and images used for
+pipeline demonstration and testing. These files are NOT covered by the MIT
+License. Each file retains its original license as documented below and in
+samples/SAMPLES.md.
+
+------------------------------------------------------------------------
+
+LICENSES USED IN samples/
+
+  US Public Domain (17 U.S.C. 105)
+    Works of the US federal government. No copyright restrictions.
+    Applies to: GSA forms, NIST publications, NASA reports, govinfo.gov
+    legislation, GPO forms, Treasury docs, DHS templates, OMB memos,
+    Congressional hearing transcripts, National Archives docs.
+
+  UK Open Government Licence v3.0 (OGL v3.0)
+    https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+    Compatible with CC-BY 4.0. Requires attribution.
+    Applies to: UK legislation (legislation.gov.uk), UK Cabinet Office
+    contract templates, UK procurement policy notes.
+
+  Creative Commons Attribution 4.0 (CC-BY 4.0)
+    https://creativecommons.org/licenses/by/4.0/
+    Applies to: PLOS ONE papers, eLife papers, Australian legislation
+    (legislation.gov.au), New Zealand legislation (legislation.govt.nz),
+    select arXiv papers marked CC-BY 4.0.
+
+  Creative Commons Attribution-ShareAlike (CC-BY-SA 2.0/3.0)
+    https://creativecommons.org/licenses/by-sa/3.0/
+    Applies to: Wikimedia Commons images (as individually attributed),
+    Adafruit learning guides.
+
+  Creative Commons Attribution (CC-BY 2.0/3.0)
+    https://creativecommons.org/licenses/by/2.0/
+    Applies to: select Wikimedia Commons images.
+
+  Public Domain
+    No copyright restrictions. Copyright expired or explicitly waived.
+    Applies to: Wikimedia Commons images marked PD, Project Gutenberg
+    texts, Brazilian government publications.
+
+  arXiv Non-Exclusive License
+    https://arxiv.org/licenses/nonexclusive-distrib/1.0/
+    Authors grant arXiv perpetual non-exclusive right to distribute.
+    Papers are freely downloadable. Redistribution rights vary per paper.
+    Applies to: arXiv papers not explicitly marked CC-BY.
+
+  TI Freely Redistributable
+    Texas Instruments datasheets are provided for design reference and
+    may be freely distributed. See individual datasheet terms.
+    Applies to: TI NE555, LM317 datasheets.
+
+  IETF Trust License
+    https://trustee.ietf.org/documents/trust-legal-provisions/
+    RFCs may be redistributed without modification. Must include the
+    IETF Trust copyright notice contained in each document.
+    Applies to: RFC 791, 2119, 2616, 2822, 5321, 7231.
+
+  EU Reuse Policy (Commission Decision 2011/833/EU)
+    https://eur-lex.europa.eu/content/legal-notice/legal-notice.html
+    EU legislation may be reused for commercial and non-commercial
+    purposes. Source acknowledgment required.
+    Applies to: EU GDPR, Digital Services Act, AI Act.
+
+  World Bank Open Access
+    https://www.worldbank.org/en/about/legal/terms-of-use-for-datasets
+    Standard bidding documents are publicly available for reuse.
+    Applies to: World Bank SBD and bid evaluation documents.
+
+  Apache License 2.0
+    https://www.apache.org/licenses/LICENSE-2.0
+    Applies to: HuggingFace sample invoice (philschmid/pdf-samples).
+
+------------------------------------------------------------------------
+
+ATTRIBUTION
+
+Wikimedia Commons images are attributed to their respective authors as
+documented on each file's Wikimedia Commons page. See samples/SAMPLES.md
+for individual source URLs.
+
+IETF RFCs include copyright notices from the IETF Trust within the
+document text itself.
+
+------------------------------------------------------------------------
+
+For the full per-file manifest with sources, licenses, and validation
+dates, see samples/SAMPLES.md.
