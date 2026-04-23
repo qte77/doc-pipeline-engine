@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://doc-pipeline.dev/schemas/ExtractionBundle.schema.json",
   "title": "ExtractionBundle",
   "description": "Uniform output schema every Adapter must emit. Contains text, layout tree, tables, figures, images.",
   "type": "object",

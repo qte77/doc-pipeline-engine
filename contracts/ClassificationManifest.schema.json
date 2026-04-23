@@ -1,36 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://doc-pipeline.dev/schemas/ClassificationManifest.schema.json",
   "title": "ClassificationManifest",
-  "description": "Optional Classify/Sort stage output — per-file domain + doc-kind guess with confidence.",
+  "description": "Optional Classify/Sort stage output. Reserved stub — wired in v0.2.",
   "type": "object",
-  "required": ["version", "classified_at", "items"],
+  "required": ["version", "items"],
   "properties": {
     "version": { "const": "0.1.0" },
-    "classified_at": { "type": "string", "format": "date-time" },
-    "classifier": {
-      "type": "object",
-      "required": ["name", "version"],
-      "properties": {
-        "name": { "type": "string" },
-        "version": { "type": "string" }
-      }
-    },
     "items": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["path", "sha256", "domain", "doc_kind", "confidence"],
+        "required": ["path", "domain", "confidence"],
         "properties": {
           "path": { "type": "string" },
-          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
-          "domain": { "type": "string", "description": "Domain pack id (e.g. generic, mech-elec-cert)" },
-          "doc_kind": { "type": "string", "description": "e.g. paper, datasheet, patent, spec, report" },
-          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
-          "evidence": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
+          "domain": { "type": "string" },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
         }
       }
     }

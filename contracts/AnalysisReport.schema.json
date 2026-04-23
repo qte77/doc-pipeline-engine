@@ -1,6 +1,5 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://doc-pipeline.dev/schemas/AnalysisReport.schema.json",
   "title": "AnalysisReport",
   "description": "Analyze stage output — claims, entities, relations, citations extracted from CanonicalDoc.",
   "type": "object",
