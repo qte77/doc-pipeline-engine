@@ -91,10 +91,12 @@ Evaluation harnesses and quality gates.
 
 - RAGAs / TruLens / DeepEval harness wrappers
 - InputFormat / OutputFormat schemas wired
-- Failure tests (F1–F12)
+- Failure tests: F1 (corrupt PDF), F2 (adapter disagreement), F4 (schema drift), F5 (policy violation), F11 (format miss), F12 (required-section miss)
 - Orchestration bench (P1–P4)
 
 ## Future
+
+- Orchestration pattern evaluation (P1 skill chain, P2 subagents, P3 team mode, P4 hybrid)
 
 - Fine-tuning pipeline
 - Graph-RAG

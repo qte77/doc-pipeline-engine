@@ -19,4 +19,3 @@ make test-contracts # schema round-trip tests
 - [Roadmap](docs/roadmap.md) — milestones with reasoning and implementation notes
 - [Scraping Landscape](docs/scraping-landscape.md) — web scraping and extraction tool survey
 - [Changelog](CHANGELOG.md) — release history ([semver](https://semver.org/))
-- [v0.1 design](docs/plans/v0.1-init.md) — original planning doc

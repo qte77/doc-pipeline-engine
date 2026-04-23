@@ -52,7 +52,20 @@ src/doc_pipeline_engine/
 
 No hard dependencies on any orchestrator or consumer. Contracts are the public API. Any system that can produce/consume the JSON schemas can participate — polyforge, office-polyforge, Claude Code plugins, or anything else.
 
+## Output tiers
+
+| Tier | Extraction | Template | Eval |
+|------|-----------|----------|------|
+| **Quick** | Headings + key claims + top-5 entities | 1-page Markdown summary | Smoke (schema + 1 faithfulness) |
+| **Comprehensive** | Full canonical tree + RAG index + tables/figures/citations | IMRaD / tech-spec | RAGAs + TruLens + human-in-loop |
+
+Quick draft always produced first — doubles as the executive summary inside comprehensive output.
+
 ## Design decisions
+
+**Two-surface split** — the engine is the data plane (heavy Python: extraction, validation, rendering). An optional control plane (Claude Code plugin or other orchestrator) owns skills, agents, hooks. Separation lets the engine stay lightweight and version independently.
+
+**Four orchestration patterns** (to be evaluated) — P1: plain skill chain, P2: parallel subagents, P3: team mode, P4: hybrid. All run the same stage graph; they differ in who runs each stage. Contracts are orchestration-agnostic by design.
 
 **Apache-2.0 over MIT** — Apache-2.0 includes patent grant and NOTICE file support. NOTICE is needed because `samples/` bundles third-party content under mixed licenses (CC-BY, Public Domain, IETF Trust, EU reuse).
 
