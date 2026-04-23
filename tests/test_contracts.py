@@ -55,7 +55,7 @@ def test_schema_is_valid_jsonschema(name: str) -> None:
 def _min_discovery() -> dict:
     return {
         "version": "0.1.0",
-        "source": {"root": "/tmp/x", "kind": "folder"},
+        "source": {"root": "/data/ingest", "kind": "folder"},
         "discovered_at": NOW,
         "files": [
             {
