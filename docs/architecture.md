@@ -51,3 +51,13 @@ src/doc_pipeline_engine/
 ## Standalone by design
 
 No hard dependencies on any orchestrator or consumer. Contracts are the public API. Any system that can produce/consume the JSON schemas can participate — polyforge, office-polyforge, Claude Code plugins, or anything else.
+
+## Design decisions
+
+**Apache-2.0 over MIT** — Apache-2.0 includes patent grant and NOTICE file support. NOTICE is needed because `samples/` bundles third-party content under mixed licenses (CC-BY, Public Domain, IETF Trust, EU reuse).
+
+**Hatchling over setuptools** — lighter, faster, PEP 621 native. `uv sync` replaces pip everywhere.
+
+**10 contracts, 5 simplified** — all 10 schemas kept to reserve contract slots. Five speculative schemas (ClassificationManifest, FormatMatch, FormatConformance, InputFormat, OutputFormat) reduced to minimal stubs. Roadmap documents when each gets wired.
+
+**Samples gitignored** — ~95 binary files too large for git. Download script is the single source of truth — carries metadata (URL, license, description) and generates `samples/SAMPLES.md` on each run.

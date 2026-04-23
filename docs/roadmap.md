@@ -6,9 +6,15 @@
 
 Schemas define the interface between every pipeline stage. Nothing runs without them.
 
+**Delivered**:
+
 - 10 JSON schemas in `contracts/` (5 core, 5 reserved stubs)
 - Gate validator (`src/doc_pipeline_engine/base/contracts.py`)
-- Schema round-trip tests
+- Schema round-trip tests (38 tests)
+- Sample download script (~95 files across 8 categories)
+- Architecture and roadmap docs
+- Apache-2.0 license with NOTICE for third-party content
+- CI: CodeQL, Dependabot, CodeFactor
 
 ## 0.2.0 — Runner
 
