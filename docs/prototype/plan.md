@@ -1,4 +1,11 @@
-# E2E Prototype Plan
+---
+title: E2E Prototype Plan
+purpose: Dual-variant end-to-end prototype walk-through — Claude Code (V1) versus Python tools (V2) on shared samples
+created: 2026-04-26
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: implementation
+---
 
 First end-to-end walk-through of the [stage graph](../architecture.md#stage-graph) on a single sample, run as **two parallel variants** so we can A/B Claude Code against the surveyed tools.
 

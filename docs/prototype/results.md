@@ -1,4 +1,11 @@
-# Prototype results
+---
+title: Prototype results
+purpose: Recorded outputs of the parallel diff harness across the five locked prototype samples
+created: 2026-04-26
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: implementation
+---
 
 Outputs of the [parallel diff harness](plan.md) running both
 V1 (Claude API) and V2 (Python tools) legs on the [prototype

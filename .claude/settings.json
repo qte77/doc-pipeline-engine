@@ -14,7 +14,8 @@
   "enabledPlugins": {
     "context7@claude-plugins-official": true,
     "python-dev@qte77-claude-code-utils": true,
-    "commit-helper@qte77-claude-code-utils": true
+    "commit-helper@qte77-claude-code-utils": true,
+    "docs-governance@qte77-claude-code-utils": true
   },
   "permissions": {
     "allow": [

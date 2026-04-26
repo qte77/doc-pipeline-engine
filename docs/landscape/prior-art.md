@@ -1,4 +1,11 @@
-# Prior Art Landscape
+---
+title: Prior Art Landscape
+purpose: E2E document pipeline prior art — academic surveys, OSS systems, commercial IDP, reference architectures
+created: 2026-04-26
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: landscape
+---
 
 End-to-end (E2E) document pipelines for business / enterprise — academic surveys, OSS systems, commercial IDP, and reference architectures. Companion files: [ingest.md](ingest.md), [process.md](process.md), [output.md](output.md).
 

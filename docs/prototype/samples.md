@@ -1,4 +1,11 @@
-# Prototype sample selection
+---
+title: Prototype sample selection
+purpose: Locks the five concrete samples (one per use case) the v1 prototype runs against
+created: 2026-04-26
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: implementation
+---
 
 Five samples drive the v1 [E2E prototype](plan.md), one per
 use case, covering the file-type spectrum (PDF, DOCX, XLSX, text, image).

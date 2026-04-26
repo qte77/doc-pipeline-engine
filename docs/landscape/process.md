@@ -1,4 +1,11 @@
-# Process Landscape
+---
+title: Process Landscape
+purpose: Survey of chunking, table/figure extraction, NER, RAG indexing, and CanonicalDoc normalization for the process stage
+created: 2026-04-26
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: landscape
+---
 
 Survey of candidates for the **process** stage — chunking, supplemental table/figure extraction, NER, RAG indexing, and normalization to `CanonicalDoc` (`ExtractionBundle → CanonicalDoc`, [roadmap [§0.5.0](../roadmap.md#050--domain-packs).0](../roadmap.md#050--domain-packs)). Companion files: [ingest.md](ingest.md), [output.md](output.md), [prior-art.md](prior-art.md).
 

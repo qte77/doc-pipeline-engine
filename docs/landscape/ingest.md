@@ -1,4 +1,11 @@
-# Ingest Landscape
+---
+title: Ingest Landscape
+purpose: Survey of extraction backends, source connectors, and crawling/discovery providers for the ingest stage
+created: 2026-04-26
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: landscape
+---
 
 Survey of candidates for the **ingest** stage — extraction backends, source connectors, and crawling/discovery providers. Companion files: [process.md](process.md), [output.md](output.md), [prior-art.md](prior-art.md).
 

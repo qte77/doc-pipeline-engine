@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `.claude/rules/frontmatter-convention.md` — exact import of `qte77-claude-code-utils/docs-governance/rules/frontmatter-convention.md`; enforces YAML frontmatter (`title`, `purpose`, `created`, `updated`, `validated_links`) on `**/*.md` outside the exempt set
+- `.markdownlint.json` — `MD013: false` (line length) and `MD041.front_matter_title` per the imported rule, so frontmatter `title:` satisfies the first-heading check
+- `.claude/settings.json` `enabledPlugins` — `docs-governance@qte77-claude-code-utils`
+- YAML frontmatter on all `docs/landscape/*.md` and `docs/prototype/*.md` files; body H1 dropped (frontmatter `title` represents it per the rule)
 - `docs/prototype/results.md` — first-run results of the parallel diff harness on the five locked prototype samples (V2-only; V1 leg blocked pending [#30](https://github.com/qte77/doc-pipeline-engine/issues/30))
 
 ### Changed
