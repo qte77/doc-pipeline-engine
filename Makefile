@@ -34,15 +34,15 @@ lint:  ## Lint Python with ruff
 lint-md:  ## Lint Markdown (markdownlint, disable MD013)
 	echo "--- lint-md"
 	if command -v markdownlint > /dev/null 2>&1; then
-		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --disable MD013 MD060
+		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --disable MD013
 	else
 		echo "markdownlint not installed — run: npm install -g markdownlint-cli"
 	fi
 
-lint-links:  ## Check links in Markdown (lychee)
+lint-links:  ## Check links in Markdown (lychee, see lychee.toml)
 	echo "--- lint-links"
 	if command -v lychee > /dev/null 2>&1; then
-		lychee --exclude-path .venv --exclude-path samples .
+		lychee .
 	else
 		echo "lychee not installed — see https://github.com/lycheeverse/lychee"
 	fi
