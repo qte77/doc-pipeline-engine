@@ -17,6 +17,14 @@ dependencies = [
 extract = [
   "kreuzberg>=2.0",
 ]
+# Install with: uv sync --extra render
+# Shared rendering: Markdown → HTML → PDF (WeasyPrint), Markdown → DOCX (python-docx).
+# All BSD-3 / MIT, pure-Python, no JVM, no GPL.
+render = [
+  "markdown>=3.5",
+  "python-docx>=1.1",
+  "weasyprint>=62",
+]
 
 [dependency-groups]
 dev = [
