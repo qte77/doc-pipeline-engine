@@ -13,6 +13,12 @@ make install        # uv sync — install dev dependencies
 Requires [uv](https://github.com/astral-sh/uv). Python version pinned in
 `pyproject.toml`.
 
+Claude Code plugins declared in `.claude/settings.json`
+(`python-dev`, `commit-helper` from `qte77-claude-code-utils`,
+`context7` from `claude-plugins-official`) provide the testing and
+commit-workflow conventions used in this repo. `rag-core` will be
+enabled when §0.5 indexing wiring begins.
+
 ## Quality commands
 
 | Command | Purpose |

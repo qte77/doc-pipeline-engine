@@ -12,7 +12,9 @@
     "command": "bash .claude/scripts/statusline.sh"
   },
   "enabledPlugins": {
-    "context7@claude-plugins-official": true
+    "context7@claude-plugins-official": true,
+    "python-dev@qte77-claude-code-utils": true,
+    "commit-helper@qte77-claude-code-utils": true
   },
   "permissions": {
     "allow": [
