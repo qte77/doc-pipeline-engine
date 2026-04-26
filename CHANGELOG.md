@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `stages/discover.py` — filesystem walk → `DiscoveryManifest` (sorted, sha256-hashed, glob-filtered)
 - `stages/extract.py` — Kreuzberg-backed adapter → `ExtractionBundle`; deferred import so the module loads without the optional extra
 - `pyproject.toml` `[project.optional-dependencies]` `extract` extra = `kreuzberg>=2.0` (MIT, local). Install with `uv sync --extra extract`
+- `render/formats.py` — shared Markdown → DOCX + PDF utility (`render_artifacts`). Used by both V1 and V2 render stages so the A/B is purely about Markdown content. Pure-Python (markdown / python-docx / WeasyPrint), no JVM, no GPL.
+- `pyproject.toml` `[project.optional-dependencies]` `render` extra = `markdown>=3.5`, `python-docx>=1.1`, `weasyprint>=62`. Install with `uv sync --extra render`
 - `Makefile` targets `test-rerun` (`pytest --lf -x`), `test-fix-snapshots` (`pytest --inline-snapshot=fix`), and `validate` (lint + test + lint-md + lint-links pre-commit gate)
 
 ### Added
