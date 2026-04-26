@@ -19,15 +19,22 @@ _TEMPLATE_NAME = "quick_summary.md.j2"
 
 def _load_env() -> Any:
     try:
-        from jinja2 import Environment, FileSystemLoader  # type: ignore[import-not-found]
+        from jinja2 import (  # type: ignore[import-not-found]
+            Environment,
+            FileSystemLoader,
+            select_autoescape,
+        )
     except ImportError as e:
         raise RuntimeError(
             "Jinja2 not installed. Install with: uv sync --extra v2"
         ) from e
+    # Reason: output is Markdown, not HTML — escaping `<` `>` `&` would
+    # corrupt valid Markdown. select_autoescape([]) makes the no-escape
+    # choice explicit and satisfies bandit B701.
     return Environment(
         loader=FileSystemLoader(str(_TEMPLATE_DIR)),
         keep_trailing_newline=True,
-        autoescape=False,  # markdown output, not HTML
+        autoescape=select_autoescape([]),
     )
 
 
