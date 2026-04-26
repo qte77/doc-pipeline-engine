@@ -33,6 +33,6 @@
     "UV_LINK_MODE": "copy",
     "RTK_TELEMETRY_DISABLED": "1"
   },
-  "onCreateCommand": "make setup-uv",
-  "postCreateCommand": "make setup-dev"
+  "onCreateCommand": "make setup_uv",
+  "postCreateCommand": "make setup_dev"
 }

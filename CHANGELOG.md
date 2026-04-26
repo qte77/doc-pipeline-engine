@@ -13,14 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `.devcontainer/setup_dev/devcontainer.json` — minimal reproducible Codespaces / VS Code dev container (Python 3.13 + Claude Code + ruff/markdownlint/lychee). `onCreateCommand` runs `make setup-uv`; `postCreateCommand` runs `make setup-dev`. Pattern lifted from `qte77/Agents-eval`.
-- `Makefile` `setup-uv`, `setup-dev`, `setup-claude-code`, `setup-npm-tools`, `setup-lychee` targets — wire the devcontainer's bootstrap chain (frozen `uv sync`, then full dev tooling via subtargets).
-- `Makefile` `install-image-ocr` — use-case-named on-demand install of `tesseract-ocr` + `tesseract-ocr-eng`. Resolves [#32](https://github.com/qte77/doc-pipeline-engine/issues/32) so the prototype harness can extract image samples (`samples/mech-elec-cert/wikimedia-arduino-uno-r3.jpg`) without OCRError.
-- `Makefile` `install-v2-nlp` — use-case-named on-demand install grouping `--extra v2` + `python -m spacy download en_core_web_sm` for V2 NER entities.
+- `.devcontainer/setup_dev/devcontainer.json` — minimal reproducible Codespaces / VS Code dev container (Python 3.13 + Claude Code + ruff/markdownlint/lychee). `onCreateCommand` runs `make setup_uv`; `postCreateCommand` runs `make setup_dev`. Pattern lifted from `qte77/Agents-eval`.
+- `Makefile` `setup_uv`, `setup_dev`, `setup_claude_code`, `setup_npm_tools`, `setup_lychee` targets — wire the devcontainer's bootstrap chain (frozen `uv sync`, then full dev tooling via subtargets).
+- `Makefile` `install_image_ocr` — use-case-named on-demand install of `tesseract-ocr` + `tesseract-ocr-eng`. Resolves [#32](https://github.com/qte77/doc-pipeline-engine/issues/32) so the prototype harness can extract image samples (`samples/mech-elec-cert/wikimedia-arduino-uno-r3.jpg`) without OCRError.
+- `Makefile` `install_v2_nlp` — use-case-named on-demand install grouping `--extra v2` + `python -m spacy download en_core_web_sm` for V2 NER entities.
 
 ### Changed
 
-- `Makefile` `install-models` — kept as a one-line alias for `install-v2-nlp` for one release cycle; removal queued for §0.5.0. Naming convention going forward: `install-<use-case>` (each target installs the apt package + Python extra + model needed for one capability, in one command).
+- `Makefile` `install_models` — kept as a one-line alias for `install_v2_nlp` for one release cycle; removal queued for §0.5.0. Naming convention going forward: `install_<use_case>` (snake_case, each target installs the apt package + Python extra + model needed for one capability, in one command).
 
 ### Added
 
@@ -54,12 +54,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `pyproject.toml` `[project.optional-dependencies]` `v1` extra = `anthropic>=0.40`. Install with `uv sync --extra v1`. V1 stages skipped in CI; integration smoke runs locally with `ANTHROPIC_API_KEY`.
 - V2 (deterministic Python tools) post-extraction stages: `stages/v2_normalize.py` (ExtractionBundle → CanonicalDoc), `stages/v2_analyze.py` (claims via heading-walk; entities via spaCy NER when available, empty otherwise), `stages/v2_render.py` (Jinja2 template → Markdown → `render_artifacts`), `stages/v2_eval.py` (minimal pass-through EvalReport). Jinja template at `stages/_jinja_templates/quick_summary.md.j2` packaged by hatchling.
 - `pyproject.toml` `[project.optional-dependencies]` `v2 = [jinja2, spacy]`, `v2-render = [jinja2]` (subset for Python 3.14 envs without spaCy wheels), `v2-eval = [deepeval]` (wired by PR 6 harness).
-- `Makefile` `install-models` target — `uv run python -m spacy download en_core_web_sm` (needed for V2 NER).
+- `Makefile` `install_models` target — `uv run python -m spacy download en_core_web_sm` (needed for V2 NER).
 - `CONTRIBUTING.md` documents the full extras taxonomy with locality flags.
 - Parallel diff harness — `harness.py` with `run_both(sample_path, ...)` returning a `DiffReport` (`LegResult` per variant: contracts, RenderArtifacts, wall_times, eval_report). Extraction is shared (Kreuzberg runs once); only post-extraction stages diverge per leg. CLI: `python -m doc_pipeline_engine.harness <sample> [--output-dir DIR]`. Renders md/docx/pdf to `outputs/<sha256>/v1/` and `outputs/<sha256>/v2/`.
 - `docs/prototype/samples.md` — selection criteria for the five prototype samples (one per use case: bidtender / legal / invoice / spec / diagrams).
 - `docs/prototype/results.md` — placeholder for first-run eval results across the five eval axes (faithfulness, determinism, latency, cost, layout fidelity).
-- `Makefile` targets `test-rerun` (`pytest --lf -x`), `test-fix-snapshots` (`pytest --inline-snapshot=fix`), and `validate` (lint + test + lint-md + lint-links pre-commit gate)
+- `Makefile` targets `test_rerun` (`pytest --lf -x`), `test_fix_snapshots` (`pytest --inline-snapshot=fix`), and `validate` (lint + test + lint_md + lint_links pre-commit gate)
 
 ### Added
 
@@ -98,4 +98,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Package layout: `workers/` → `src/doc_pipeline_engine/`
 - Build system: setuptools → hatchling, pip → uv sync
-- Makefile: MARK sections, auto-help, lint-md, lint-links
+- Makefile: MARK sections, auto-help, lint_md, lint_links

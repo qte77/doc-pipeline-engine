@@ -107,7 +107,7 @@ each for normalize/analyze/eval. Per-sample raw JSON in
 - **#30 — Claude Code headless fallback for V1.** Required to A/B at
   all without a paid API key. _Implementation queued in next session._
 - **Tesseract on demand** — fixed in [#32](https://github.com/qte77/doc-pipeline-engine/issues/32):
-  run `make install-image-ocr` when extracting image samples.
+  run `make install_image_ocr` when extracting image samples.
 - **V2 normalize: heading-tree reconstruction** — tracked in
   [#33](https://github.com/qte77/doc-pipeline-engine/issues/33). The
   single-leaf shortcut produces structurally honest but semantically
