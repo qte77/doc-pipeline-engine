@@ -18,7 +18,7 @@ Schemas define the interface between every pipeline stage. Nothing runs without 
 
 ## 0.2.0 — Runner
 
-Stage chain that passes JSON between stages in-process. Minimum viable pipeline.
+Stage chain that passes JSON between stages in-process. Minimum viable pipeline. Prototype walk-through: see [prototype-plan.md](prototype-plan.md).
 
 **Why now**: contracts without a runner are just static files. The runner proves the contracts work as a real data flow.
 
