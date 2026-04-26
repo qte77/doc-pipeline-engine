@@ -1,6 +1,6 @@
 # Ingest Landscape
 
-Survey of candidates for the **ingest** stage — extraction backends, source connectors, and crawling/discovery providers. Companion files: [landscape-process.md](landscape-process.md), [landscape-output.md](landscape-output.md), [landscape-prior-art.md](landscape-prior-art.md).
+Survey of candidates for the **ingest** stage — extraction backends, source connectors, and crawling/discovery providers. Companion files: [process.md](process.md), [output.md](output.md), [prior-art.md](prior-art.md).
 
 ## Selection criteria
 
@@ -8,7 +8,7 @@ Survey of candidates for the **ingest** stage — extraction backends, source co
 2. **Format coverage / source coverage** — what the tool actually reaches.
 3. **Runtime footprint** — Python-native preferred; JVM/heavy native deps must justify themselves.
 4. **Auth/credential model** — for source connectors, must support OAuth 2.0 / service-account flows.
-5. **Data-locality fit** — note cloud-only paths; relevant to [§0.5.0](roadmap.md#050--domain-packs) `local-only` / `claude-api-extracted-only` / `cloud-redacted` policies.
+5. **Data-locality fit** — note cloud-only paths; relevant to [§0.5.0](../roadmap.md#050--domain-packs) `local-only` / `claude-api-extracted-only` / `cloud-redacted` policies.
 6. **Maintenance signal** — active releases, non-trivial user base.
 
 ## 1. Extraction backends
@@ -28,7 +28,7 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 
 ### Notes
 
-**docling vs Kreuzberg** — not redundant. docling is the layout-accurate path for PDFs that feed `CanonicalDoc`; Kreuzberg is the pragmatic catch-all for the formats docling doesn't handle well (email, xlsx, legacy Office). Run them side by side in [§0.4.0](roadmap.md#040--adapters) cross-validation.
+**docling vs Kreuzberg** — not redundant. docling is the layout-accurate path for PDFs that feed `CanonicalDoc`; Kreuzberg is the pragmatic catch-all for the formats docling doesn't handle well (email, xlsx, legacy Office). Run them side by side in [§0.4.0](../roadmap.md#040--adapters) cross-validation.
 
 **Tesseract positioning** — don't expose as its own adapter. It's a dependency of the Python wrappers; surfacing it separately would duplicate configuration surface for no gain.
 
@@ -54,7 +54,7 @@ Wired behind a `SourceConnector` interface. Emit file lists / blob handles consu
 
 **msgraph-sdk vs O365** — prefer `msgraph-sdk` as primary; it is the officially maintained Microsoft library and maps 1:1 to Graph API docs. O365 stays as an optional shim.
 
-**Data-locality flagging** — every cloud-source connector must declare `data_locality: cloud` so the [§0.5.0](roadmap.md#050--domain-packs) policy layer can refuse to load it under a `local-only` profile. On-prem variants (EWS, Confluence Server, S3-compatible MinIO) are local-friendly.
+**Data-locality flagging** — every cloud-source connector must declare `data_locality: cloud` so the [§0.5.0](../roadmap.md#050--domain-packs) policy layer can refuse to load it under a `local-only` profile. On-prem variants (EWS, Confluence Server, S3-compatible MinIO) are local-friendly.
 
 **boto3 endpoint override** — pass `endpoint_url` to reach MinIO, Backblaze B2, or other S3-compatible stores. No fork required.
 
@@ -84,16 +84,16 @@ Produce the file list that becomes `DiscoveryManifest` (`version`, `source`, `di
 ## See also
 
 - [ai-agents-research / CC-web-scraping-plugins-analysis.md](https://github.com/qte77/ai-agents-research/blob/main/docs/cc-native/plugins-ecosystem/CC-web-scraping-plugins-analysis.md) — Claude Code plugins for web scraping, at the orchestration layer above the connectors and crawlers surveyed here.
-- [prototype-plan.md](prototype-plan.md) — how the candidates surveyed here get exercised in the v1 dual-variant prototype.
+- [../prototype/plan.md](../prototype/plan.md) — how the candidates surveyed here get exercised in the v1 dual-variant prototype.
 
 ## Open questions
 
 - Should `DiscoveryManifest.source` be an enum (cloud-source ID) or a free string?
 - MS Graph throttling (429 / `Retry-After`) — does the connector layer own retry, or does polyfetch-scrape's fetch layer absorb it?
-- Adapter registry policy across extractors: first-match, ensemble, or declared per-domain? → revisit during [§0.5.0 — Domain packs](roadmap.md#050--domain-packs).
+- Adapter registry policy across extractors: first-match, ensemble, or declared per-domain? → revisit during [§0.5.0 — Domain packs](../roadmap.md#050--domain-packs).
 - Minimum cross-validation set: which adapters must agree on which sample categories to call extraction "verified"?
-- Do we need handwriting OCR in scope for [§0.4.0](roadmap.md#040--adapters), or defer with GLM-OCR? → see AGENT_REQUESTS.md if raised.
-- watchdog watch-mode: in-scope for the [§0.5.0](roadmap.md#050--domain-packs) streaming milestone, or defer to a separate `ingest-streaming` extra?
+- Do we need handwriting OCR in scope for [§0.4.0](../roadmap.md#040--adapters), or defer with GLM-OCR? → see AGENT_REQUESTS.md if raised.
+- watchdog watch-mode: in-scope for the [§0.5.0](../roadmap.md#050--domain-packs) streaming milestone, or defer to a separate `ingest-streaming` extra?
 
 ## References
 

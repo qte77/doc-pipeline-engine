@@ -1,8 +1,8 @@
 # Prototype results
 
-Outputs of the [parallel diff harness](prototype-plan.md) running both
+Outputs of the [parallel diff harness](plan.md) running both
 V1 (Claude API) and V2 (Python tools) legs on the [prototype
-samples](prototype-samples.md).
+samples](samples.md).
 
 ## Status
 

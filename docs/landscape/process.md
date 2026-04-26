@@ -1,14 +1,14 @@
 # Process Landscape
 
-Survey of candidates for the **process** stage — chunking, supplemental table/figure extraction, NER, RAG indexing, and normalization to `CanonicalDoc` (`ExtractionBundle → CanonicalDoc`, [roadmap [§0.5.0](roadmap.md#050--domain-packs).0](roadmap.md#050--domain-packs)). Companion files: [landscape-ingest.md](landscape-ingest.md), [landscape-output.md](landscape-output.md), [landscape-prior-art.md](landscape-prior-art.md).
+Survey of candidates for the **process** stage — chunking, supplemental table/figure extraction, NER, RAG indexing, and normalization to `CanonicalDoc` (`ExtractionBundle → CanonicalDoc`, [roadmap [§0.5.0](../roadmap.md#050--domain-packs).0](../roadmap.md#050--domain-packs)). Companion files: [ingest.md](ingest.md), [output.md](output.md), [prior-art.md](prior-art.md).
 
-`CanonicalDoc` fields: `version`, `source_sha256`, `built_at`, `input_format`, `root` (normalized tree), `tier_summary` (Quick vs Comprehensive — see [architecture.md](architecture.md)). "Canonical" means a normalized tree rooted at `root` carrying tier-aware summary.
+`CanonicalDoc` fields: `version`, `source_sha256`, `built_at`, `input_format`, `root` (normalized tree), `tier_summary` (Quick vs Comprehensive — see [architecture.md](../architecture.md)). "Canonical" means a normalized tree rooted at `root` carrying tier-aware summary.
 
 ## Selection criteria
 
 1. **License compatibility** — Apache-2.0 / MIT preferred; AGPL/GPL opt-in only.
 2. **Runtime footprint** — Python-native preferred; model downloads and GPU requirements declared.
-3. **Data-locality fit** — local-only vs cloud-required; critical for [§0.5.0](roadmap.md#050--domain-packs) policy enforcement.
+3. **Data-locality fit** — local-only vs cloud-required; critical for [§0.5.0](../roadmap.md#050--domain-packs) policy enforcement.
 4. **Format coverage / domain fit** — chunkers, NER models.
 5. **Maintenance signal** — active releases, non-trivial user base.
 
@@ -47,7 +47,7 @@ When extraction backends (docling, Kreuzberg) miss or mangle tables/figures.
 | **outlines** | Constrained LLM decoding for structured NER | Apache-2.0 | Python + torch + local LLM | local (with local model) | **Candidate (local-LLM)** — pairs with Ollama/vLLM; no cloud calls. |
 | **instructor** | Structured output via LLM function-calling | MIT | Python; OpenAI-compatible API | **cloud by default** | **Opt-in only** — violates `local-only` policy unless pointed at local vLLM. Gate behind `[ner-llm]` and require explicit endpoint config. |
 
-**Notes** — Data-locality is the critical axis. spaCy is the safe default. instructor/outlines are the precision ceiling; both require explicit opt-in. Cloud NER calls must be refused under [§0.5.0](roadmap.md#050--domain-packs) `local-only` profile.
+**Notes** — Data-locality is the critical axis. spaCy is the safe default. instructor/outlines are the precision ceiling; both require explicit opt-in. Cloud NER calls must be refused under [§0.5.0](../roadmap.md#050--domain-packs) `local-only` profile.
 
 ## 4. RAG indexing
 
@@ -83,7 +83,7 @@ Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
 
 ## See also
 
-- [prototype-plan.md](prototype-plan.md) — how the chunking, NER, and normalization candidates surveyed here get exercised in the v1 dual-variant prototype.
+- [../prototype/plan.md](../prototype/plan.md) — how the chunking, NER, and normalization candidates surveyed here get exercised in the v1 dual-variant prototype.
 
 ## Open questions
 

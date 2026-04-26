@@ -1,6 +1,6 @@
 # Prototype sample selection
 
-Five samples drive the v1 [E2E prototype](prototype-plan.md), one per
+Five samples drive the v1 [E2E prototype](plan.md), one per
 use case, covering the file-type spectrum (PDF, DOCX, XLSX, text, image).
 Sample binaries are gitignored; obtain them with:
 
@@ -28,4 +28,4 @@ bash scripts/download-samples.sh --download
 | Spec | `samples/mech-elec-cert/ti-ne555-datasheet.pdf` | `1df8d26a8bd7` |
 | Diagram | `samples/mech-elec-cert/wikimedia-arduino-uno-r3.jpg` | _(extract failed; see results)_ |
 
-Run findings live in [prototype-results.md](prototype-results.md).
+Run findings live in [results.md](results.md).

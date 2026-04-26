@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `docs/prototype/results.md` — first-run results of the parallel diff harness on the five locked prototype samples (V2-only; V1 leg blocked pending [#30](https://github.com/qte77/doc-pipeline-engine/issues/30))
+
+### Changed
+
+- Reorganized docs into topical subdirs: `docs/landscape-*.md` → `docs/landscape/*.md` (drops the redundant `landscape-` prefix), `docs/prototype-*.md` → `docs/prototype/*.md`. All cross-references in `CHANGELOG.md`, `CONTRIBUTING.md`, `README.md`, `docs/roadmap.md`, `docs/llms.txt`, `.github/templates/llms.txt.tpl`, and intra-doc links were updated.
+- `.gitignore` — ignore `outputs/` (harness-generated artifacts: per-sample md/docx/pdf and `v2_summary.json`)
+- `Makefile` — drop redundant `@` prefixes and backslash continuations in the `help` recipe (`.SILENT` and `.ONESHELL` already declared); ignore `outputs/**` in `markdownlint`
+
+### Added
+
 - `.github/workflows/generate-sbom.yaml` — calls `qte77/gha-sbom-action@v0.1.0` on weekly cron + push-to-main; outputs SPDX SBOM to `docs/SBOM/`
 - `.github/workflows/write-llms-txt.yaml` — calls `qte77/gha-llms-txt-action@v0.1.0`; auto-generates `docs/llms.txt` from `.github/templates/llms.txt.tpl` whenever docs/src/governance change
 - `.github/templates/llms.txt.tpl` — llms.txt index template covering architecture, roadmap, prototype-plan, four landscape docs, and governance files
@@ -32,13 +42,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Makefile` `install-models` target — `uv run python -m spacy download en_core_web_sm` (needed for V2 NER).
 - `CONTRIBUTING.md` documents the full extras taxonomy with locality flags.
 - Parallel diff harness — `harness.py` with `run_both(sample_path, ...)` returning a `DiffReport` (`LegResult` per variant: contracts, RenderArtifacts, wall_times, eval_report). Extraction is shared (Kreuzberg runs once); only post-extraction stages diverge per leg. CLI: `python -m doc_pipeline_engine.harness <sample> [--output-dir DIR]`. Renders md/docx/pdf to `outputs/<sha256>/v1/` and `outputs/<sha256>/v2/`.
-- `docs/prototype-samples.md` — selection criteria for the five prototype samples (one per use case: bidtender / legal / invoice / spec / diagrams).
-- `docs/prototype-results.md` — placeholder for first-run eval results across the five eval axes (faithfulness, determinism, latency, cost, layout fidelity).
+- `docs/prototype/samples.md` — selection criteria for the five prototype samples (one per use case: bidtender / legal / invoice / spec / diagrams).
+- `docs/prototype/results.md` — placeholder for first-run eval results across the five eval axes (faithfulness, determinism, latency, cost, layout fidelity).
 - `Makefile` targets `test-rerun` (`pytest --lf -x`), `test-fix-snapshots` (`pytest --inline-snapshot=fix`), and `validate` (lint + test + lint-md + lint-links pre-commit gate)
 
 ### Added
 
-- `docs/prototype-plan.md` — dual-variant E2E prototype plan (Claude Code vs landscape tools), Quick-tier-only, with TDD framing per `tdd-core` / `python-dev` plugins and a parallel-diff harness sketch. Roadmap §0.2.0, CONTRIBUTING doc hierarchy, and the four landscape files cross-link to it.
+- `docs/prototype/plan.md` — dual-variant E2E prototype plan (Claude Code vs landscape tools), Quick-tier-only, with TDD framing per `tdd-core` / `python-dev` plugins and a parallel-diff harness sketch. Roadmap §0.2.0, CONTRIBUTING doc hierarchy, and the four landscape files cross-link to it.
 
 ### Changed
 
@@ -46,13 +56,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `docs/landscape-process.md` — process-stage survey (chunking, table/figure extraction, NER, RAG indexing, CanonicalDoc normalization)
-- `docs/landscape-output.md` — output-stage survey (rendering, office formats, templating, FormatConformance validators)
-- `docs/landscape-prior-art.md` — E2E pipeline prior art (arXiv 2025 surveys, OSS systems, commercial IDP) and USP gap analysis
+- `docs/landscape/process.md` — process-stage survey (chunking, table/figure extraction, NER, RAG indexing, CanonicalDoc normalization)
+- `docs/landscape/output.md` — output-stage survey (rendering, office formats, templating, FormatConformance validators)
+- `docs/landscape/prior-art.md` — E2E pipeline prior art (arXiv 2025 surveys, OSS systems, commercial IDP) and USP gap analysis
 
 ### Changed
 
-- `docs/landscape.md` → `docs/landscape-ingest.md`; expanded with source connectors (SharePoint, Confluence, Drive, S3, IMAP, Exchange) and crawling/discovery sections (polyfetch-scrape, trafilatura, httpx, pathlib, watchdog)
+- `docs/landscape.md` → `docs/landscape/ingest.md`; expanded with source connectors (SharePoint, Confluence, Drive, S3, IMAP, Exchange) and crawling/discovery sections (polyfetch-scrape, trafilatura, httpx, pathlib, watchdog)
 - `CONTRIBUTING.md` documentation hierarchy updated to reference the four landscape files
 
 ## [0.1.0] - 2026-04-23
