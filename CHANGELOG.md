@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - V1 leg of the parallel diff harness now runs in subscription-only environments (codespaces with `claude` CLI but no `ANTHROPIC_API_KEY`). Previously crashed at `_v1_client.make_client()`.
+- `_v1_client._call_via_cli` passes the user prompt via stdin instead of as a positional argv. Argv path raised `OSError: [Errno 7] Argument list too long` on the contract DOCX (220K chars of extracted text). Caught by the run-2 multi-sample E2E.
+
+### Added
+
+- `docs/prototype/results/2026-04-26-run-2-v1-cli.md` — first fully-paired V1+V2 harness run on all five locked samples; V1 dispatched via the `claude` CLI fallback. Includes per-sample axes, content-delta example, and faithfulness gaps surfaced by the run.
+- `docs/prototype/results/README.md` — index of harness runs (one file per run, dated).
 
 ### Added
 
@@ -37,7 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `.markdownlint.json` — `MD013: false` (line length) and `MD041.front_matter_title` per the imported rule, so frontmatter `title:` satisfies the first-heading check
 - `.claude/settings.json` `enabledPlugins` — `docs-governance@qte77-claude-code-utils`
 - YAML frontmatter on all `docs/landscape/*.md` and `docs/prototype/*.md` files; body H1 dropped (frontmatter `title` represents it per the rule)
-- `docs/prototype/results.md` — first-run results of the parallel diff harness on the five locked prototype samples (V2-only; V1 leg blocked pending [#30](https://github.com/qte77/doc-pipeline-engine/issues/30))
+- `docs/prototype/results/2026-04-26-run-1-v2-only.md` — first-run results of the parallel diff harness on the five locked prototype samples (V2-only; V1 leg blocked pending [#30](https://github.com/qte77/doc-pipeline-engine/issues/30)). Originally landed as `docs/prototype/results.md`; relocated under `results/` so per-run files accumulate without overwriting.
 
 ### Changed
 
