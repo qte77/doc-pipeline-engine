@@ -17,6 +17,7 @@ data accumulates without overwriting and trends are easy to read.
 | --- | --- | --- |
 | 2026-04-26 | [run 1 — V2 only](2026-04-26-run-1-v2-only.md) | First full harness run; V1 leg blocked by missing `ANTHROPIC_API_KEY`; diagram blocked by missing Tesseract. |
 | 2026-04-26 | [run 2 — V1 + V2 (V1 via Claude Code CLI)](2026-04-26-run-2-v1-cli.md) | First fully-paired V1+V2 run. V1 dispatched via `claude` CLI fallback ([#41](https://github.com/qte77/doc-pipeline-engine/pull/41)); diagram extracted via Tesseract installed by `make install_image_ocr` ([#37](https://github.com/qte77/doc-pipeline-engine/pull/37)). |
+| 2026-04-26 | [run 3 — V2 heading-tree](2026-04-26-run-3-v2-headings.md) | V2-only re-run after `v2_normalize` learns heuristic heading detection ([#33](https://github.com/qte77/doc-pipeline-engine/issues/33)). Legal goes 1 → 22 claims, spec 1 → 98; invoice and diagram stay at 1 (no detectable headings). |
 
 ## Sample roster
 

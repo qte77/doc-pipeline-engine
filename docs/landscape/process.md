@@ -80,6 +80,8 @@ Framework vs vector store are orthogonal. Recommended default: LlamaIndex (frame
 
 **Notes** — `CanonicalDoc.root` encodes a tree, not a flat list. docling's `DoclingDocument` is the closest existing schema; a thin wrapper adds the four missing fields. `tier_summary` is our invention — no existing tool produces it. The normalizer stage always generates it from `root` via the Quick/Comprehensive tier logic.
 
+- `v2_normalize` reconstructs a flat heading tree from the Kreuzberg-extracted plain text via three regex families (formal-prefix `SECTION`/`SEC.`/`CHAPTER`/`ARTICLE`/`PART`, numbered `5.1 Title`, glued numbered `1Title`) with a 50% density-cap fallback to single-leaf. Real nested hierarchy and docling-based normalize remain deferred to [§0.5.0](../roadmap.md#050--domain-packs) Comprehensive tier.
+
 ## What "canonical" means concretely
 
 Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
