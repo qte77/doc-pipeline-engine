@@ -18,9 +18,14 @@ bash scripts/download-samples.sh --download
 | Spec / certification | PDF + DOCX | `mech-elec-cert/` | Heading hierarchy + technical terms; multi-format A/B |
 | Diagrams / scanned | image / scanned PDF | `generic/` | Layout-only or image-only; OCR path stress |
 
-## Locking the five filenames
+## Locked filenames (first run, 2026-04-26)
 
-Concrete filenames are confirmed at first harness run. Until then, the
-selection criteria above stand in. After the first run, this file gets
-updated with the exact paths and sha256 of each sample, and the eval
-results land in [prototype-results.md](prototype-results.md).
+| Use case | Path | sha256 (head) |
+| --- | --- | --- |
+| Contract | `samples/contracts/uk-short-form-contract.docx` | `88c177fe3a74` |
+| Legal | `samples/legal/us/us-open-government-act-2007.pdf` | `3af32df1de87` |
+| Invoice | `samples/invoices/nifc-sf1034-invoice.pdf` | `bedf3200fa3c` |
+| Spec | `samples/mech-elec-cert/ti-ne555-datasheet.pdf` | `1df8d26a8bd7` |
+| Diagram | `samples/mech-elec-cert/wikimedia-arduino-uno-r3.jpg` | _(extract failed; see results)_ |
+
+Run findings live in [prototype-results.md](prototype-results.md).
