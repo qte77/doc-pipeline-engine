@@ -1,6 +1,6 @@
 .SILENT:
 .ONESHELL:
-.PHONY: install test test-contracts lint lint-md lint-links clean help
+.PHONY: install test test-contracts test-rerun test-fix-snapshots lint lint-md lint-links validate clean help
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -27,6 +27,12 @@ test:  ## Run full test suite
 test-contracts:  ## JSON schema round-trip tests
 	uv run pytest tests/test_contracts.py -v
 
+test-rerun:  ## Rerun only failed tests (use during fix iterations)
+	uv run pytest --lf -x
+
+test-fix-snapshots:  ## Run tests and auto-fix inline-snapshot expected values
+	uv run pytest --inline-snapshot=fix
+
 lint:  ## Lint Python with ruff
 	echo "--- lint$(if $(RUFF_QUIET), [quiet])"
 	uv run ruff check $(RUFF_QUIET) .
@@ -46,6 +52,13 @@ lint-links:  ## Check links in Markdown (lychee, see lychee.toml)
 	else
 		echo "lychee not installed — see https://github.com/lycheeverse/lychee"
 	fi
+
+validate:  ## Pre-commit gate: lint + test + lint-md + lint-links
+	set -e
+	$(MAKE) -s lint
+	$(MAKE) -s test
+	$(MAKE) -s lint-md
+	$(MAKE) -s lint-links
 
 
 # MARK: CLEAN

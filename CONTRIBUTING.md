@@ -25,9 +25,12 @@ enabled when §0.5 indexing wiring begins.
 | --- | --- |
 | `make test` | Full pytest suite |
 | `make test-contracts` | JSON schema round-trip tests only |
+| `make test-rerun` | Rerun only failed tests (`pytest --lf -x`) — fast TDD iteration |
+| `make test-fix-snapshots` | Auto-fix inline-snapshot expected values |
 | `make lint` | Ruff check on Python sources |
 | `make lint-md` | markdownlint on `**/*.md` (MD013 disabled) |
 | `make lint-links` | lychee link check |
+| `make validate` | Pre-commit gate: lint + test + lint-md + lint-links |
 | `make clean` | Remove `.pytest_cache`, `.ruff_cache`, `__pycache__` |
 | `make help` | List all recipes |
 
