@@ -11,7 +11,7 @@ Same input sample → both variants → identical output contract shape → mech
 ## Variant 1 — Claude Code + Anthropic API (Linux)
 
 | Stage | How |
-|---|---|
+| --- | --- |
 | Discover | `pathlib.rglob()` over `samples/` → `DiscoveryManifest` |
 | Extract — PDF | `claude_cli_adapter` posts file via Messages API `documents` block; Claude returns JSON matching `ExtractionBundle` |
 | Extract — DOCX/XLSX/PPTX | Preprocess with `python-docx` / `openpyxl` / `python-pptx` (flatten content), then Claude turn → `ExtractionBundle` |
@@ -25,7 +25,7 @@ Anthropic's office-document skills (`anthropics/skills`) are Claude.ai-only — 
 ## Variant 2 — Tools from the landscape
 
 | Stage | How |
-|---|---|
+| --- | --- |
 | Discover | `pathlib.rglob()` → `DiscoveryManifest` (shared with V1) |
 | Extract | **docling** (PDF/Office), **Kreuzberg** (long tail) → `ExtractionBundle`. See [landscape-ingest.md](landscape-ingest.md). |
 | Normalize | Thin Python adapter `DoclingDocument → CanonicalDoc` (adds `source_sha256`, `built_at`, runs tier-split). See [landscape-process.md → Normalization to CanonicalDoc](landscape-process.md#5-normalization-to-canonicaldoc). |
@@ -53,7 +53,7 @@ Per `tdd-core/testing-tdd` and `python-dev/testing-python` plugins (declared in 
 - Schema gates already TDD'd in [roadmap §0.1.0 — Contracts](roadmap.md#010--contracts) (38 round-trip tests)
 
 | Stage type | Tooling |
-|---|---|
+| --- | --- |
 | Pure functions (V2 discover, normalize, render) | pytest + inline-snapshot |
 | LLM stages (V1 extract, normalize, analyze, render) | pytest + Hypothesis property assertions |
 | Parallel diff harness | pytest with mock pipelines |

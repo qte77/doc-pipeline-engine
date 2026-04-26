@@ -22,7 +22,7 @@ enabled when §0.5 indexing wiring begins.
 ## Quality commands
 
 | Command | Purpose |
-|---|---|
+| --- | --- |
 | `make test` | Full pytest suite |
 | `make test-contracts` | JSON schema round-trip tests only |
 | `make lint` | Ruff check on Python sources |

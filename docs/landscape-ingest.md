@@ -16,7 +16,7 @@ Survey of candidates for the **ingest** stage — extraction backends, source co
 Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 
 | Tool | Primary role | License | Runtime | Formats | Verdict |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **docling** | Layout-aware PDF/Office → structured doc | MIT | Python + torch | PDF, DOCX, PPTX, HTML, images | **Primary** — best layout fidelity, native target for `CanonicalDoc`. |
 | **Kreuzberg** | Async multi-format extraction facade | MIT | Python (pypdfium2, Tesseract, python-docx, …) | PDF, Office, images, email, HTML | **Primary (breadth)** — covers the long tail with one adapter. |
 | **claude_cli_adapter** | LLM-based extraction via Claude Code CLI | n/a (our code) | Claude CLI | Any (LLM-mediated) | **Primary (reference)** — end-to-end wired first; cross-validation baseline. |
@@ -41,7 +41,7 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 Wired behind a `SourceConnector` interface. Emit file lists / blob handles consumed by extraction.
 
 | Tool | Source system | License | Runtime | Auth | Locality | Verdict |
-|---|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- | --- |
 | **msgraph-sdk** | SharePoint / OneDrive (MS Graph) | MIT | Python-native | OAuth 2.0 (MSAL / client-credentials) | cloud | **Primary** — official Microsoft SDK; covers SharePoint and OneDrive via single Graph surface. |
 | **O365** | SharePoint / OneDrive (MS Graph) | Apache-2.0 | Python-native | OAuth 2.0 / device flow | cloud | **Optional** — friendlier surface than msgraph-sdk; less actively maintained. |
 | **atlassian-python-api** | Confluence (REST v1/v2) | Apache-2.0 | Python-native | API token / OAuth 2.0 | cloud or on-prem | **Primary** — canonical community SDK; covers Cloud and Server; exposes page-tree traversal. |
@@ -65,7 +65,7 @@ Wired behind a `SourceConnector` interface. Emit file lists / blob handles consu
 Produce the file list that becomes `DiscoveryManifest` (`version`, `source`, `discovered_at`, `files`).
 
 | Tool | Role | License | Runtime | `DiscoveryManifest` fit | Verdict |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **polyfetch-scrape** (sibling repo) | Web crawl → URL/file list | Apache-2.0 (internal) | Python-native | Native — already emits structured manifests | **Primary (web)** — purpose-built sibling; reuse output as `DiscoveryManifest` directly. |
 | **trafilatura** | Web content extraction + URL crawl | Apache-2.0 | Python-native | Adapt URL list to `files[]` | **Optional (targeted web)** — lightweight; excellent boilerplate stripping; for single-site crawls where Scrapy overhead is unjustified. |
 | **httpx** | HTTP client for bespoke crawlers | BSD-3-Clause | Python-native | Raw — caller builds manifest | **Building block** — async-native, HTTP/2; recommended base for custom connector fetch loops. |

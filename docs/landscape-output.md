@@ -18,7 +18,7 @@ Output emits documents validating against `OutputFormat` (`id`, `version`, `tier
 ## 1. Rendering engines
 
 | Tool | License | Runtime | Output formats | Verdict |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **WeasyPrint** | BSD-3-Clause | Python-native | PDF, PNG (from HTML/CSS) | **Primary (PDF)** — pure-Python HTML→PDF; good CSS3 support; no Haskell/Rust install. |
 | **ReportLab** | BSD-3-Clause / commercial (RLPDF) | Python-native | PDF | **Primary (programmatic PDF)** — battle-tested; preferred for data-heavy tables and charts in Comprehensive. |
 | **Typst** | Apache-2.0 | External binary (Rust); `typst` Python binding | PDF, PNG, SVG | **Optional** — modern TeX replacement; Python binding removes shell-out. |
@@ -32,7 +32,7 @@ Output emits documents validating against `OutputFormat` (`id`, `version`, `tier
 ## 2. Office formats (write side)
 
 | Tool | License | Runtime | Formats | Verdict |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **python-docx** | MIT | Python-native | DOCX | **Primary** — standard DOCX writer; first-class `CanonicalDoc → DOCX` adapter target. |
 | **docxtpl** | LGPL-2.1 | Python-native (wraps python-docx) | DOCX | **Primary (templates)** — Jinja2-in-DOCX; LGPL is library-use safe for Apache-2.0 callers when not modifying the lib. Confirm with legal before redistributing modified copies. |
 | **python-pptx** | MIT | Python-native | PPTX | **Primary** — only serious Python PPTX writer. |
@@ -43,7 +43,7 @@ Output emits documents validating against `OutputFormat` (`id`, `version`, `tier
 ## 3. Templating engines
 
 | Tool | License | Runtime | Use case | Verdict |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **Jinja2** | BSD-3-Clause | Python-native | HTML, MD, LaTeX, Typst text templates | **Primary** — de-facto standard; covers Quick and Comprehensive text templates. |
 | **pystache** | MIT | Python-native | Mustache logic-less templates | **Optional** — pick where logic-less is required for cross-language template sharing. |
 | **chevron** | MIT | Python-native | Mustache | **Avoid** — unmaintained since 2021; prefer pystache. |
@@ -56,7 +56,7 @@ Output emits documents validating against `OutputFormat` (`id`, `version`, `tier
 Backs the `FormatConformance` contract. Practical pattern: rely on writer libraries for structural correctness in the hot path, delegate strict format validators (PDF/A, HTML5) to CI or opt-in extras.
 
 | Tool | License | Runtime | Validates | Role |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **python-docx structural check** | MIT | Python-native | DOCX (OOXML constructor raises on malformed) | **Runtime** — pair with `lxml` schema validation for deeper checks. |
 | **WeasyPrint runtime errors** | BSD-3-Clause | Python-native | HTML/CSS for PDF rendering | **Runtime** — raises on unrenderable input. |
 | **pymarkdownlnt** | MIT | Python-native | CommonMark / GFM Markdown | **Runtime** — backs Quick-tier Markdown conformance. |
@@ -71,7 +71,7 @@ Backs the `FormatConformance` contract. Practical pattern: rely on writer librar
 ## Recommended defaults vs. opt-in extras
 
 | Tier | Default (no extra) | Opt-in extra |
-|---|---|---|
+| --- | --- | --- |
 | PDF | WeasyPrint, ReportLab | Pandoc (`[pandoc]`), Typst (`[typst]`), Quarto (`[quarto]`) |
 | DOCX | python-docx, docxtpl | — |
 | XLSX/PPTX | openpyxl, python-pptx | xlsxwriter, odfpy |

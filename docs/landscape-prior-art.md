@@ -14,7 +14,7 @@ This file informs USP positioning. It is *not* a buyer's guide.
 ## 1. Academic prior art (arXiv, 2025)
 
 | Paper | What it covers | Relevance |
-|---|---|---|
+| --- | --- | --- |
 | **Agentic RAG: A Survey** ([arXiv:2501.09136](https://arxiv.org/abs/2501.09136)) | Taxonomy of agentic RAG architectures — agent cardinality, control structure, autonomy, knowledge representation. Names LlamaIndex Agentic Document Workflows as E2E reference. | Maps cleanly to our P1–P4 orchestration patterns; useful taxonomy reference. |
 | **RAG: Comprehensive Survey** ([arXiv:2506.00054](https://arxiv.org/abs/2506.00054)) | Adaptive / multi-source / query-refinement / hybrid retrieval families and their trade-offs. | Informs [§0.5.0](roadmap.md#050--domain-packs) RAG indexing choices in [landscape-process.md](landscape-process.md). |
 | **Systematic Review of RAG Systems** ([arXiv:2507.18910](https://arxiv.org/abs/2507.18910)) | Multi-library systematic review (ACL, IEEE, ACM, Scholar) through mid-2025. | Coverage map for gaps (eval, governance). |
@@ -27,7 +27,7 @@ This file informs USP positioning. It is *not* a buyer's guide.
 ## 2. OSS E2E systems
 
 | System | License | E2E scope | Position |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | **SciPhi-AI / R2R** ([repo](https://github.com/SciPhi-AI/R2R)) | Apache-2.0 | Ingest (PDF/DOCX/MD/MP3/PNG…), chunk, embed, KG extraction, hybrid search, agentic RAG, REST API | **Closest competitor** by feature surface. Difference: R2R is a deployed *service* (REST + Postgres + Docker compose); we are an *embeddable engine* with JSON contracts. |
 | **Unstructured.io** ([repo](https://github.com/Unstructured-IO/unstructured)) | Apache-2.0 (OSS core) + commercial API | Ingest + element-typed extraction + chunking; downstream RAG via partner libs | **Adjacent** — already a candidate processor (see [landscape-process.md](landscape-process.md)). Scope is ingest+extract; we cover all five stages with strict contracts. |
 | **LlamaIndex + LlamaParse + Agentic Document Workflows** ([LlamaIndex](https://github.com/run-llama/llama_index)) | MIT (LlamaIndex), commercial (LlamaParse) | Parse → index → agentic workflow over docs | **Inspiration, not competitor** — we *use* LlamaIndex as a candidate framework; ADW is one possible orchestration pattern over our stages. |

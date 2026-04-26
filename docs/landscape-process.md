@@ -15,7 +15,7 @@ Survey of candidates for the **process** stage — chunking, supplemental table/
 ## 1. Chunking strategies
 
 | Tool | Strategy | License | Runtime | Locality | Verdict |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **langchain-text-splitters** | Fixed-size, recursive, Markdown/HTML-aware | MIT | Python, CPU | local | **Primary** — zero-model splits; `MarkdownHeaderTextSplitter` maps onto `CanonicalDoc.root` heading tree. Slim sub-package avoids full LangChain footprint. |
 | **llama-index-core** node parsers | Semantic, layout-aware, sentence-window, hierarchical | MIT | Python; some pull sentence-transformers (GPU optional) | local | **Candidate** — `HierarchicalNodeParser` mirrors tier hierarchy; evaluate footprint. |
 | **semantic-chunker** | Embedding-similarity boundary detection | MIT | Python + sentence-transformers (~300 MB) | local | **Optional (Comprehensive)** — improves coherence; gate behind `[semantic]` extra. |
@@ -29,7 +29,7 @@ Survey of candidates for the **process** stage — chunking, supplemental table/
 When extraction backends (docling, Kreuzberg) miss or mangle tables/figures.
 
 | Tool | Role | License | Runtime | Locality | Verdict |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **pdfplumber** | Text + tables + bbox from PDFs | MIT | Python + pdfminer.six | local | **Primary (light fallback)** — no native deps beyond pdfminer; lower recall than Camelot but easy default. |
 | **Camelot** | Lattice + stream table extraction from PDFs | MIT | Python + Ghostscript + OpenCV | local | **Optional** — best lattice recall on born-digital PDFs; Ghostscript native dep. |
 | **img2table** | Heuristic table extraction from images and PDFs | Apache-2.0 | Python + OpenCV | local | **Optional** — CPU-only fallback for image/scan paths without GPU. |
@@ -40,7 +40,7 @@ When extraction backends (docling, Kreuzberg) miss or mangle tables/figures.
 ## 3. Entity extraction / NER
 
 | Tool | Approach | License | Runtime | Locality | Verdict |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **spaCy** | Rule + statistical NER, 50+ language models | MIT | Python; models 12–560 MB | local | **Primary** — deterministic, fast, no GPU for `en_core_web_sm/md`. |
 | **GLiNER** | Generative LM-based zero-shot NER | Apache-2.0 | Python + torch (~500 MB) | local | **Candidate (Comprehensive)** — domain-specific entities without retraining; gate behind `[ner-gliner]`. |
 | **Flair** | Contextual string embeddings NER | MIT | Python + torch (300 MB–1 GB) | local | **Optional** — strong on CoNLL; redundant if GLiNER adopted. |
@@ -54,7 +54,7 @@ When extraction backends (docling, Kreuzberg) miss or mangle tables/figures.
 Framework vs vector store are orthogonal. Recommended default: LlamaIndex (framework) + Chroma (store) — both Apache-2.0/MIT, embedded, no server.
 
 | Tool | Role | License | Runtime | Locality | Verdict |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | **llama-index-core** | RAG framework + ingestion pipeline | MIT | Python | local (LLM calls configurable) | **Primary (framework)** — `VectorStoreIndex` wraps any store. |
 | **Haystack (haystack-ai)** | RAG pipeline orchestration | Apache-2.0 | Python | local | **Alternative** — deeper graph; prefer LlamaIndex unless consumer already uses Haystack. |
 | **Chroma (chromadb)** | Embedded vector store | Apache-2.0 | Python; optional native HNSW | local | **Primary (store)** — zero-server, embedded, no Docker. |
@@ -65,7 +65,7 @@ Framework vs vector store are orthogonal. Recommended default: LlamaIndex (frame
 ## 5. Normalization to CanonicalDoc
 
 | Source / tool | What it provides | Gap vs `CanonicalDoc` | License | Verdict |
-|---|---|---|---|---|
+| --- | --- | --- | --- | --- |
 | **docling `DoclingDocument`** | Hierarchical doc tree with headings, tables, figures, text blocks; JSON-serializable | Missing `source_sha256`, `built_at`, `tier_summary`; table/figure refs need mapping to `root` leaves | MIT | **Primary normalization source** — richest structural fidelity; thin adapter adds provenance + tier split. |
 | **unstructured element schema** | Flat list of typed elements (Title, NarrativeText, Table, Image, …) | No hierarchy; reconstruct from sequence; no provenance | Apache-2.0 | **Secondary** — reconstruct `root` via heading-indent heuristic. Lossier than docling. |
 | **Pandoc AST** (via `pypandoc`) | Universal AST; 40+ formats | Pandoc binary GPL; AST is Haskell-native JSON; no provenance | GPL-2+ (Pandoc); MIT (`pypandoc`) | **Optional** — for Office/Markdown/RST sources docling handles poorly. Pandoc binary called as subprocess (does not link), but document the GPL gate. |

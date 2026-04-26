@@ -55,7 +55,7 @@ No hard dependencies on any orchestrator or consumer. Contracts are the public A
 ## Output tiers
 
 | Tier | Extraction | Template | Eval |
-|------|-----------|----------|------|
+| ------ | ----------- | ---------- | ------ |
 | **Quick** | Headings + key claims + top-5 entities | 1-page Markdown summary | Smoke (schema + 1 faithfulness) |
 | **Comprehensive** | Full canonical tree + RAG index + tables/figures/citations | IMRaD / tech-spec | RAGAs + TruLens + human-in-loop |
 
