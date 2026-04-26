@@ -26,3 +26,6 @@ jobs:
         uses: qte77/gha-llms-txt-action@7cb4f03bd69a23c0e561ce76e926cadc0d3d3b9f # v0.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          # The repo's GitHub Actions permissions don't allow PR creation.
+          # Push directly to main; llms.txt updates are auto-generated docs.
+          create_pr: false
