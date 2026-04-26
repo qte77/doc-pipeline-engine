@@ -14,7 +14,7 @@ Requires [uv](https://github.com/astral-sh/uv). Python version pinned in
 `pyproject.toml`.
 
 A reproducible Codespaces / VS Code dev container lives at
-`.devcontainer/setup_dev/devcontainer.json` (Python 3.13 + Claude Code +
+`.devcontainer/devcontainer.json` (Python 3.13 + Claude Code +
 ruff/markdownlint/lychee). On rebuild it runs `make setup_uv` then
 `make setup_dev`.
 

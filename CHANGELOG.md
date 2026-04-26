@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- `.devcontainer/setup_dev/devcontainer.json` — minimal reproducible Codespaces / VS Code dev container (Python 3.13 + Claude Code + ruff/markdownlint/lychee). `onCreateCommand` runs `make setup_uv`; `postCreateCommand` runs `make setup_dev`. Pattern lifted from `qte77/Agents-eval`.
+- `.devcontainer/devcontainer.json` — minimal reproducible Codespaces / VS Code dev container (Python 3.13 + Claude Code + ruff/markdownlint/lychee). `onCreateCommand` runs `make setup_uv`; `postCreateCommand` runs `make setup_dev`. Pattern lifted from `qte77/Agents-eval`.
 - `Makefile` `setup_uv`, `setup_dev`, `setup_claude_code`, `setup_npm_tools`, `setup_lychee` targets — wire the devcontainer's bootstrap chain (frozen `uv sync`, then full dev tooling via subtargets).
 - `Makefile` `install_image_ocr` — use-case-named on-demand install of `tesseract-ocr` + `tesseract-ocr-eng`. Resolves [#32](https://github.com/qte77/doc-pipeline-engine/issues/32) so the prototype harness can extract image samples (`samples/mech-elec-cert/wikimedia-arduino-uno-r3.jpg`) without OCRError.
 - `Makefile` `install_v2_nlp` — use-case-named on-demand install grouping `--extra v2` + `python -m spacy download en_core_web_sm` for V2 NER entities.

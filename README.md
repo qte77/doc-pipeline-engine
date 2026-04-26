@@ -16,7 +16,7 @@ make test_contracts # schema round-trip tests
 
 ## Devcontainer
 
-Reproducible dev env at `.devcontainer/setup_dev/devcontainer.json` (Python 3.13 + Claude Code + lint tooling). Optional system deps install on demand per use case:
+Reproducible dev env at `.devcontainer/devcontainer.json` (Python 3.13 + Claude Code + lint tooling). Optional system deps install on demand per use case:
 
 - `make install_image_ocr` — Tesseract for image-sample extraction
 - `make install_v2_nlp` — spaCy `en_core_web_sm` for V2 NER entities
