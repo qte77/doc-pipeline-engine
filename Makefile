@@ -1,6 +1,6 @@
 .SILENT:
 .ONESHELL:
-.PHONY: install test test-contracts test-rerun test-fix-snapshots lint lint-md lint-links validate clean help
+.PHONY: install install-models test test-contracts test-rerun test-fix-snapshots lint lint-md lint-links validate clean help
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -15,6 +15,9 @@ endif
 
 install:  ## Install dev deps (uv sync)
 	uv sync
+
+install-models:  ## Download spaCy en_core_web_sm (~12 MB) — needs --extra v2
+	uv run python -m spacy download en_core_web_sm
 
 
 # MARK: QUALITY

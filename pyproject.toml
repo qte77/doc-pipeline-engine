@@ -33,6 +33,27 @@ render = [
 v1 = [
   "anthropic>=0.40",
 ]
+# Install with: uv sync --extra v2
+# V2 pipeline leg: deterministic Python tools for normalize / analyze / render.
+# Marked optional for footprint (spaCy + transitive deps ~150 MB); local-only
+# by construction. spaCy needs `make install-models` for en_core_web_sm.
+# Note: spaCy currently lacks Python 3.14 wheels. Use `--extra v2-render`
+# (jinja2 only) on 3.14 environments; full `--extra v2` requires Python ≤ 3.13.
+v2 = [
+  "jinja2>=3.1",
+  "spacy>=3.7",
+]
+# Subset of v2 for environments where spaCy can't install (e.g. Python 3.14).
+# Enables v2_render and v2_normalize/v2_eval; v2_analyze runs without entities.
+v2-render = [
+  "jinja2>=3.1",
+]
+# Install with: uv sync --extra v2-eval
+# DeepEval faithfulness probe for V2 leg (local heuristic by default).
+# Wired by PR 6 harness; not used by v2_eval directly in v1 of the prototype.
+v2-eval = [
+  "deepeval>=0.20",
+]
 
 [dependency-groups]
 dev = [

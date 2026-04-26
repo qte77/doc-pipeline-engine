@@ -21,6 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `pyproject.toml` `[project.optional-dependencies]` `render` extra = `markdown>=3.5`, `python-docx>=1.1`, `weasyprint>=62`. Install with `uv sync --extra render`
 - V1 (Claude API) post-extraction stages: `stages/v1_normalize.py` (ExtractionBundle → CanonicalDoc), `stages/v1_analyze.py` (CanonicalDoc → AnalysisReport), `stages/v1_render.py` (AnalysisReport → RenderArtifacts via shared `render_artifacts`), `stages/v1_eval.py` (minimal pass-through EvalReport). Shared Anthropic helper at `stages/_v1_client.py` with deferred import + dependency-injectable `client` parameter for stub-based testing. Default model `claude-opus-4-7`.
 - `pyproject.toml` `[project.optional-dependencies]` `v1` extra = `anthropic>=0.40`. Install with `uv sync --extra v1`. V1 stages skipped in CI; integration smoke runs locally with `ANTHROPIC_API_KEY`.
+- V2 (deterministic Python tools) post-extraction stages: `stages/v2_normalize.py` (ExtractionBundle → CanonicalDoc), `stages/v2_analyze.py` (claims via heading-walk; entities via spaCy NER when available, empty otherwise), `stages/v2_render.py` (Jinja2 template → Markdown → `render_artifacts`), `stages/v2_eval.py` (minimal pass-through EvalReport). Jinja template at `stages/_jinja_templates/quick_summary.md.j2` packaged by hatchling.
+- `pyproject.toml` `[project.optional-dependencies]` `v2 = [jinja2, spacy]`, `v2-render = [jinja2]` (subset for Python 3.14 envs without spaCy wheels), `v2-eval = [deepeval]` (wired by PR 6 harness).
+- `Makefile` `install-models` target — `uv run python -m spacy download en_core_web_sm` (needed for V2 NER).
+- `CONTRIBUTING.md` documents the full extras taxonomy with locality flags.
 - `Makefile` targets `test-rerun` (`pytest --lf -x`), `test-fix-snapshots` (`pytest --inline-snapshot=fix`), and `validate` (lint + test + lint-md + lint-links pre-commit gate)
 
 ### Added
