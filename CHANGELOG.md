@@ -41,6 +41,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Package layout: `workers/` → `src/doc_pipeline_engine/`
 - Build system: setuptools → hatchling, pip → uv sync
 - Makefile: MARK sections, auto-help, lint-md, lint-links
-
-[Unreleased]: https://github.com/qte77/doc-pipeline-engine/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/qte77/doc-pipeline-engine/releases/tag/v0.1.0
