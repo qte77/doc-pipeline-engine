@@ -13,6 +13,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `.github/workflows/generate-sbom.yaml` — calls `qte77/gha-sbom-action@v0.1.0` on weekly cron + push-to-main; outputs SPDX SBOM to `docs/SBOM/`
+- `.github/workflows/write-llms-txt.yaml` — calls `qte77/gha-llms-txt-action@v0.1.0`; auto-generates `docs/llms.txt` from `.github/templates/llms.txt.tpl` whenever docs/src/governance change
+- `.github/templates/llms.txt.tpl` — llms.txt index template covering architecture, roadmap, prototype-plan, four landscape docs, and governance files
+
+### Added
+
 - [§0.2.0 — Runner](docs/roadmap.md#020--runner) scaffold: `runner.py` (stage chain + gate validation, halt-on-first-failure with `PipelineError` carrying stage and contract names), `base/adapter.py` (`AdapterBase` ABC), and `stages/__init__.py`
 - `stages/discover.py` — filesystem walk → `DiscoveryManifest` (sorted, sha256-hashed, glob-filtered)
 - `stages/extract.py` — Kreuzberg-backed adapter → `ExtractionBundle`; deferred import so the module loads without the optional extra

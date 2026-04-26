@@ -1,0 +1,26 @@
+name: Generate SBOM
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/SBOM/**"
+  schedule:
+    - cron: "0 0 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate-sbom:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Generate SBOM
+        uses: qte77/gha-sbom-action@82becb244dc8ec442a17d5b5e171d0a384909896 # v0.1.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
