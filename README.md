@@ -11,8 +11,15 @@ Modular document processing engine with contract-gated pipeline stages. Standalo
 
 ```bash
 make install        # uv sync
-make test-contracts # schema round-trip tests
+make test_contracts # schema round-trip tests
 ```
+
+## Devcontainer
+
+Reproducible dev env at `.devcontainer/devcontainer.json` (Python 3.13 + Claude Code + lint tooling). Optional system deps install on demand per use case:
+
+- `make install_image_ocr` — Tesseract for image-sample extraction
+- `make install_v2_nlp` — spaCy `en_core_web_sm` for V2 NER entities
 
 ## Docs
 

@@ -106,10 +106,11 @@ each for normalize/analyze/eval. Per-sample raw JSON in
 
 - **#30 — Claude Code headless fallback for V1.** Required to A/B at
   all without a paid API key. _Implementation queued in next session._
-- **Tesseract devcontainer step** — image samples can't extract until
-  this lands; affects the diagram leg of the A/B.
-- **V2 normalize: heading-tree reconstruction** — the single-leaf
-  shortcut produces structurally honest but semantically empty
-  AnalysisReports. Worth landing before §0.5.0 Comprehensive tier.
+- **Tesseract on demand** — fixed in [#32](https://github.com/qte77/doc-pipeline-engine/issues/32):
+  run `make install_image_ocr` when extracting image samples.
+- **V2 normalize: heading-tree reconstruction** — tracked in
+  [#33](https://github.com/qte77/doc-pipeline-engine/issues/33). The
+  single-leaf shortcut produces structurally honest but semantically
+  empty AnalysisReports. Worth landing before §0.5.0 Comprehensive tier.
 - **Re-run on Python 3.13 codespace** for spaCy NER coverage, or wait
   for spaCy 3.14 wheels.

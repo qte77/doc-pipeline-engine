@@ -1,0 +1,38 @@
+{
+  "name": "doc-pipeline-engine",
+  "image": "mcr.microsoft.com/vscode/devcontainers/python:3.13",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "anthropic.claude-code",
+        "charliermarsh.ruff",
+        "davidanson.vscode-markdownlint",
+        "donjayamanne.githistory",
+        "editorconfig.editorconfig",
+        "ms-python.debugpy",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-vscode.makefile-tools",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "yzhang.markdown-all-in-one"
+      ],
+      "settings": {
+        "dotfiles.repository": "qte77/dotfiles",
+        "dotfiles.installCommand": "install.sh",
+        "dotfiles.targetPath": "~/dotfiles",
+        "makefile.configureOnOpen": false,
+        "python.defaultInterpreterPath": "./.venv/bin/python"
+      }
+    }
+  },
+  "containerEnv": {
+    "UV_LINK_MODE": "copy",
+    "RTK_TELEMETRY_DISABLED": "1"
+  },
+  "onCreateCommand": "make setup_uv",
+  "postCreateCommand": "make setup_dev"
+}

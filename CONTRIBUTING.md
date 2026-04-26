@@ -13,6 +13,21 @@ make install        # uv sync — install dev dependencies
 Requires [uv](https://github.com/astral-sh/uv). Python version pinned in
 `pyproject.toml`.
 
+A reproducible Codespaces / VS Code dev container lives at
+`.devcontainer/devcontainer.json` (Python 3.13 + Claude Code +
+ruff/markdownlint/lychee). On rebuild it runs `make setup_uv` then
+`make setup_dev`.
+
+### On-demand use-case installs
+
+System-level deps that only some workflows need are installed by their
+use case (apt + Python extra + model in one target):
+
+| Command | Use case |
+| --- | --- |
+| `make install_image_ocr` | Extract image samples (installs `tesseract-ocr` + `tesseract-ocr-eng`) |
+| `make install_v2_nlp` | Run V2 leg with NER entities (installs `--extra v2` + spaCy `en_core_web_sm`) |
+
 Claude Code plugins declared in `.claude/settings.json`
 (`python-dev`, `commit-helper` from `qte77-claude-code-utils`,
 `context7` from `claude-plugins-official`) provide the testing and
@@ -37,22 +52,23 @@ Install per leg:
 ```bash
 uv sync --extra extract --extra render --extra v1   # V1 leg
 uv sync --extra extract --extra render --extra v2   # V2 leg, full
-make install-models                                  # spaCy en_core_web_sm
+make install_v2_nlp                                  # spaCy en_core_web_sm
 ```
 
 ## Quality commands
 
 | Command | Purpose |
 | --- | --- |
-| `make install-models` | Download spaCy `en_core_web_sm` (needed for V2 NER) |
+| `make install_v2_nlp` | Install `--extra v2` + spaCy `en_core_web_sm` (needed for V2 NER) |
+| `make install_image_ocr` | Install Tesseract + `eng` (needed for image-sample extraction) |
 | `make test` | Full pytest suite |
-| `make test-contracts` | JSON schema round-trip tests only |
-| `make test-rerun` | Rerun only failed tests (`pytest --lf -x`) — fast TDD iteration |
-| `make test-fix-snapshots` | Auto-fix inline-snapshot expected values |
+| `make test_contracts` | JSON schema round-trip tests only |
+| `make test_rerun` | Rerun only failed tests (`pytest --lf -x`) — fast TDD iteration |
+| `make test_fix_snapshots` | Auto-fix inline-snapshot expected values |
 | `make lint` | Ruff check on Python sources |
-| `make lint-md` | markdownlint on `**/*.md` (MD013 disabled) |
-| `make lint-links` | lychee link check |
-| `make validate` | Pre-commit gate: lint + test + lint-md + lint-links |
+| `make lint_md` | markdownlint on `**/*.md` (MD013 disabled) |
+| `make lint_links` | lychee link check |
+| `make validate` | Pre-commit gate: lint + test + lint_md + lint_links |
 | `make clean` | Remove `.pytest_cache`, `.ruff_cache`, `__pycache__` |
 | `make help` | List all recipes |
 
