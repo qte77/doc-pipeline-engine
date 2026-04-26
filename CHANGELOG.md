@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `docs/landscape-process.md` — process-stage survey (chunking, table/figure extraction, NER, RAG indexing, CanonicalDoc normalization)
+- `docs/landscape-output.md` — output-stage survey (rendering, office formats, templating, FormatConformance validators)
+- `docs/landscape-prior-art.md` — E2E pipeline prior art (arXiv 2025 surveys, OSS systems, commercial IDP) and USP gap analysis
+
+### Changed
+
+- `docs/landscape.md` → `docs/landscape-ingest.md`; expanded with source connectors (SharePoint, Confluence, Drive, S3, IMAP, Exchange) and crawling/discovery sections (polyfetch-scrape, trafilatura, httpx, pathlib, watchdog)
+- `CONTRIBUTING.md` documentation hierarchy updated to reference the four landscape files
+
 ## [0.1.0] - 2026-04-23
 
 ### Added
