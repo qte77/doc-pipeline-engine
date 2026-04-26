@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `docs/prototype-plan.md` — dual-variant E2E prototype plan (Claude Code vs landscape tools), Quick-tier-only, with TDD framing per `tdd-core` / `python-dev` plugins and a parallel-diff harness sketch. Roadmap §0.2.0, CONTRIBUTING doc hierarchy, and the four landscape files cross-link to it.
+
 ### Changed
 
 - `.claude/settings.json` enables `python-dev` and `commit-helper` plugins from the `qte77-claude-code-utils` marketplace; `CONTRIBUTING.md` documents the plugin set under Setup
