@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `stages/v2_normalize.py` — reconstructs a flat heading tree from Kreuzberg's plain text via three regex families (formal-prefix `SECTION`/`SEC.`/`CHAPTER`/`ARTICLE`/`PART`, numbered `5.1 Title`, glued numbered `1Title`). Each detected heading becomes one section node carrying `title` + body text; falls back to single-leaf on zero headings or detected density >50% of non-empty lines. Resolves [#33](https://github.com/qte77/doc-pipeline-engine/issues/33): V2 now produces N claims per document instead of one, matching V1's structural granularity. `v2_analyze` / `v2_render` / `v2_eval` untouched.
+
+### Added
+
+- `tests/test_stages_v2_normalize_headings.py` — five cases covering numbered-with-space, formal-prefix, numbered-glued splitting, density-cap fallback, and zero-heading fallback. All gated on `is_valid("CanonicalDoc", …)`.
+- `docs/prototype/results/2026-04-26-run-3-v2-headings.md` — V2-only re-run on the five locked samples after #33; legal goes 1 → 22 claims, spec 1 → 98; invoice/diagram correctly stay at 1.
+
 ### Added
 
 - `stages/_v1_client.py` backend dispatch — explicit injected client → Anthropic SDK with `ANTHROPIC_API_KEY` → `claude` CLI on PATH (uses Claude subscription auth) → clear error. Resolves [#30](https://github.com/qte77/doc-pipeline-engine/issues/30) so V1 stages run in environments without a cloud API key.
