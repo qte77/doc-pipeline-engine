@@ -81,6 +81,7 @@ Backs the `FormatConformance` contract. Practical pattern: rely on writer librar
 ## See also
 
 - [ai-agents-research / CC-office-document-skills.md](https://github.com/qte77/ai-agents-research/blob/main/docs/cc-native/plugins-ecosystem/CC-office-document-skills.md) — how Claude Code itself handles office documents at the orchestration layer (Anthropic's `/v1/skills` API for docx/xlsx/pptx/pdf). Complementary view: this file covers the engine-layer Python libraries; the linked file covers the CC integration layer above them.
+- [prototype-plan.md](prototype-plan.md) — how the rendering and office-format candidates surveyed here get exercised in the v1 dual-variant prototype.
 
 ## Open questions
 

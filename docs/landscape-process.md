@@ -1,6 +1,6 @@
 # Process Landscape
 
-Survey of candidates for the **process** stage — chunking, supplemental table/figure extraction, NER, RAG indexing, and normalization to `CanonicalDoc` (`ExtractionBundle → CanonicalDoc`, roadmap §0.5). Companion files: [landscape-ingest.md](landscape-ingest.md), [landscape-output.md](landscape-output.md), [landscape-prior-art.md](landscape-prior-art.md).
+Survey of candidates for the **process** stage — chunking, supplemental table/figure extraction, NER, RAG indexing, and normalization to `CanonicalDoc` (`ExtractionBundle → CanonicalDoc`, [roadmap [§0.5.0](roadmap.md#050--domain-packs).0](roadmap.md#050--domain-packs)). Companion files: [landscape-ingest.md](landscape-ingest.md), [landscape-output.md](landscape-output.md), [landscape-prior-art.md](landscape-prior-art.md).
 
 `CanonicalDoc` fields: `version`, `source_sha256`, `built_at`, `input_format`, `root` (normalized tree), `tier_summary` (Quick vs Comprehensive — see [architecture.md](architecture.md)). "Canonical" means a normalized tree rooted at `root` carrying tier-aware summary.
 
@@ -8,7 +8,7 @@ Survey of candidates for the **process** stage — chunking, supplemental table/
 
 1. **License compatibility** — Apache-2.0 / MIT preferred; AGPL/GPL opt-in only.
 2. **Runtime footprint** — Python-native preferred; model downloads and GPU requirements declared.
-3. **Data-locality fit** — local-only vs cloud-required; critical for §0.5 policy enforcement.
+3. **Data-locality fit** — local-only vs cloud-required; critical for [§0.5.0](roadmap.md#050--domain-packs) policy enforcement.
 4. **Format coverage / domain fit** — chunkers, NER models.
 5. **Maintenance signal** — active releases, non-trivial user base.
 
@@ -47,7 +47,7 @@ When extraction backends (docling, Kreuzberg) miss or mangle tables/figures.
 | **outlines** | Constrained LLM decoding for structured NER | Apache-2.0 | Python + torch + local LLM | local (with local model) | **Candidate (local-LLM)** — pairs with Ollama/vLLM; no cloud calls. |
 | **instructor** | Structured output via LLM function-calling | MIT | Python; OpenAI-compatible API | **cloud by default** | **Opt-in only** — violates `local-only` policy unless pointed at local vLLM. Gate behind `[ner-llm]` and require explicit endpoint config. |
 
-**Notes** — Data-locality is the critical axis. spaCy is the safe default. instructor/outlines are the precision ceiling; both require explicit opt-in. Cloud NER calls must be refused under §0.5 `local-only` profile.
+**Notes** — Data-locality is the critical axis. spaCy is the safe default. instructor/outlines are the precision ceiling; both require explicit opt-in. Cloud NER calls must be refused under [§0.5.0](roadmap.md#050--domain-packs) `local-only` profile.
 
 ## 4. RAG indexing
 
@@ -80,6 +80,10 @@ Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
 1. **Provenance is exact** — `source_sha256` is the cryptographic hash of the *bytes* that were extracted; `built_at` is the normalization timestamp. Together these identify which input + which extractor run produced this doc.
 2. **`root` is a tree** — heading hierarchy is preserved as nested structure, not as a flat element list. This is what enables tier-aware summarization (Quick = top headings + key claims; Comprehensive = full tree).
 3. **`tier_summary` is precomputed** — analysis stages do not re-derive it. This decouples downstream stages from the normalization choice and makes Quick output cheap.
+
+## See also
+
+- [prototype-plan.md](prototype-plan.md) — how the chunking, NER, and normalization candidates surveyed here get exercised in the v1 dual-variant prototype.
 
 ## Open questions
 
