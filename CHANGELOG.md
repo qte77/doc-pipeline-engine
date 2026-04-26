@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `.claude/settings.json` enables `python-dev` and `commit-helper` plugins from the `qte77-claude-code-utils` marketplace; `CONTRIBUTING.md` documents the plugin set under Setup
+
 ### Added
 
 - `docs/landscape-process.md` — process-stage survey (chunking, table/figure extraction, NER, RAG indexing, CanonicalDoc normalization)
