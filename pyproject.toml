@@ -10,6 +10,14 @@ dependencies = [
   "jsonschema>=4.21",
 ]
 
+[project.optional-dependencies]
+# Install with: uv sync --extra extract
+# Kreuzberg covers PDF/Office/images/email/text via Tesseract+pypdfium2.
+# MIT, local-only, no cloud.
+extract = [
+  "kreuzberg>=2.0",
+]
+
 [dependency-groups]
 dev = [
   "pytest>=8.0",
