@@ -21,6 +21,11 @@ Reproducible dev env at `.devcontainer/devcontainer.json` (Python 3.13 + Claude 
 - `make install_image_ocr` — Tesseract for image-sample extraction
 - `make install_v2_nlp` — spaCy `en_core_web_sm` for V2 NER entities
 
+V1 stages (Claude API leg) work with either `ANTHROPIC_API_KEY` set
+(uses the Anthropic SDK) or the `claude` CLI on PATH (uses the user's
+Claude subscription). Set neither and the stages raise with install
+hints.
+
 ## Docs
 
 - [Architecture](docs/architecture.md) — stage graph, runner vs stream, package layout

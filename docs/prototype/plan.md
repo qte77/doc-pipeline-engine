@@ -17,6 +17,12 @@ Same input sample → both variants → identical output contract shape → mech
 
 ## Variant 1 — Claude Code + Anthropic API (Linux)
 
+V1 stage helpers (`stages/_v1_client.py`) dispatch to whichever Claude
+backend is available: explicit injected client → Anthropic SDK with
+`ANTHROPIC_API_KEY` → `claude` CLI on PATH → clear error. The CLI path
+uses the user's Claude subscription auth, so V1 runs in environments
+without a cloud API key.
+
 | Stage | How |
 | --- | --- |
 | Discover | `pathlib.rglob()` over `samples/` → `DiscoveryManifest` |
