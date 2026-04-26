@@ -108,7 +108,7 @@ Produce the file list that becomes `DiscoveryManifest` (`version`, `source`, `di
 
 - docling: <https://github.com/docling-project/docling>
 - Kreuzberg: <https://github.com/kreuzberg-dev/kreuzberg>
-- GLM-OCR: <https://github.com/THUDM/GLM-4>
+- GLM-OCR: <https://github.com/zai-org/GLM-4>
 - PaddleOCR-VL: <https://github.com/PaddlePaddle/PaddleOCR>
 - Tesseract: <https://github.com/tesseract-ocr/tesseract>
 - PyMuPDF: <https://github.com/pymupdf/PyMuPDF>

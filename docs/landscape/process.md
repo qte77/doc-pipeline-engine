@@ -120,8 +120,8 @@ Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
 - spaCy: <https://github.com/explosion/spaCy>
 - GLiNER: <https://github.com/urchade/GLiNER>
 - Flair: <https://github.com/flairNLP/flair>
-- outlines: <https://github.com/outlines-dev/outlines>
-- instructor: <https://github.com/jxnl/instructor>
+- outlines: <https://github.com/dottxt-ai/outlines>
+- instructor: <https://github.com/567-labs/instructor>
 
 ### RAG indexing
 
