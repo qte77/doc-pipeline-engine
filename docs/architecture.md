@@ -1,4 +1,11 @@
-# Architecture
+---
+title: Architecture
+purpose: Stage graph, contracts, runtime modes, and design decisions for the pipeline engine
+created: 2026-04-23
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: technical
+---
 
 ## Core idea
 

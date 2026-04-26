@@ -1,4 +1,11 @@
-# Roadmap
+---
+title: Roadmap
+purpose: Versioned milestones (0.1 → 0.6+) with status, scope, and reasoning per release
+created: 2026-04-23
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: requirements
+---
 
 ## 0.1.0 — Contracts
 
