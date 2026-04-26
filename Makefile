@@ -1,6 +1,10 @@
 .SILENT:
 .ONESHELL:
-.PHONY: install install-models test test-contracts test-rerun test-fix-snapshots lint lint-md lint-links validate clean help
+.PHONY: \
+	install install-models install-image-ocr install-v2-nlp \
+	setup-uv setup-dev setup-claude-code setup-npm-tools setup-lychee \
+	test test-contracts test-rerun test-fix-snapshots \
+	lint lint-md lint-links validate clean help
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -16,8 +20,53 @@ endif
 install:  ## Install dev deps (uv sync)
 	uv sync
 
-install-models:  ## Download spaCy en_core_web_sm (~12 MB) — needs --extra v2
+setup-uv:  ## Bootstrap uv + frozen deps (devcontainer onCreateCommand)
+	pip install -q uv
+	uv sync --frozen
+
+setup-dev:  ## Full dev env: uv sync + claude-code + npm tools + lychee (devcontainer postCreateCommand)
+	uv sync
+	$(MAKE) -s setup-claude-code
+	$(MAKE) -s setup-npm-tools
+	$(MAKE) -s setup-lychee
+
+setup-claude-code:  ## Install Claude Code CLI
+	if command -v claude > /dev/null 2>&1; then
+		echo "claude already installed: $$(claude --version)"
+	else
+		curl -fsSL https://claude.ai/install.sh | bash
+		echo "claude installed: $$(claude --version)"
+	fi
+
+setup-npm-tools:  ## Install npm-based dev tools (markdownlint)
+	npm install -gs markdownlint-cli
+	echo "markdownlint version: $$(markdownlint --version)"
+
+setup-lychee:  ## Install lychee link checker (Rust binary, requires sudo)
+	if command -v lychee > /dev/null 2>&1; then
+		echo "lychee already installed: $$(lychee --version)"
+	else
+		curl -sL https://github.com/lycheeverse/lychee/releases/latest/download/lychee-x86_64-unknown-linux-gnu.tar.gz \
+			| sudo tar xz -C /usr/local/bin lychee
+		echo "lychee installed: $$(lychee --version)"
+	fi
+
+install-image-ocr:  ## Use case: extract image samples — installs Tesseract + eng (system pkg)
+	if command -v apt-get > /dev/null 2>&1; then
+		sudo apt-get update -qq && sudo apt-get install -y tesseract-ocr tesseract-ocr-eng
+	elif command -v dnf > /dev/null 2>&1; then
+		sudo dnf install -y tesseract tesseract-langpack-eng
+	else
+		echo "Unsupported package manager. Install tesseract-ocr + eng traineddata manually."
+		exit 1
+	fi
+	tesseract --list-langs
+
+install-v2-nlp:  ## Use case: V2 leg with NER entities — installs spaCy extra + en_core_web_sm
+	uv sync --extra v2
 	uv run python -m spacy download en_core_web_sm
+
+install-models: install-v2-nlp  ## Deprecated alias for install-v2-nlp; will be removed in §0.5.0
 
 
 # MARK: QUALITY

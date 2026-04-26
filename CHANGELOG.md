@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `.devcontainer/setup_dev/devcontainer.json` — minimal reproducible Codespaces / VS Code dev container (Python 3.13 + Claude Code + ruff/markdownlint/lychee). `onCreateCommand` runs `make setup-uv`; `postCreateCommand` runs `make setup-dev`. Pattern lifted from `qte77/Agents-eval`.
+- `Makefile` `setup-uv`, `setup-dev`, `setup-claude-code`, `setup-npm-tools`, `setup-lychee` targets — wire the devcontainer's bootstrap chain (frozen `uv sync`, then full dev tooling via subtargets).
+- `Makefile` `install-image-ocr` — use-case-named on-demand install of `tesseract-ocr` + `tesseract-ocr-eng`. Resolves [#32](https://github.com/qte77/doc-pipeline-engine/issues/32) so the prototype harness can extract image samples (`samples/mech-elec-cert/wikimedia-arduino-uno-r3.jpg`) without OCRError.
+- `Makefile` `install-v2-nlp` — use-case-named on-demand install grouping `--extra v2` + `python -m spacy download en_core_web_sm` for V2 NER entities.
+
+### Changed
+
+- `Makefile` `install-models` — kept as a one-line alias for `install-v2-nlp` for one release cycle; removal queued for §0.5.0. Naming convention going forward: `install-<use-case>` (each target installs the apt package + Python extra + model needed for one capability, in one command).
+
+### Added
+
 - `.claude/rules/frontmatter-convention.md` — exact import of `qte77-claude-code-utils/docs-governance/rules/frontmatter-convention.md`; enforces YAML frontmatter (`title`, `purpose`, `created`, `updated`, `validated_links`) on `**/*.md` outside the exempt set
 - `.markdownlint.json` — `MD013: false` (line length) and `MD041.front_matter_title` per the imported rule, so frontmatter `title:` satisfies the first-heading check
 - `.claude/settings.json` `enabledPlugins` — `docs-governance@qte77-claude-code-utils`

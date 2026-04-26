@@ -13,6 +13,21 @@ make install        # uv sync — install dev dependencies
 Requires [uv](https://github.com/astral-sh/uv). Python version pinned in
 `pyproject.toml`.
 
+A reproducible Codespaces / VS Code dev container lives at
+`.devcontainer/setup_dev/devcontainer.json` (Python 3.13 + Claude Code +
+ruff/markdownlint/lychee). On rebuild it runs `make setup-uv` then
+`make setup-dev`.
+
+### On-demand use-case installs
+
+System-level deps that only some workflows need are installed by their
+use case (apt + Python extra + model in one target):
+
+| Command | Use case |
+| --- | --- |
+| `make install-image-ocr` | Extract image samples (installs `tesseract-ocr` + `tesseract-ocr-eng`) |
+| `make install-v2-nlp` | Run V2 leg with NER entities (installs `--extra v2` + spaCy `en_core_web_sm`) |
+
 Claude Code plugins declared in `.claude/settings.json`
 (`python-dev`, `commit-helper` from `qte77-claude-code-utils`,
 `context7` from `claude-plugins-official`) provide the testing and
@@ -37,14 +52,15 @@ Install per leg:
 ```bash
 uv sync --extra extract --extra render --extra v1   # V1 leg
 uv sync --extra extract --extra render --extra v2   # V2 leg, full
-make install-models                                  # spaCy en_core_web_sm
+make install-v2-nlp                                  # spaCy en_core_web_sm
 ```
 
 ## Quality commands
 
 | Command | Purpose |
 | --- | --- |
-| `make install-models` | Download spaCy `en_core_web_sm` (needed for V2 NER) |
+| `make install-v2-nlp` | Install `--extra v2` + spaCy `en_core_web_sm` (needed for V2 NER) |
+| `make install-image-ocr` | Install Tesseract + `eng` (needed for image-sample extraction) |
 | `make test` | Full pytest suite |
 | `make test-contracts` | JSON schema round-trip tests only |
 | `make test-rerun` | Rerun only failed tests (`pytest --lf -x`) — fast TDD iteration |

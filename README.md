@@ -14,6 +14,13 @@ make install        # uv sync
 make test-contracts # schema round-trip tests
 ```
 
+## Devcontainer
+
+Reproducible dev env at `.devcontainer/setup_dev/devcontainer.json` (Python 3.13 + Claude Code + lint tooling). Optional system deps install on demand per use case:
+
+- `make install-image-ocr` — Tesseract for image-sample extraction
+- `make install-v2-nlp` — spaCy `en_core_web_sm` for V2 NER entities
+
 ## Docs
 
 - [Architecture](docs/architecture.md) — stage graph, runner vs stream, package layout
