@@ -29,3 +29,6 @@ htmlcov/
 # Project
 release/
 samples/
+
+# Claude Code (machine-local settings only)
+.claude/settings.local.json
