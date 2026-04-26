@@ -1,0 +1,31 @@
+# doc-pipeline-engine
+
+> Document processing pipeline engine —  adapters, contracts, domain packs, eval harnesses
+
+## Getting Started
+
+- [README](https://github.com/qte77/doc-pipeline-engine/blob/main/README.md): Project overview and quickstart
+- [Contributing](https://github.com/qte77/doc-pipeline-engine/blob/main/CONTRIBUTING.md): Setup, quality commands, plugins, optional extras
+
+## Architecture & Design
+
+- [Architecture](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/architecture.md): Stage graph, contracts, runtime modes, design decisions
+- [Roadmap](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/roadmap.md): Versioned milestones (0.1 → 0.6+)
+- [Prototype plan](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/prototype-plan.md): Dual-variant E2E prototype (Claude vs Python tools)
+
+## Tool surveys
+
+- [Landscape — Ingest](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-ingest.md): Extraction backends, source connectors, crawling
+- [Landscape — Process](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-process.md): Chunking, NER, RAG indexing, normalization
+- [Landscape — Output](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-output.md): Rendering, office formats, templating, conformance
+- [Landscape — Prior art](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-prior-art.md): E2E pipeline competitors and USP positioning
+
+## Governance
+
+- [Agent rules](https://github.com/qte77/doc-pipeline-engine/blob/main/AGENTS.md): AI-agent behavioral rules and quality thresholds
+- [Agent learnings](https://github.com/qte77/doc-pipeline-engine/blob/main/AGENT_LEARNINGS.md): Compound learnings across sessions
+- [Agent requests](https://github.com/qte77/doc-pipeline-engine/blob/main/AGENT_REQUESTS.md): Open escalations from agents
+
+## Optional
+
+- [Changelog](https://github.com/qte77/doc-pipeline-engine/blob/main/CHANGELOG.md): Release history (Keep a Changelog)
