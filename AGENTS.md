@@ -15,16 +15,6 @@ agents.** For technical workflows and coding standards, see
 
 **Rules** (`.claude/rules/`): Session-loaded constraints (always active)
 
-## Core Rules & AI Behavior
-
-- Follow SDLC principles: maintainability, modularity, reusability, adaptability
-- **Never assume missing context** - Ask questions if uncertain about requirements
-- **Never hallucinate libraries** - Only use packages verified in project dependencies
-- **Always confirm file paths exist** before referencing in code or tests
-- **Never delete existing code** unless explicitly instructed or documented refactoring
-- **Document new patterns** in AGENT_LEARNINGS.md (concise, laser-focused, streamlined)
-- **Request human feedback** in AGENT_REQUESTS.md (concise, laser-focused, streamlined)
-
 ## Decision Framework
 
 **Priority Order:** User instructions > AGENTS.md compliance > Documentation
