@@ -52,7 +52,7 @@ This file informs USP positioning. It is *not* a buyer's guide.
 Listed for architectural inspiration; not under evaluation as embeddable deps.
 
 - **ABBYY**, **Hyperscience**, **Rossum**, **Instabase** — full-stack IDP suites with proprietary classification and HITL review.
-- **Azure AI Document Intelligence** ([docs](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/)) — pre-built + custom models; closest cloud equivalent to our extraction tier.
+- **Azure AI Document Intelligence** ([docs](https://learn.microsoft.com/en-us/azure/ai-services/document-intelligence/?view=doc-intel-4.0.0)) — pre-built + custom models; closest cloud equivalent to our extraction tier.
 - **AWS Textract / Bedrock Data Automation** — see GenAI IDP Accelerator above.
 - **Google Document AI Workbench** ([docs](https://cloud.google.com/document-ai)) — managed extraction + custom processors.
 
