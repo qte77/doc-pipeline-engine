@@ -70,10 +70,11 @@ def test_v1_client_falls_back_to_cli_when_no_api_key(
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     monkeypatch.setattr(_v1_client, "_has_claude_cli", lambda: True)
 
-    captured: dict[str, list[str]] = {}
+    captured: dict[str, object] = {}
 
-    def _fake_run(cmd: list[str], **_kw: object) -> object:
+    def _fake_run(cmd: list[str], **kwargs: object) -> object:
         captured["cmd"] = cmd
+        captured["input"] = kwargs.get("input")
         return SimpleNamespace(
             stdout=json.dumps({"result": "from-cli", "is_error": False}),
             stderr="",
@@ -90,7 +91,8 @@ def test_v1_client_falls_back_to_cli_when_no_api_key(
     assert captured["cmd"][:2] == ["claude", "--print"]
     assert "--system-prompt" in captured["cmd"]
     assert "be terse" in captured["cmd"]
-    assert captured["cmd"][-1] == "hi"
+    assert "hi" not in captured["cmd"]  # user prompt goes via stdin, not argv
+    assert captured["input"] == "hi"
 
 
 def test_v1_client_raises_when_no_backend_available(

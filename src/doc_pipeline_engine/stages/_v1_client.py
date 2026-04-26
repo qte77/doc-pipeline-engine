@@ -79,14 +79,18 @@ def _call_via_sdk(
 
 
 def _call_via_cli(*, model: str, system: str, user: str) -> str:
+    # Pass the user prompt via stdin: positional argv hits E2BIG for long
+    # extracted-text inputs (200K+ chars). System prompt stays as a flag — it's
+    # always short and the CLI only accepts it that way.
     cmd = [
         "claude", "--print",
         "--output-format", "json",
         "--model", model,
         "--system-prompt", system,
-        user,
     ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    proc = subprocess.run(
+        cmd, input=user, capture_output=True, text=True, check=True
+    )
     payload = json.loads(proc.stdout)
     if payload.get("is_error"):
         raise RuntimeError(f"claude CLI returned error: {payload}")
