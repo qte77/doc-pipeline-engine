@@ -43,7 +43,7 @@ lint:  ## Lint Python with ruff
 lint-md:  ## Lint Markdown (markdownlint, disable MD013)
 	echo "--- lint-md"
 	if command -v markdownlint > /dev/null 2>&1; then
-		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --disable MD013
+		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --ignore 'outputs/**' --disable MD013
 	else
 		echo "markdownlint not installed — run: npm install -g markdownlint-cli"
 	fi
@@ -76,17 +76,17 @@ clean:  ## Remove caches
 
 
 help:  ## Show available recipes
-	@echo "Usage: make [recipe] [VERBOSE=1]"
-	@echo ""
-	@awk '/^# MARK:/ { \
-		section = substr($$0, index($$0, ":")+2); \
-		printf "\n\033[1m%s\033[0m\n", section \
-	} \
-	/^[a-zA-Z0-9_-]+:.*?##/ { \
-		helpMessage = match($$0, /## (.*)/); \
-		if (helpMessage) { \
-			recipe = $$1; \
-			sub(/:/, "", recipe); \
-			printf "  \033[36m%-22s\033[0m %s\n", recipe, substr($$0, RSTART + 3, RLENGTH) \
-		} \
+	echo "Usage: make [recipe] [VERBOSE=1]"
+	echo ""
+	awk '/^# MARK:/ {
+		section = substr($$0, index($$0, ":")+2)
+		printf "\n\033[1m%s\033[0m\n", section
+	}
+	/^[a-zA-Z0-9_-]+:.*?##/ {
+		helpMessage = match($$0, /## (.*)/)
+		if (helpMessage) {
+			recipe = $$1
+			sub(/:/, "", recipe)
+			printf "  \033[36m%-22s\033[0m %s\n", recipe, substr($$0, RSTART + 3, RLENGTH)
+		}
 	}' $(MAKEFILE_LIST)

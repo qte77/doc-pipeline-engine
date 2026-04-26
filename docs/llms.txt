@@ -11,14 +11,14 @@
 
 - [Architecture](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/architecture.md): Stage graph, contracts, runtime modes, design decisions
 - [Roadmap](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/roadmap.md): Versioned milestones (0.1 → 0.6+)
-- [Prototype plan](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/prototype-plan.md): Dual-variant E2E prototype (Claude vs Python tools)
+- [Prototype plan](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/prototype/plan.md): Dual-variant E2E prototype (Claude vs Python tools)
 
 ## Tool surveys
 
-- [Landscape — Ingest](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-ingest.md): Extraction backends, source connectors, crawling
-- [Landscape — Process](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-process.md): Chunking, NER, RAG indexing, normalization
-- [Landscape — Output](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-output.md): Rendering, office formats, templating, conformance
-- [Landscape — Prior art](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape-prior-art.md): E2E pipeline competitors and USP positioning
+- [Landscape — Ingest](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/ingest.md): Extraction backends, source connectors, crawling
+- [Landscape — Process](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/process.md): Chunking, NER, RAG indexing, normalization
+- [Landscape — Output](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/output.md): Rendering, office formats, templating, conformance
+- [Landscape — Prior art](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/prior-art.md): E2E pipeline competitors and USP positioning
 
 ## Governance
 

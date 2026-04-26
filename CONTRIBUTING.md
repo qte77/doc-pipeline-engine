@@ -97,11 +97,11 @@ Authoritative sources — update these, don't duplicate:
 - `README.md` — project overview, quickstart
 - `docs/architecture.md` — design decisions, contracts, runtime modes
 - `docs/roadmap.md` — versioned milestones (0.1 → 0.6+)
-- `docs/landscape-ingest.md` — ingest survey (extraction backends, source connectors, crawling)
-- `docs/landscape-process.md` — process survey (chunking, NER, RAG indexing, normalization)
-- `docs/landscape-output.md` — output survey (rendering, office formats, templating, conformance)
-- `docs/landscape-prior-art.md` — E2E pipeline prior art and USP positioning
-- `docs/prototype-plan.md` — dual-variant E2E prototype plan (Claude Code vs landscape tools)
+- `docs/landscape/ingest.md` — ingest survey (extraction backends, source connectors, crawling)
+- `docs/landscape/process.md` — process survey (chunking, NER, RAG indexing, normalization)
+- `docs/landscape/output.md` — output survey (rendering, office formats, templating, conformance)
+- `docs/landscape/prior-art.md` — E2E pipeline prior art and USP positioning
+- `docs/prototype/plan.md` — dual-variant E2E prototype plan (Claude Code vs landscape tools)
 - `AGENTS.md` — AI agent behavioral rules
 - `CONTRIBUTING.md` — this file
 

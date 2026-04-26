@@ -1,8 +1,15 @@
-# Output Landscape
+---
+title: Output Landscape
+purpose: Survey of rendering, office formats, templating, and conformance validators for the output stage
+created: 2026-04-26
+updated: 2026-04-26
+validated_links: 2026-04-26
+category: landscape
+---
 
-Survey of candidates for the **output** stage — rendering, office formats, templating, and `OutputFormat` / `FormatConformance` validators. Companion files: [landscape-ingest.md](landscape-ingest.md), [landscape-process.md](landscape-process.md), [landscape-prior-art.md](landscape-prior-art.md).
+Survey of candidates for the **output** stage — rendering, office formats, templating, and `OutputFormat` / `FormatConformance` validators. Companion files: [ingest.md](ingest.md), [process.md](process.md), [prior-art.md](prior-art.md).
 
-Output emits documents validating against `OutputFormat` (`id`, `version`, `tier`) and `FormatConformance` (`output_format_id`, `conformant`). Tiers from [architecture.md](architecture.md):
+Output emits documents validating against `OutputFormat` (`id`, `version`, `tier`) and `FormatConformance` (`output_format_id`, `conformant`). Tiers from [architecture.md](../architecture.md):
 
 - **Quick** — 1-page Markdown summary
 - **Comprehensive** — IMRaD / tech-spec; full canonical tree + tables/figures/citations
@@ -81,7 +88,7 @@ Backs the `FormatConformance` contract. Practical pattern: rely on writer librar
 ## See also
 
 - [ai-agents-research / CC-office-document-skills.md](https://github.com/qte77/ai-agents-research/blob/main/docs/cc-native/plugins-ecosystem/CC-office-document-skills.md) — how Claude Code itself handles office documents at the orchestration layer (Anthropic's `/v1/skills` API for docx/xlsx/pptx/pdf). Complementary view: this file covers the engine-layer Python libraries; the linked file covers the CC integration layer above them.
-- [prototype-plan.md](prototype-plan.md) — how the rendering and office-format candidates surveyed here get exercised in the v1 dual-variant prototype.
+- [../prototype/plan.md](../prototype/plan.md) — how the rendering and office-format candidates surveyed here get exercised in the v1 dual-variant prototype.
 
 ## Open questions
 
