@@ -19,10 +19,32 @@ Claude Code plugins declared in `.claude/settings.json`
 commit-workflow conventions used in this repo. `rag-core` will be
 enabled when §0.5 indexing wiring begins.
 
+### Optional extras
+
+The prototype's pipeline legs are gated behind `[project.optional-dependencies]`:
+
+| Extra | Purpose | Locality |
+| --- | --- | --- |
+| `extract` | Kreuzberg extractor (PDF/Office/images/email/text) | Local |
+| `render` | Markdown → DOCX + PDF (markdown / python-docx / WeasyPrint) | Local |
+| `v1` | Anthropic SDK for V1 (Claude API) leg | **Cloud** |
+| `v2` | spaCy + Jinja2 for V2 (Python tools) leg | Local |
+| `v2-render` | Jinja2 only — for environments where spaCy can't install (e.g. Python 3.14) | Local |
+| `v2-eval` | DeepEval faithfulness probe (wired by harness) | Local |
+
+Install per leg:
+
+```bash
+uv sync --extra extract --extra render --extra v1   # V1 leg
+uv sync --extra extract --extra render --extra v2   # V2 leg, full
+make install-models                                  # spaCy en_core_web_sm
+```
+
 ## Quality commands
 
 | Command | Purpose |
 | --- | --- |
+| `make install-models` | Download spaCy `en_core_web_sm` (needed for V2 NER) |
 | `make test` | Full pytest suite |
 | `make test-contracts` | JSON schema round-trip tests only |
 | `make test-rerun` | Rerun only failed tests (`pytest --lf -x`) — fast TDD iteration |
