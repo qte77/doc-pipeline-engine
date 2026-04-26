@@ -1,0 +1,26 @@
+# Lychee link checker configuration
+# https://lychee.cli.rs/usage/config/
+
+# Accept status codes commonly returned by bot-blocking sites
+# 403 = Forbidden (procycons.com, dl.acm.org, iso.org, etc.)
+# 401 = Unauthorized (huggingface.co/spaces, semanticscholar.org)
+# 429 = Too Many Requests (rate limiting)
+# 406 = Not Acceptable (arxiv.org — bot-blocking)
+accept = [200, 202, 204, 301, 401, 403, 406, 429]
+
+# Exclude paths from scanning
+exclude_path = [
+  ".venv",
+  "samples",
+]
+
+# Exclude URLs that are expected to fail in CI
+exclude = [
+  # --- Non-routable / local ---
+  "^https?://localhost",
+
+  # --- Not yet released ---
+  # v0.1.0 release tag URLs in CHANGELOG once tag is cut
+  "^https://github\\.com/qte77/doc-pipeline-engine/releases/tag/v",
+  "^https://github\\.com/qte77/doc-pipeline-engine/compare/v",
+]
