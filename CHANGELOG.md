@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `pyproject.toml` `[project.optional-dependencies]` `v2 = [jinja2, spacy]`, `v2-render = [jinja2]` (subset for Python 3.14 envs without spaCy wheels), `v2-eval = [deepeval]` (wired by PR 6 harness).
 - `Makefile` `install-models` target — `uv run python -m spacy download en_core_web_sm` (needed for V2 NER).
 - `CONTRIBUTING.md` documents the full extras taxonomy with locality flags.
+- Parallel diff harness — `harness.py` with `run_both(sample_path, ...)` returning a `DiffReport` (`LegResult` per variant: contracts, RenderArtifacts, wall_times, eval_report). Extraction is shared (Kreuzberg runs once); only post-extraction stages diverge per leg. CLI: `python -m doc_pipeline_engine.harness <sample> [--output-dir DIR]`. Renders md/docx/pdf to `outputs/<sha256>/v1/` and `outputs/<sha256>/v2/`.
+- `docs/prototype-samples.md` — selection criteria for the five prototype samples (one per use case: bidtender / legal / invoice / spec / diagrams).
+- `docs/prototype-results.md` — placeholder for first-run eval results across the five eval axes (faithfulness, determinism, latency, cost, layout fidelity).
 - `Makefile` targets `test-rerun` (`pytest --lf -x`), `test-fix-snapshots` (`pytest --inline-snapshot=fix`), and `validate` (lint + test + lint-md + lint-links pre-commit gate)
 
 ### Added
