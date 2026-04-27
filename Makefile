@@ -76,8 +76,8 @@ test:  ## Run full test suite
 	echo "--- test$(if $(PYTEST_QUIET), [quiet])"
 	uv run pytest $(PYTEST_QUIET)
 
-test_contracts:  ## JSON schema round-trip tests
-	uv run pytest tests/test_contracts.py -v
+test_contracts:  ## Pydantic model round-trip tests
+	uv run pytest tests/test_models_round_trip.py -v
 
 test_rerun:  ## Rerun only failed tests (use during fix iterations)
 	uv run pytest --lf -x

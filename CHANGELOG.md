@@ -19,7 +19,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `python -m doc_pipeline_engine.models dump <Name>` CLI — emits `Model.model_json_schema()` for any consumer that needs the JSON Schema view; replaces the deleted `contracts/*.schema.json` files.
 - `tests/test_models_round_trip.py` — round-trip + negative-validation cases over all 10 models (replaces `tests/test_contracts.py`).
-- `tests/test_models_schema_snapshot.py` — smoke tests over each emitted JSON Schema (`type=object`, required-set, `additionalProperties: false`).
 - `docs/adr/0001-pydantic-as-contract-source-of-truth.md` — records the decision and rejected alternatives.
 - `docs/roadmap.md` §0.2.1 entry.
 
