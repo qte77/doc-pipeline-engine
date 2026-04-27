@@ -26,7 +26,7 @@ use case (apt + Python extra + model in one target):
 | Command | Use case |
 | --- | --- |
 | `make install_image_ocr` | Extract image samples (installs `tesseract-ocr` + `tesseract-ocr-eng`) |
-| `make install_v2_nlp` | Run V2 leg with NER entities (installs `--extra v2` + spaCy `en_core_web_sm`) |
+| `make install_local_nlp` | Run `local` leg with NER entities (installs `--extra local` + spaCy `en_core_web_sm`) |
 
 Claude Code plugins declared in `.claude/settings.json`
 (`python-dev`, `commit-helper` from `qte77-claude-code-utils`,
@@ -42,24 +42,25 @@ The prototype's pipeline legs are gated behind `[project.optional-dependencies]`
 | --- | --- | --- |
 | `extract` | Kreuzberg extractor (PDF/Office/images/email/text) | Local |
 | `render` | Markdown → DOCX + PDF (markdown / python-docx / WeasyPrint) | Local |
-| `v1` | Anthropic SDK for V1 (Claude API) leg | **Cloud** |
-| `v2` | spaCy + Jinja2 for V2 (Python tools) leg | Local |
-| `v2-render` | Jinja2 only — for environments where spaCy can't install (e.g. Python 3.14) | Local |
-| `v2-eval` | DeepEval faithfulness probe (wired by harness) | Local |
+| `anthropic_sdk` | Anthropic Python SDK for the `anthropic_sdk` leg (vendor-configurable via `base_url` / Bedrock / Vertex) | **Cloud** by default |
+| `local` | spaCy + Jinja2 for the `local` leg (no LLM, no cloud calls) | Local |
+| `local-render` | Jinja2 only — for environments where spaCy can't install (e.g. Python 3.14) | Local |
+| `local-eval` | DeepEval faithfulness probe (wired by harness) | Local |
+| `v1` / `v2` / `v2-render` / `v2-eval` | **Deprecated** aliases of the renamed extras above; will be removed in §0.5.0 | (forwards to the new names) |
 
 Install per leg:
 
 ```bash
-uv sync --extra extract --extra render --extra v1   # V1 leg
-uv sync --extra extract --extra render --extra v2   # V2 leg, full
-make install_v2_nlp                                  # spaCy en_core_web_sm
+uv sync --extra extract --extra render --extra anthropic_sdk   # anthropic_sdk leg
+uv sync --extra extract --extra render --extra local           # local leg, full
+make install_local_nlp                                         # spaCy en_core_web_sm
 ```
 
 ## Quality commands
 
 | Command | Purpose |
 | --- | --- |
-| `make install_v2_nlp` | Install `--extra v2` + spaCy `en_core_web_sm` (needed for V2 NER) |
+| `make install_local_nlp` | Install `--extra local` + spaCy `en_core_web_sm` (needed for `local` leg NER) |
 | `make install_image_ocr` | Install Tesseract + `eng` (needed for image-sample extraction) |
 | `make test` | Full pytest suite |
 | `make test_contracts` | JSON schema round-trip tests only |

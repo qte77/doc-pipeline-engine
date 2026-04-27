@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Pipeline legs renamed**: `v1` → `anthropic_sdk`, `v2` → `local`. The PR-ordering labels obscured what the legs actually do; the new names describe the transport flexibility (Anthropic SDK can also point at Bedrock / Vertex / local LLM gateways) and the locality property (`local` does no LLM and no cloud calls). All `stages/v{1,2}_*.py` files renamed via `git mv`; `harness.py` `DiffReport` fields, axes keys, and CLI flag (`--anthropic-sdk-model`) updated; `pyproject.toml` extras renamed (`anthropic_sdk`, `local`, `local-render`, `local-eval`); `Makefile` `install_v2_nlp` → `install_local_nlp`. The old extras + Makefile target ship as deprecated aliases for one release cycle. Output dirs change from `outputs/<sha>/v1/` → `outputs/<sha>/anthropic_sdk/` and `v2/` → `local/`. Forward-looking docs (architecture / roadmap / CONTRIBUTING / prototype plan / landscape) adopt the new names; historical run-1/2/3 results keep `v1`/`v2` wording as snapshots. See [ADR-0003](docs/adr/0003-rename-legs-anthropic-sdk-local.md).
+
 ### Added
 
 - `mkdocs.yaml` at repo root — mirrors [`qte77/Agents-eval/mkdocs.yaml`](https://github.com/qte77/Agents-eval/blob/main/mkdocs.yaml). material theme with dual-palette `prefers-color-scheme` toggle, mkdocstrings + autorefs, nav covers prose docs + auto-generated API ref. Site name/description/repo_url substituted at build time via `<gha_sed_*>` placeholders.
