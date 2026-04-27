@@ -7,6 +7,8 @@
 
 Modular document processing engine with contract-gated pipeline stages. Standalone module — usable independently or as a component in larger systems (e.g. polyforge, office-polyforge).
 
+![Pipeline overview — Discover → Extract → V1/V2 fork → Eval](docs/assets/architecture-bird.svg)
+
 ## Quickstart
 
 ```bash

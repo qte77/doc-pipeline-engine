@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-label="doc-pipeline-engine pipeline overview">
+  <title>doc-pipeline-engine — bird's-eye pipeline</title>
+  <desc>Discover and Extract feed two parallel legs (V1 Claude API and V2 deterministic Python tools) through Normalize, Analyze, and Render; both converge in a shared Eval stage. Wires are labelled with the contract name passed between stages.</desc>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+    .bg { fill: #ffffff; }
+    .node { fill: #f5f7fa; stroke: #1f2933; stroke-width: 1.5; }
+    .v1 { fill: #fdecef; stroke: #b3203a; }
+    .v2 { fill: #e7f3fb; stroke: #0a558c; }
+    .label { font: 600 14px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #1f2933; text-anchor: middle; }
+    .lane-label { font: 700 12px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #1f2933; text-anchor: start; }
+    .v1-label { fill: #b3203a; }
+    .v2-label { fill: #0a558c; }
+    .edge { stroke: #1f2933; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    .edge-label { font: 500 11px ui-monospace, "SFMono-Regular", monospace; fill: #52606d; text-anchor: middle; }
+    .arrow-head { fill: #1f2933; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #0d1117; }
+      .node { fill: #161b22; stroke: #c9d1d9; }
+      .v1 { fill: #2a141a; stroke: #f17b96; }
+      .v2 { fill: #0c2436; stroke: #79b8e6; }
+      .label, .lane-label { fill: #c9d1d9; }
+      .v1-label { fill: #f17b96; }
+      .v2-label { fill: #79b8e6; }
+      .edge { stroke: #c9d1d9; }
+      .edge-label { fill: #8b949e; }
+      .arrow-head { fill: #c9d1d9; }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path class="arrow-head" d="M0,0 L10,5 L0,10 z" />
+    </marker>
+  </defs>
+  <rect class="bg" width="100%" height="100%" />
+  <text class="lane-label v1-label" x="20" y="120">V1 — Claude API</text>
+  <text class="lane-label v2-label" x="20" y="240">V2 — Python tools</text>
+  <rect class="node" x="20" y="150" width="120" height="60" rx="8" />
+  <text class="label" x="80" y="184">Discover</text>
+  <rect class="node" x="200" y="150" width="120" height="60" rx="8" />
+  <text class="label" x="260" y="184">Extract</text>
+  <rect class="node v1" x="380" y="80" width="120" height="60" rx="8" />
+  <text class="label" x="440" y="114">Normalize V1</text>
+  <rect class="node v1" x="540" y="80" width="120" height="60" rx="8" />
+  <text class="label" x="600" y="114">Analyze V1</text>
+  <rect class="node v1" x="700" y="80" width="120" height="60" rx="8" />
+  <text class="label" x="760" y="114">Render V1</text>
+  <rect class="node v2" x="380" y="220" width="120" height="60" rx="8" />
+  <text class="label" x="440" y="254">Normalize V2</text>
+  <rect class="node v2" x="540" y="220" width="120" height="60" rx="8" />
+  <text class="label" x="600" y="254">Analyze V2</text>
+  <rect class="node v2" x="700" y="220" width="120" height="60" rx="8" />
+  <text class="label" x="760" y="254">Render V2</text>
+  <rect class="node" x="850" y="150" width="90" height="60" rx="8" />
+  <text class="label" x="895" y="184">Eval</text>
+  <path class="edge" d="M140,180 L200,180" />
+  <text class="edge-label" x="170" y="172">DiscoveryManifest</text>
+  <path class="edge" d="M320,170 L380,120" />
+  <text class="edge-label" x="350" y="138">ExtractionBundle</text>
+  <path class="edge" d="M320,190 L380,250" />
+  <text class="edge-label" x="350" y="226">ExtractionBundle</text>
+  <path class="edge" d="M500,110 L540,110" />
+  <text class="edge-label" x="520" y="102">CanonicalDoc</text>
+  <path class="edge" d="M660,110 L700,110" />
+  <text class="edge-label" x="680" y="102">AnalysisReport</text>
+  <path class="edge" d="M500,250 L540,250" />
+  <text class="edge-label" x="520" y="272">CanonicalDoc</text>
+  <path class="edge" d="M660,250 L700,250" />
+  <text class="edge-label" x="680" y="272">AnalysisReport</text>
+  <path class="edge" d="M820,120 L850,170" />
+  <text class="edge-label" x="850" y="138">RenderArtifacts</text>
+  <path class="edge" d="M820,250 L850,200" />
+  <text class="edge-label" x="850" y="226">RenderArtifacts</text>
+  <text class="edge-label" x="895" y="232">→ EvalReport</text>
+</svg>
