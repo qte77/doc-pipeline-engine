@@ -2,7 +2,7 @@
 title: Architecture
 purpose: Stage graph, contracts, runtime modes, and design decisions for the pipeline engine
 created: 2026-04-23
-updated: 2026-04-26
+updated: 2026-04-27
 validated_links: 2026-04-26
 category: technical
 ---
@@ -46,14 +46,18 @@ Reserved stages (stub contracts, wired later):
 ## Package layout
 
 ```text
-contracts/                          JSON schemas (the load-bearing interface)
 src/doc_pipeline_engine/
-  base/contracts.py                 Schema loader + gate validator
+  models/                           Pydantic v2 contract models (load-bearing interface)
+  base/contracts.py                 Pydantic-backed gate validator (validate / is_valid)
   base/adapter.py                   Adapter ABC (0.4.0)
   runner.py                         Stage chain runner (0.2.0)
   cli.py                            NDJSON CLI wrappers (0.3.0)
   stages/                           Stage implementations (0.2.0+)
 ```
+
+Each contract has a single Pydantic model under `models/`; the JSON
+Schema view is regenerated on demand via `python -m
+doc_pipeline_engine.models dump <Name>` (no on-disk schema files).
 
 ## Standalone by design
 
