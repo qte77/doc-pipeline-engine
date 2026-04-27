@@ -779,8 +779,21 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+anthropic-sdk = [
+    { name = "anthropic" },
+]
 extract = [
     { name = "kreuzberg" },
+]
+local = [
+    { name = "jinja2" },
+    { name = "spacy" },
+]
+local-eval = [
+    { name = "deepeval" },
+]
+local-render = [
+    { name = "jinja2" },
 ]
 render = [
     { name = "markdown" },
@@ -816,18 +829,22 @@ docs = [
 
 [package.metadata]
 requires-dist = [
-    { name = "anthropic", marker = "extra == 'v1'", specifier = ">=0.40" },
-    { name = "deepeval", marker = "extra == 'v2-eval'", specifier = ">=0.20" },
-    { name = "jinja2", marker = "extra == 'v2'", specifier = ">=3.1" },
-    { name = "jinja2", marker = "extra == 'v2-render'", specifier = ">=3.1" },
+    { name = "anthropic", marker = "extra == 'anthropic-sdk'", specifier = ">=0.40" },
+    { name = "deepeval", marker = "extra == 'local-eval'", specifier = ">=0.20" },
+    { name = "doc-pipeline-engine", extras = ["anthropic-sdk"], marker = "extra == 'v1'" },
+    { name = "doc-pipeline-engine", extras = ["local"], marker = "extra == 'v2'" },
+    { name = "doc-pipeline-engine", extras = ["local-eval"], marker = "extra == 'v2-eval'" },
+    { name = "doc-pipeline-engine", extras = ["local-render"], marker = "extra == 'v2-render'" },
+    { name = "jinja2", marker = "extra == 'local'", specifier = ">=3.1" },
+    { name = "jinja2", marker = "extra == 'local-render'", specifier = ">=3.1" },
     { name = "kreuzberg", marker = "extra == 'extract'", specifier = ">=2.0" },
     { name = "markdown", marker = "extra == 'render'", specifier = ">=3.5" },
     { name = "pydantic", specifier = ">=2.7" },
     { name = "python-docx", marker = "extra == 'render'", specifier = ">=1.1" },
-    { name = "spacy", marker = "extra == 'v2'", specifier = ">=3.7" },
+    { name = "spacy", marker = "extra == 'local'", specifier = ">=3.7" },
     { name = "weasyprint", marker = "extra == 'render'", specifier = ">=62" },
 ]
-provides-extras = ["extract", "render", "v1", "v2", "v2-render", "v2-eval"]
+provides-extras = ["extract", "render", "anthropic-sdk", "local", "local-render", "local-eval", "v1", "v2", "v2-render", "v2-eval"]
 
 [package.metadata.requires-dev]
 dev = [

@@ -1,7 +1,7 @@
 .SILENT:
 .ONESHELL:
 .PHONY: \
-	install install_models install_image_ocr install_v2_nlp \
+	install install_models install_image_ocr install_local_nlp install_v2_nlp \
 	setup_uv setup_dev setup_claude_code setup_npm_tools setup_lychee \
 	test test_contracts test_rerun test_fix_snapshots \
 	lint lint_md lint_links validate clean help \
@@ -63,11 +63,13 @@ install_image_ocr:  ## Use case: extract image samples — installs Tesseract + 
 	fi
 	tesseract --list-langs
 
-install_v2_nlp:  ## Use case: V2 leg with NER entities — installs spaCy extra + en_core_web_sm
-	uv sync --extra v2
+install_local_nlp:  ## Use case: `local` leg with NER entities — installs spaCy extra + en_core_web_sm
+	uv sync --extra local
 	uv run python -m spacy download en_core_web_sm
 
-install_models: install_v2_nlp  ## Deprecated alias for install_v2_nlp; will be removed in §0.5.0
+install_v2_nlp: install_local_nlp  ## Deprecated alias for install_local_nlp; will be removed in §0.5.0
+
+install_models: install_local_nlp  ## Deprecated alias for install_local_nlp; will be removed in §0.5.0
 
 
 # MARK: QUALITY
