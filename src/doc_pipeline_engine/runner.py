@@ -9,18 +9,16 @@
 
 A stage is a 3-tuple ``(name, callable, output_contract_name)``. The runner
 threads the output of each stage into the next, validating the output
-against its declared contract via `base.contracts.validate`. The chain
-halts on the first validation failure with a `PipelineError` carrying the
-offending stage name and contract.
+against its declared contract via :func:`base.contracts.validate`. The
+chain halts on the first validation failure with a :class:`PipelineError`
+carrying the offending stage name and contract.
 """
 from __future__ import annotations
 
 from collections.abc import Callable
 from typing import Any
 
-import jsonschema
-
-from doc_pipeline_engine.base.contracts import validate
+from doc_pipeline_engine.base.contracts import ContractValidationError, validate
 
 StageCallable = Callable[[dict[str, Any]], dict[str, Any]]
 Stage = tuple[str, StageCallable, str]
@@ -39,14 +37,26 @@ class PipelineError(Exception):
 
 
 def run(stages: list[Stage], seed: dict[str, Any]) -> list[dict[str, Any]]:
-    """Execute stages in order, validating each output against its contract."""
+    """Execute stages in order, validating each output against its contract.
+
+    Args:
+        stages: Ordered list of ``(name, fn, contract_name)`` tuples.
+        seed: Initial input handed to the first stage.
+
+    Returns:
+        List of stage outputs in execution order.
+
+    Raises:
+        PipelineError: on the first contract failure; subsequent stages do
+        not run.
+    """
     outputs: list[dict[str, Any]] = []
     current: dict[str, Any] = seed
     for stage_name, fn, contract_name in stages:
         result = fn(current)
         try:
             validate(contract_name, result)
-        except jsonschema.ValidationError as e:
+        except ContractValidationError as e:
             raise PipelineError(stage_name, contract_name, e.message) from e
         outputs.append(result)
         current = result
