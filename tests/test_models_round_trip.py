@@ -5,51 +5,25 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+"""Pydantic-model round-trip + negative-validation tests.
 
-"""Schema round-trip tests: every contract loads as valid JSON Schema, and
-a minimal valid instance round-trips. Also: known-invalid instances fail.
-
-This is the v0.1 contract floor - if these pass, any adapter / stage can be
-wired against a stable contract surface.
+Replaces the JSON-Schema-era ``tests/test_contracts.py``. Each minimal
+valid instance round-trips through ``model_validate`` →
+``model_dump(mode="json")`` → ``model_validate`` and stays equal; each
+named negative case fails via ``is_valid`` returning False.
 """
 from __future__ import annotations
 
 import json
 from datetime import datetime, timezone
 
-import jsonschema
 import pytest
 
-from doc_pipeline_engine.base.contracts import (
-    CONTRACTS_DIR,
-    SCHEMA_NAMES,
-    is_valid,
-    load_schema,
-    validate,
-)
+from doc_pipeline_engine.base.contracts import SCHEMA_NAMES, is_valid, validate
+from doc_pipeline_engine.models import REGISTRY
 
 SHA_ZERO = "0" * 64
 NOW = datetime.now(timezone.utc).isoformat()
-
-
-@pytest.mark.parametrize("name", SCHEMA_NAMES)
-def test_schema_file_exists(name: str) -> None:
-    assert (CONTRACTS_DIR / f"{name}.schema.json").exists()
-
-
-@pytest.mark.parametrize("name", SCHEMA_NAMES)
-def test_schema_is_valid_jsonschema(name: str) -> None:
-    schema = load_schema(name)
-    jsonschema.Draft202012Validator.check_schema(schema)
-
-
-# ---- Minimal valid instances --------------------------------------------
 
 
 def _min_discovery() -> dict:
@@ -71,9 +45,7 @@ def _min_discovery() -> dict:
 def _min_classification() -> dict:
     return {
         "version": "0.1.0",
-        "items": [
-            {"path": "a.pdf", "domain": "generic", "confidence": 0.9}
-        ],
+        "items": [{"path": "a.pdf", "domain": "generic", "confidence": 0.9}],
     }
 
 
@@ -122,9 +94,7 @@ def _min_analysis() -> dict:
         "version": "0.1.0",
         "source_sha256": SHA_ZERO,
         "analyzed_at": NOW,
-        "claims": [
-            {"id": "c1", "text": "x is y", "node_refs": ["s.1"]}
-        ],
+        "claims": [{"id": "c1", "text": "x is y", "node_refs": ["s.1"]}],
         "entities": [],
     }
 
@@ -135,18 +105,14 @@ def _min_evaluation_report() -> dict:
         "evaluated_at": NOW,
         "tier": "quick",
         "verdict": "pass",
-        "scores": {
-            "schema_valid": {"value": 1.0, "threshold": 1.0, "passed": True}
-        },
+        "scores": {"schema_valid": {"value": 1.0, "threshold": 1.0, "passed": True}},
     }
 
 
 def _min_format_match() -> dict:
     return {
         "version": "0.1.0",
-        "matches": [
-            {"format_id": "generic/any-document", "confidence": 0.5}
-        ],
+        "matches": [{"format_id": "generic/any-document", "confidence": 0.5}],
     }
 
 
@@ -189,14 +155,23 @@ MIN_INSTANCES = {
 
 
 @pytest.mark.parametrize("name", SCHEMA_NAMES)
-def test_min_valid_instance_roundtrips(name: str) -> None:
+def test_registry_covers_every_schema_name(name: str) -> None:
+    assert name in REGISTRY
+
+
+@pytest.mark.parametrize("name", SCHEMA_NAMES)
+def test_min_valid_instance_round_trips(name: str) -> None:
     instance = MIN_INSTANCES[name]()
     validate(name, instance)
-    reloaded = json.loads(json.dumps(instance))
+
+    model = REGISTRY[name]
+    dumped = model.model_validate(instance).model_dump(mode="json", exclude_none=True)
+    reloaded = json.loads(json.dumps(dumped))
+
     assert is_valid(name, reloaded)
 
 
-# ---- Known-invalid instances (schema drift / missing required) ----------
+# ---- Known-invalid instances ---------------------------------------------
 
 
 def test_extraction_missing_required_field_fails() -> None:

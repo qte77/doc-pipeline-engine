@@ -2,7 +2,7 @@
 title: Roadmap
 purpose: Versioned milestones (0.1 → 0.6+) with status, scope, and reasoning per release
 created: 2026-04-23
-updated: 2026-04-26
+updated: 2026-04-27
 validated_links: 2026-04-26
 category: requirements
 ---
@@ -15,7 +15,7 @@ Schemas define the interface between every pipeline stage. Nothing runs without 
 
 **Delivered**:
 
-- 10 JSON schemas in `contracts/` (5 core, 5 reserved stubs)
+- 10 JSON schemas in `contracts/` (5 core, 5 reserved stubs) — superseded by §0.2.1 (Pydantic models)
 - Gate validator (`src/doc_pipeline_engine/base/contracts.py`)
 - Schema round-trip tests (38 tests)
 - Sample download script (~95 files across 8 categories)
@@ -41,6 +41,23 @@ Stage chain that passes JSON between stages in-process. Minimum viable pipeline.
 - `src/doc_pipeline_engine/runner.py` — ordered stage list, loop + validate
 - Stage functions as a protocol/ABC (input contract type → output contract type)
 - Wire stub stages that emit minimal valid contracts to prove the chain
+
+## 0.2.1 — Typed contracts
+
+**Status**: done
+
+Pydantic v2 models replace the JSON-Schema gate. Models become the single source of truth; the JSON Schema view stays available on demand via a CLI dump for downstream consumers.
+
+**Delivered**:
+
+- `src/doc_pipeline_engine/models/` — 10 Pydantic v2 `BaseModel`s, one per contract; registry-driven (`REGISTRY` in `__init__.py`).
+- `python -m doc_pipeline_engine.models dump <Name>` CLI — emits `Model.model_json_schema()` for any consumer that needs the JSON Schema view; replaces the deleted `contracts/*.schema.json` files.
+- `base/contracts.py` rewritten as a Pydantic-backed thin wrapper (`validate(name, instance)` and `is_valid(name, instance)` keep the same public API).
+- `runner.py` raises `PipelineError` from `ContractValidationError` (no longer depends on `jsonschema`).
+- `tests/test_models_round_trip.py` + `tests/test_models_schema_snapshot.py` — replace the old `tests/test_contracts.py`.
+- ADR-0001 records the decision to make pydantic models the source of truth.
+
+**Deferred to §0.2.1-followup**: full typed return signatures on stages (currently still `dict[str, Any]` to keep the test surface stable).
 
 ## 0.3.0 — Stream
 

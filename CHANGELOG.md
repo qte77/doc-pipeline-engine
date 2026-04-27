@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Pydantic v2 models replace the JSON-Schema gate as the single source of truth for stage contracts. `src/doc_pipeline_engine/models/` ships one `BaseModel` per contract (10 total) with a `REGISTRY` mapping. `base/contracts.py` rewritten as a thin Pydantic-backed wrapper — public API (`validate`, `is_valid`) unchanged, internally dispatches into `Model.model_validate(...)` and raises `ContractValidationError`. `runner.py` raises `PipelineError` from `ContractValidationError` (no longer depends on `jsonschema`). Resolves the typed-contract goal of [§0.2.1](docs/roadmap.md#021--typed-contracts); see [ADR-0001](docs/adr/0001-pydantic-as-contract-source-of-truth.md).
+
+### Added
+
+- `python -m doc_pipeline_engine.models dump <Name>` CLI — emits `Model.model_json_schema()` for any consumer that needs the JSON Schema view; replaces the deleted `contracts/*.schema.json` files.
+- `tests/test_models_round_trip.py` — round-trip + negative-validation cases over all 10 models (replaces `tests/test_contracts.py`).
+- `tests/test_models_schema_snapshot.py` — smoke tests over each emitted JSON Schema (`type=object`, required-set, `additionalProperties: false`).
+- `docs/adr/0001-pydantic-as-contract-source-of-truth.md` — records the decision and rejected alternatives.
+- `docs/roadmap.md` §0.2.1 entry.
+
+### Removed
+
+- `contracts/` directory (10 hand-written JSON Schema files) — superseded by Pydantic models per ADR-0001.
+- `tests/test_contracts.py` — superseded by the two new model test files.
+- `jsonschema` runtime dependency in `pyproject.toml`.
+
+### Changed
+
 - `stages/v2_normalize.py` — reconstructs a flat heading tree from Kreuzberg's plain text via three regex families (formal-prefix `SECTION`/`SEC.`/`CHAPTER`/`ARTICLE`/`PART`, numbered `5.1 Title`, glued numbered `1Title`). Each detected heading becomes one section node carrying `title` + body text; falls back to single-leaf on zero headings or detected density >50% of non-empty lines. Resolves [#33](https://github.com/qte77/doc-pipeline-engine/issues/33): V2 now produces N claims per document instead of one, matching V1's structural granularity. `v2_analyze` / `v2_render` / `v2_eval` untouched.
 
 ### Added
