@@ -31,5 +31,16 @@ release/
 samples/
 outputs/
 
+# mkdocs build output + workflow-generated pages
+site/
+docs/index.md
+docs/docstrings.md
+docs/CHANGELOG.md
+docs/CONTRIBUTING.md
+docs/AGENTS.md
+docs/AGENT_LEARNINGS.md
+docs/AGENT_REQUESTS.md
+docs/LICENSE.md
+
 # Claude Code (machine-local settings only)
 .claude/settings.local.json

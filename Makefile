@@ -4,7 +4,8 @@
 	install install_models install_image_ocr install_v2_nlp \
 	setup_uv setup_dev setup_claude_code setup_npm_tools setup_lychee \
 	test test_contracts test_rerun test_fix_snapshots \
-	lint lint_md lint_links validate clean help
+	lint lint_md lint_links validate clean help \
+	docs docs_serve docs_index
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -111,6 +112,24 @@ validate:  ## Pre-commit gate: lint + test + lint_md + lint_links
 	$(MAKE) -s test
 	$(MAKE) -s lint_md
 	$(MAKE) -s lint_links
+
+
+# MARK: DOCS
+
+
+docs_index:  ## Regenerate docs/docstrings.md (auto-generated API ref index)
+	PREFIX="::: "
+	find src -type f -name "*.py" -not -name "__*__*" -printf "%P\n" \
+		| sed 's/\//./g' | sed 's/\.py$$//' \
+		| sed "s/^/$$PREFIX/" | sort > docs/docstrings.md
+
+docs:  ## Build the mkdocs site under site/ (uses --only-group docs)
+	$(MAKE) -s docs_index
+	uv run --only-group docs mkdocs build
+
+docs_serve:  ## Live-reload mkdocs dev server (requires `uv sync --only-group docs`)
+	$(MAKE) -s docs_index
+	uv run --only-group docs mkdocs serve
 
 
 # MARK: CLEAN
