@@ -8,12 +8,13 @@
 """Backend-dispatch tests for _anthropic_sdk_client.
 
 Verifies the precedence: explicit client > ANTHROPIC_API_KEY (Anthropic SDK)
-> claude CLI on PATH > raise. Subprocess and Anthropic SDK calls are
-mocked so the suite stays unit-level.
+> raise. Anthropic SDK calls are mocked so the suite stays unit-level.
+
+The Claude Code CLI fallback was removed in §0.2.3 PR B (see ADR-0004).
+Subscription-only users now run external/cc_cli/run_headless.sh instead.
 """
 from __future__ import annotations
 
-import json
 from types import SimpleNamespace
 
 import pytest
@@ -29,114 +30,40 @@ def _stub_sdk_client(text: str) -> object:
 
 def test_anthropic_sdk_client_explicit_client_wins(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ANTHROPIC_API_KEY", "should-not-be-used")
-    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
-    sentinel_called = {"sdk": False, "cli": False}
+    sentinel_called = {"sdk": False}
 
     def _boom_sdk(*_a: object, **_kw: object) -> str:
         sentinel_called["sdk"] = True
         raise AssertionError("explicit client must short-circuit make_client")
 
-    def _boom_cli(*_a: object, **_kw: object) -> str:
-        sentinel_called["cli"] = True
-        raise AssertionError("explicit client must short-circuit CLI fallback")
-
     monkeypatch.setattr(_anthropic_sdk_client, "make_client", _boom_sdk)
-    monkeypatch.setattr(_anthropic_sdk_client, "_call_via_cli", _boom_cli)
 
     out = _anthropic_sdk_client.call_text(
         _stub_sdk_client("hello"), model="m", system="s", user="u"
     )
 
     assert out == "hello"
-    assert sentinel_called == {"sdk": False, "cli": False}
+    assert sentinel_called == {"sdk": False}
 
 
-def test_anthropic_sdk_client_uses_sdk_when_api_key_set(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
-    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
-    monkeypatch.setattr(_anthropic_sdk_client, "make_client", lambda: _stub_sdk_client("from-sdk"))
-
-    def _boom_cli(*_a: object, **_kw: object) -> str:
-        raise AssertionError("CLI must not run when API key is set")
-
-    monkeypatch.setattr(_anthropic_sdk_client, "_call_via_cli", _boom_cli)
-
-    assert _anthropic_sdk_client.call_text(None, model="m", system="s", user="u") == "from-sdk"
-
-
-def test_anthropic_sdk_client_falls_back_to_cli_when_no_api_key(
+def test_anthropic_sdk_client_uses_sdk_when_api_key_set(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
-
-    captured: dict[str, object] = {}
-
-    def _fake_run(cmd: list[str], **kwargs: object) -> object:
-        captured["cmd"] = cmd
-        captured["input"] = kwargs.get("input")
-        return SimpleNamespace(
-            stdout=json.dumps({"result": "from-cli", "is_error": False}),
-            stderr="",
-            returncode=0,
-        )
-
-    monkeypatch.setattr(_anthropic_sdk_client.subprocess, "run", _fake_run)
-
-    out = _anthropic_sdk_client.call_text(
-        None, model="claude-opus-4-7", system="be terse", user="hi"
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
+    monkeypatch.setattr(
+        _anthropic_sdk_client, "make_client", lambda: _stub_sdk_client("from-sdk")
     )
 
-    assert out == "from-cli"
-    assert captured["cmd"][:2] == ["claude", "--print"]
-    assert "--system-prompt" in captured["cmd"]
-    assert "be terse" in captured["cmd"]
-    assert "hi" not in captured["cmd"]  # user prompt goes via stdin, not argv
-    assert captured["input"] == "hi"
+    assert (
+        _anthropic_sdk_client.call_text(None, model="m", system="s", user="u")
+        == "from-sdk"
+    )
 
 
-def test_anthropic_sdk_client_raises_when_no_backend_available(
+def test_anthropic_sdk_client_raises_when_no_api_key(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: False)
 
-    with pytest.raises(RuntimeError, match="No V1 backend available"):
+    with pytest.raises(RuntimeError, match="ANTHROPIC_API_KEY"):
         _anthropic_sdk_client.call_text(None, model="m", system="s", user="u")
-
-
-def test_anthropic_sdk_client_cli_propagates_is_error(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
-
-    def _fake_run(_cmd: list[str], **_kw: object) -> object:
-        return SimpleNamespace(
-            stdout=json.dumps({"is_error": True, "result": ""}),
-            stderr="",
-            returncode=0,
-        )
-
-    monkeypatch.setattr(_anthropic_sdk_client.subprocess, "run", _fake_run)
-
-    with pytest.raises(RuntimeError, match="claude CLI returned error"):
-        _anthropic_sdk_client.call_text(None, model="m", system="s", user="u")
-
-
-def test_anthropic_sdk_client_call_json_parses_result(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
-
-    def _fake_run(_cmd: list[str], **_kw: object) -> object:
-        return SimpleNamespace(
-            stdout=json.dumps(
-                {"result": json.dumps({"key": "value"}), "is_error": False}
-            ),
-            stderr="",
-            returncode=0,
-        )
-
-    monkeypatch.setattr(_anthropic_sdk_client.subprocess, "run", _fake_run)
-
-    out = _anthropic_sdk_client.call_json(None, model="m", system="s", user="u")
-
-    assert out == {"key": "value"}
