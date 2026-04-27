@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-label="doc-pipeline-engine pipeline overview">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" role="img" aria-label="doc-pipeline-engine pipeline overview">
   <title>doc-pipeline-engine — bird's-eye pipeline</title>
-  <desc>Discover and Extract feed two parallel legs (V1 Claude API and V2 deterministic Python tools) through Normalize, Analyze, and Render; both converge in a shared Eval stage. Wires are labelled with the contract name passed between stages.</desc>
+  <desc>Discover and Extract feed two parallel legs (V1 Claude — Anthropic SDK or Claude Code CLI fallback — and V2 deterministic Python tools) through Normalize, Analyze, and Render; both converge in a shared Eval stage. The V1 backend dispatch (SDK with ANTHROPIC_API_KEY, else Claude Code CLI on PATH) is shared across all V1 stages via stages/_v1_client.py and is a transport detail; the stage decomposition is identical regardless of backend. Wires are labelled with the contract name passed between stages.</desc>
   <style>
     :root {
       color-scheme: light dark;
@@ -11,6 +11,7 @@
     .v2 { fill: #e7f3fb; stroke: #0a558c; }
     .label { font: 600 14px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #1f2933; text-anchor: middle; }
     .lane-label { font: 700 12px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #1f2933; text-anchor: start; }
+    .lane-sub { font: 500 10px ui-monospace, "SFMono-Regular", monospace; fill: #52606d; text-anchor: start; }
     .v1-label { fill: #b3203a; }
     .v2-label { fill: #0a558c; }
     .edge { stroke: #1f2933; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
@@ -26,6 +27,7 @@
       .v2-label { fill: #79b8e6; }
       .edge { stroke: #c9d1d9; }
       .edge-label { fill: #8b949e; }
+      .lane-sub { fill: #8b949e; }
       .arrow-head { fill: #c9d1d9; }
     }
   </style>
@@ -35,7 +37,8 @@
     </marker>
   </defs>
   <rect class="bg" width="100%" height="100%" />
-  <text class="lane-label v1-label" x="20" y="120">V1 — Claude API</text>
+  <text class="lane-label v1-label" x="20" y="106">V1 — Claude</text>
+  <text class="lane-sub v1-label" x="20" y="124">SDK ▷ CLI fallback</text>
   <text class="lane-label v2-label" x="20" y="240">V2 — Python tools</text>
   <rect class="node" x="20" y="150" width="120" height="60" rx="8" />
   <text class="label" x="80" y="184">Discover</text>
