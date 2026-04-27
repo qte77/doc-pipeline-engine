@@ -59,6 +59,22 @@ Pydantic v2 models replace the JSON-Schema gate. Models become the single source
 
 **Deferred to §0.2.1-followup**: full typed return signatures on stages (currently still `dict[str, Any]` to keep the test surface stable).
 
+## 0.2.2 — API docs site
+
+**Status**: in progress
+
+mkdocs-material + mkdocstrings serves the public API reference and the existing prose tree on GitHub Pages. Pydantic `Field(description=...)` payloads from §0.2.1 render inline.
+
+**Delivered**:
+
+- `mkdocs.yaml` at repo root (mirrors `qte77/Agents-eval`); material theme with dual-palette `prefers-color-scheme` toggle; mkdocstrings + autorefs.
+- `.github/workflows/generate-deploy-mkdocs-ghpages.yaml` — deploys via `actions/deploy-pages@v4` on PR-merged-to-main + `workflow_dispatch`.
+- `[dependency-groups] docs` in `pyproject.toml` (`mkdocs`, `mkdocs-material`, `mkdocstrings[python]`, `mkdocs-autorefs`).
+- `make docs`, `make docs_serve`, `make docs_index` Makefile targets.
+- Google-style docstring pass on `src/doc_pipeline_engine/` enforced by ruff `D`-rules.
+- Bird's-eye architecture SVG with `prefers-color-scheme` theming, embedded in `docs/architecture.md` and `README.md`.
+- ADR-0002 records the decision.
+
 ## 0.3.0 — Stream
 
 NDJSON (newline-delimited JSON) interface over the runner. Enables CLI composition, audit logging, and IPC.
