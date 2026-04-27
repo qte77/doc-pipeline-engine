@@ -5,7 +5,7 @@
 	setup_uv setup_dev setup_claude_code setup_npm_tools setup_lychee \
 	test test_contracts test_rerun test_fix_snapshots \
 	lint lint_md lint_links validate clean help \
-	docs docs_serve docs_index
+	docs docs_serve docs_index docs_contracts
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -92,10 +92,10 @@ lint:  ## Lint Python with ruff
 	echo "--- lint$(if $(RUFF_QUIET), [quiet])"
 	uv run ruff check $(RUFF_QUIET) .
 
-lint_md:  ## Lint Markdown (markdownlint, disable MD013)
+lint_md:  ## Lint Markdown (rules in .markdownlint.json)
 	echo "--- lint_md"
 	if command -v markdownlint > /dev/null 2>&1; then
-		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --ignore 'outputs/**' --disable MD013
+		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --ignore 'outputs/**'
 	else
 		echo "markdownlint not installed — run: npm install -g markdownlint-cli"
 	fi
@@ -118,6 +118,13 @@ validate:  ## Pre-commit gate: lint + test + lint_md + lint_links
 
 # MARK: DOCS
 
+
+docs_contracts:  ## Regenerate docs/contracts.md from src/doc_pipeline_engine/models/
+	uv run python scripts/gen_contracts_md.py
+	@if ! git diff --quiet docs/contracts.md; then \
+		echo "docs/contracts.md drifted from src/doc_pipeline_engine/models/ — review the diff"; \
+		exit 1; \
+	fi
 
 docs_index:  ## Regenerate docs/docstrings.md (auto-generated API ref index)
 	PREFIX="::: "
