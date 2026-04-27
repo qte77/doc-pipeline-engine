@@ -7,6 +7,8 @@ validated_links: 2026-04-26
 category: technical
 ---
 
+![Pipeline overview — Discover → Extract → V1/V2 fork → Eval](assets/architecture-bird.svg)
+
 ## Core idea
 
 Every pipeline stage consumes one JSON contract and emits another. A gate validator sits between each pair. If validation fails, the pipeline stops.

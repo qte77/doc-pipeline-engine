@@ -69,10 +69,12 @@ the old `jsonschema.ValidationError` shape that `runner.run` reads).
 
 - The §0.1.0 wire format is no longer pinned to a hand-written file.
   Any field change is visible only in the model diff. **Mitigation**:
-  every model carries snapshot smoke tests in
-  `tests/test_models_schema_snapshot.py` over the emitted JSON
-  Schema's `required` set + `additionalProperties: false` invariant;
-  drift is caught at PR review.
+  `tests/test_models_round_trip.py` is the load-bearing safety net —
+  any breaking field rename, removed required field, or relaxed
+  `extra` policy makes the round-trip identity test fail. A separate
+  `inline_snapshot` over the full emitted schema is queued for
+  whenever an actionable drift-review need surfaces (per AHA: wait
+  for the second occurrence before extracting).
 - Runtime dependency: `pydantic>=2.7` added; `jsonschema` removed.
   Net runtime size is comparable.
 - Downstream consumers that previously read `contracts/*.schema.json`

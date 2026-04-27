@@ -1,0 +1,97 @@
+---
+# Mirrors qte77/Agents-eval/mkdocs.yaml. Site info is sed-substituted at build
+# time by .github/workflows/generate-deploy-mkdocs-ghpages.yaml.
+site_name: '<gha_sed_site_name_here>'
+site_description: '<gha_sed_site_description_here>'
+repo_url: '<gha_sed_repo_url_here>'
+edit_uri: edit/main
+theme:
+  name: material
+  language: en
+  features:
+    - content.code.annotation
+    - content.code.copy
+    - content.tabs.link
+    - navigation.footer
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: "Toggle Dark Mode"
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: "Toggle Light Mode"
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Roadmap: roadmap.md
+  - Landscape:
+      - Ingest: landscape/ingest.md
+      - Process: landscape/process.md
+      - Output: landscape/output.md
+      - Prior Art: landscape/prior-art.md
+  - Prototype:
+      - Plan: prototype/plan.md
+      - Samples: prototype/samples.md
+      - Results: prototype/results/README.md
+      - "Run 1 — V2 only": prototype/results/2026-04-26-run-1-v2-only.md
+      - "Run 2 — V1+V2": prototype/results/2026-04-26-run-2-v1-cli.md
+      - "Run 3 — V2 headings": prototype/results/2026-04-26-run-3-v2-headings.md
+  - ADRs:
+      - "ADR-0001 Pydantic contracts": adr/0001-pydantic-as-contract-source-of-truth.md
+      - "ADR-0002 mkdocs site": adr/0002-mkdocs-material-mkdocstrings-for-api-docs.md
+  - Code: docstrings.md
+  - Agents:
+      - Rules: AGENTS.md
+      - Learnings: AGENT_LEARNINGS.md
+      - Requests: AGENT_REQUESTS.md
+  - Contributing: CONTRIBUTING.md
+  - Change Log: CHANGELOG.md
+  - License: LICENSE.md
+plugins:
+  - search:
+      lang: en
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_root_full_path: true
+            show_object_full_path: false
+            show_root_members_full_path: false
+            show_category_heading: true
+            show_submodules: true
+markdown_extensions:
+  - attr_list
+  - pymdownx.magiclink
+  - pymdownx.tabbed
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - sane_lists
+  - smarty
+  - toc:
+      permalink: true
+validation:
+  links:
+    not_found: warn
+    anchors: warn
+# strict:false matches Agents-eval — cross-doc links to README/architecture
+# break under strict; validation still runs and logs warnings.
+strict: false
+...

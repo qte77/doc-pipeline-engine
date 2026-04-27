@@ -32,6 +32,8 @@ from doc_pipeline_engine.render.formats import RenderArtifacts
 
 @dataclass
 class LegResult:
+    """All artifacts and timings produced by one pipeline leg (V1 or V2)."""
+
     variant: str  # "v1" | "v2"
     contracts: list[dict[str, Any]]  # all stage outputs in order
     artifacts: RenderArtifacts
@@ -41,6 +43,8 @@ class LegResult:
 
 @dataclass
 class DiffReport:
+    """Side-by-side V1 + V2 result over one sample, with comparative axes."""
+
     sample_path: str
     sample_sha256: str
     extraction_bundle: dict[str, Any]

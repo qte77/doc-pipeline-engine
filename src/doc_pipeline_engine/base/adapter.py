@@ -17,6 +17,8 @@ from typing import Any
 
 
 class AdapterBase(ABC):
+    """Base class every extraction backend implements."""
+
     name: str
     version: str
 

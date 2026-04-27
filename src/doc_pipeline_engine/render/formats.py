@@ -23,6 +23,8 @@ _HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 
 @dataclass
 class RenderArtifacts:
+    """Markdown source + binary DOCX + binary PDF for a single rendered summary."""
+
     md: str
     docx: bytes
     pdf: bytes

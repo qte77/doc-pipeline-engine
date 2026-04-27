@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `mkdocs.yaml` at repo root — mirrors [`qte77/Agents-eval/mkdocs.yaml`](https://github.com/qte77/Agents-eval/blob/main/mkdocs.yaml). material theme with dual-palette `prefers-color-scheme` toggle, mkdocstrings + autorefs, nav covers prose docs + auto-generated API ref. Site name/description/repo_url substituted at build time via `<gha_sed_*>` placeholders.
+- `.github/workflows/generate-deploy-mkdocs-ghpages.yaml` — builds and deploys the docs site on PR-merged-to-main + `workflow_dispatch`. Uses `astral-sh/setup-uv@v5` → `uv sync --only-group docs` → `actions/configure-pages@v5` → `actions/upload-pages-artifact@v3` → `actions/deploy-pages@v4`. No `gh-pages` branch required; repo Settings → Pages → Source must be set to "GitHub Actions".
+- `[dependency-groups] docs` in `pyproject.toml`: `mkdocs`, `mkdocs-material`, `mkdocstrings[python]`, `mkdocs-autorefs`. Runtime deps untouched.
+- `make docs` / `make docs_serve` / `make docs_index` Makefile targets — local build, live-reload server, and regenerate `docs/docstrings.md` index.
+- `docs/adr/0002-mkdocs-material-mkdocstrings-for-api-docs.md` — records the decision and rejected alternatives.
+- `docs/roadmap.md` §0.2.2 entry.
+- `.gitignore` — adds `site/`, `docs/index.md`, `docs/docstrings.md`, plus the README/CHANGELOG/LICENSE/CONTRIBUTING/AGENTS copies the workflow generates at build time.
+
 ### Changed
 
 - Pydantic v2 models replace the JSON-Schema gate as the single source of truth for stage contracts. `src/doc_pipeline_engine/models/` ships one `BaseModel` per contract (10 total) with a `REGISTRY` mapping. `base/contracts.py` rewritten as a thin Pydantic-backed wrapper — public API (`validate`, `is_valid`) unchanged, internally dispatches into `Model.model_validate(...)` and raises `ContractValidationError`. `runner.py` raises `PipelineError` from `ContractValidationError` (no longer depends on `jsonschema`). Resolves the typed-contract goal of [§0.2.1](docs/roadmap.md#021--typed-contracts); see [ADR-0001](docs/adr/0001-pydantic-as-contract-source-of-truth.md).
@@ -19,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `python -m doc_pipeline_engine.models dump <Name>` CLI — emits `Model.model_json_schema()` for any consumer that needs the JSON Schema view; replaces the deleted `contracts/*.schema.json` files.
 - `tests/test_models_round_trip.py` — round-trip + negative-validation cases over all 10 models (replaces `tests/test_contracts.py`).
-- `tests/test_models_schema_snapshot.py` — smoke tests over each emitted JSON Schema (`type=object`, required-set, `additionalProperties: false`).
 - `docs/adr/0001-pydantic-as-contract-source-of-truth.md` — records the decision and rejected alternatives.
 - `docs/roadmap.md` §0.2.1 entry.
 

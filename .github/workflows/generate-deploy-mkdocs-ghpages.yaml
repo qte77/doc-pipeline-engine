@@ -1,0 +1,110 @@
+---
+name: Deploy Docs
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  DOCSTRINGS_FILE: "docstrings.md"
+  DOC_DIR: "docs"
+  SRC_DIR: "src"
+  SITE_DIR: "site"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+
+    - name: Checkout the repository
+      uses: actions/checkout@v4
+      with:
+        ref:
+          ${{
+            github.event.pull_request.merged == true &&
+            'main' ||
+            github.ref_name
+          }}
+        fetch-depth: 0
+
+    - uses: actions/configure-pages@v5
+
+    # https://docs.astral.sh/uv/guides/integration/github/#caching
+    - name: Install uv with cache dependency glob
+      uses: astral-sh/setup-uv@v5
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    # https://docs.astral.sh/uv/guides/integration/github/#setting-up-python
+    - name: "Set up Python"
+      run: uv python install
+
+    - name: Install only doc deps
+      run: uv sync --only-group docs
+
+    - name: Get repo info and stream into mkdocs.yaml
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPOSITORY: ${{ github.repository }}
+        SERVER_URL: ${{ github.server_url }}
+      run: |
+        REPO_INFO=$(curl -H "Authorization: token ${GH_TOKEN}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          "https://api.github.com/repos/${REPOSITORY}")
+        REPO_URL="${SERVER_URL}/${REPOSITORY}"
+        REPO_URL=$(echo "${REPO_URL}" | sed 's|/|\\/|g')
+        SITE_NAME=$(sed '1!d' README.md | sed '0,/# /{s/# //}')
+        SITE_DESC=$(echo "$REPO_INFO" | jq -r .description)
+        sed -i "s/<gha_sed_repo_url_here>/${REPO_URL}/g" mkdocs.yaml
+        sed -i "s/<gha_sed_site_name_here>/${SITE_NAME}/g" mkdocs.yaml
+        sed -i "s/<gha_sed_site_description_here>/${SITE_DESC}/g" mkdocs.yaml
+
+    - name: Copy text files to be included
+      run: |
+        cp README.md "${DOC_DIR}/index.md"
+        cp CHANGELOG.md "${DOC_DIR}"
+        cp LICENSE "${DOC_DIR}/LICENSE.md"
+        cp CONTRIBUTING.md "${DOC_DIR}"
+        cp AGENTS.md "${DOC_DIR}"
+        cp AGENT_LEARNINGS.md "${DOC_DIR}"
+        cp AGENT_REQUESTS.md "${DOC_DIR}"
+
+    - name: Fix docs/-prefixed links in index.md
+      run: sed -i 's|](docs/|](|g' "${DOC_DIR}/index.md"
+
+    - name: Generate code docstrings concat file
+      run: |
+        PREFIX="::: "
+        find "${SRC_DIR}" -type f -name "*.py" \
+          -type f -not -name "__*__*" -printf "%P\n" | \
+          sed 's/\//./g' | sed 's/\.py$//' | \
+          sed "s/^/${PREFIX}/" | sort > \
+          "${DOC_DIR}/${DOCSTRINGS_FILE}"
+
+    - name: Build documentation
+      run: uv run --only-group docs mkdocs build
+
+    - name: Copy llms.txt to site root
+      run: |
+        if [ -f "${DOC_DIR}/llms.txt" ]; then
+          cp "${DOC_DIR}/llms.txt" "${SITE_DIR}/llms.txt"
+        fi
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: "${{ env.SITE_DIR }}"
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+...

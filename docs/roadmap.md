@@ -54,10 +54,26 @@ Pydantic v2 models replace the JSON-Schema gate. Models become the single source
 - `python -m doc_pipeline_engine.models dump <Name>` CLI — emits `Model.model_json_schema()` for any consumer that needs the JSON Schema view; replaces the deleted `contracts/*.schema.json` files.
 - `base/contracts.py` rewritten as a Pydantic-backed thin wrapper (`validate(name, instance)` and `is_valid(name, instance)` keep the same public API).
 - `runner.py` raises `PipelineError` from `ContractValidationError` (no longer depends on `jsonschema`).
-- `tests/test_models_round_trip.py` + `tests/test_models_schema_snapshot.py` — replace the old `tests/test_contracts.py`.
+- `tests/test_models_round_trip.py` — replaces the old `tests/test_contracts.py`. Round-trip identity per model is the load-bearing safety net for schema drift; full `inline_snapshot` over emitted schemas is deferred.
 - ADR-0001 records the decision to make pydantic models the source of truth.
 
 **Deferred to §0.2.1-followup**: full typed return signatures on stages (currently still `dict[str, Any]` to keep the test surface stable).
+
+## 0.2.2 — API docs site
+
+**Status**: in progress
+
+mkdocs-material + mkdocstrings serves the public API reference and the existing prose tree on GitHub Pages. Pydantic `Field(description=...)` payloads from §0.2.1 render inline.
+
+**Delivered**:
+
+- `mkdocs.yaml` at repo root (mirrors `qte77/Agents-eval`); material theme with dual-palette `prefers-color-scheme` toggle; mkdocstrings + autorefs.
+- `.github/workflows/generate-deploy-mkdocs-ghpages.yaml` — deploys via `actions/deploy-pages@v4` on PR-merged-to-main + `workflow_dispatch`.
+- `[dependency-groups] docs` in `pyproject.toml` (`mkdocs`, `mkdocs-material`, `mkdocstrings[python]`, `mkdocs-autorefs`).
+- `make docs`, `make docs_serve`, `make docs_index` Makefile targets.
+- Google-style docstring pass on `src/doc_pipeline_engine/` enforced by ruff `D`-rules.
+- Bird's-eye architecture SVG with `prefers-color-scheme` theming, embedded in `docs/architecture.md` and `README.md`.
+- ADR-0002 records the decision.
 
 ## 0.3.0 — Stream
 
