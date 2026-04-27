@@ -11,6 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `external/` directory tree — off-the-shelf one-shot summarizers compared against the in-process pipeline outputs. See [ADR-0004](docs/adr/0004-external-evaluators-vs-pipeline.md). Variants:
+  - `external/anthropic_sdk/run_oneshot.py` — Anthropic SDK called once per sample, vanilla / project flags. Inlines `docs/contracts.md` into the system prompt (FIXME workaround for SDK's lack of file-reading; ~5KB/request asymmetry vs CC).
+  - `external/cc_cli/run_headless.sh` — `claude --print --bare` (vanilla) / no-bare (project), wrapped through `npx codeburn` for cost capture. References `docs/contracts.md` by path; CC's Read tool fetches it on demand.
+  - `external/cc_cli/interactive.md` — user-driven TUI workflow doc.
+  - `external/PROMPT.md` — shared one-shot prompt body.
+  - `external/README.md` — matrix overview + how to run each cell.
+- `scripts/gen_contracts_md.py` — auto-generator that walks `doc_pipeline_engine.models.REGISTRY` and emits `docs/contracts.md` (one section per model: docstring summary, prose Field table from `Field(description=...)`, JSON Schema dump). Wired into `make docs_contracts` with idempotency gate.
+- `docs/contracts.md` — committed generator output; consumed by external evaluators so their summaries can structurally match the pipeline output.
+- `docs/adr/0004-external-evaluators-vs-pipeline.md` — records the external-evaluators decision + rejected alternatives.
+- `docs/roadmap.md` §0.2.3 — updated to describe PR A (merged) + PR B (this change) + PR C (deferred CC SDK).
+- `tests/test_external_anthropic_sdk_run_oneshot.py` (3 tests, RED-first), `tests/test_external_cc_cli_run_headless.py` (3 tests with fake `claude` + `codeburn` shims), `tests/test_gen_contracts_md.py` (3 tests, RED-first).
+- `mkdocs.yaml` nav: ADR-0004 + `Contracts: docs/contracts.md`.
+
+### Removed
+
+- CC-CLI fallback in `src/doc_pipeline_engine/stages/_anthropic_sdk_client.py` — rolled back from #41 / #30. Subscription-only users now run `external/cc_cli/run_headless.sh` instead. Three CLI dispatch tests (`test_*_falls_back_to_cli_*`, `test_*_cli_propagates_is_error`, `test_*_call_json_parses_result`) removed alongside the dispatch code; explicit-client + SDK + no-API-key tests preserved.
+
+### Changed
+
+- Migrated markdown linting from `markdownlint-cli` (v1) to `markdownlint-cli2` for single-file config. New `.markdownlint-cli2.jsonc` holds rules + globs + ignores in one place; `.markdownlint.json` and the inline `--ignore` flags in the Makefile are gone. Ignores list: `.venv/`, `node_modules/`, `samples/`, `docs/plans/`, `outputs/`, `external/PROMPT.md`, `docs/contracts.md`. `Makefile` `setup_npm_tools` installs `markdownlint-cli2`; `lint_md` invokes plain `markdownlint-cli2` with no flags.
+- `docs/assets/architecture-bird.svg` redrawn with three lanes: `anthropic_sdk` pipeline + `local` pipeline (in-process, share `Discover` / `Extract` / `Eval`) + `external evaluators` (dashed-border side-panel). Compare-against arrow shows external outputs flow into Eval as comparison references rather than as pipeline stages.
+
 ### Changed
 
 - **Pipeline legs renamed**: `v1` → `anthropic_sdk`, `v2` → `local`. The PR-ordering labels obscured what the legs actually do; the new names describe the transport flexibility (Anthropic SDK can also point at Bedrock / Vertex / local LLM gateways) and the locality property (`local` does no LLM and no cloud calls). All `stages/v{1,2}_*.py` files renamed via `git mv`; `harness.py` `DiffReport` fields, axes keys, and CLI flag (`--anthropic-sdk-model`) updated; `pyproject.toml` extras renamed (`anthropic_sdk`, `local`, `local-render`, `local-eval`); `Makefile` `install_v2_nlp` → `install_local_nlp`. The old extras + Makefile target ship as deprecated aliases for one release cycle. Output dirs change from `outputs/<sha>/v1/` → `outputs/<sha>/anthropic_sdk/` and `v2/` → `local/`. Forward-looking docs (architecture / roadmap / CONTRIBUTING / prototype plan / landscape) adopt the new names; historical run-1/2/3 results keep `v1`/`v2` wording as snapshots. See [ADR-0003](docs/adr/0003-rename-legs-anthropic-sdk-local.md).

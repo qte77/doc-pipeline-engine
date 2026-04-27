@@ -1,30 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-label="doc-pipeline-engine pipeline overview">
-  <title>doc-pipeline-engine — bird's-eye pipeline</title>
-  <desc>Discover and Extract feed two parallel legs (V1 Claude API and V2 deterministic Python tools) through Normalize, Analyze, and Render; both converge in a shared Eval stage. Wires are labelled with the contract name passed between stages.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 540" role="img" aria-label="doc-pipeline-engine pipeline overview with external evaluators">
+  <title>doc-pipeline-engine — bird's-eye pipeline + external evaluators</title>
+  <desc>The in-process pipeline shares Discover and Extract, then forks into two stage-decomposed legs (anthropic_sdk via Anthropic SDK, local via deterministic Python tools — no LLM, no cloud). Both legs converge at Eval. Off to the side, external one-shot evaluators (Anthropic SDK called once, Claude Code CLI headless/interactive, Claude Code SDK) run outside the pipeline against the same samples; their outputs are compared against the pipeline outputs in the prototype results docs. Wires labelled with contract names.</desc>
   <style>
-    :root {
-      color-scheme: light dark;
-    }
+    :root { color-scheme: light dark; }
     .bg { fill: #ffffff; }
     .node { fill: #f5f7fa; stroke: #1f2933; stroke-width: 1.5; }
-    .v1 { fill: #fdecef; stroke: #b3203a; }
-    .v2 { fill: #e7f3fb; stroke: #0a558c; }
+    .anth { fill: #fdecef; stroke: #b3203a; }
+    .loc { fill: #e7f3fb; stroke: #0a558c; }
+    .ext { fill: #f4ecfb; stroke: #5b2a86; stroke-dasharray: 6 4; }
     .label { font: 600 14px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #1f2933; text-anchor: middle; }
     .lane-label { font: 700 12px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #1f2933; text-anchor: start; }
-    .v1-label { fill: #b3203a; }
-    .v2-label { fill: #0a558c; }
+    .lane-sub { font: 500 10px ui-monospace, "SFMono-Regular", monospace; fill: #52606d; text-anchor: start; }
+    .anth-label { fill: #b3203a; }
+    .loc-label { fill: #0a558c; }
+    .ext-label { fill: #5b2a86; }
     .edge { stroke: #1f2933; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+    .edge-cmp { stroke: #5b2a86; stroke-width: 1; stroke-dasharray: 4 3; fill: none; marker-end: url(#arrow); }
     .edge-label { font: 500 11px ui-monospace, "SFMono-Regular", monospace; fill: #52606d; text-anchor: middle; }
     .arrow-head { fill: #1f2933; }
     @media (prefers-color-scheme: dark) {
       .bg { fill: #0d1117; }
       .node { fill: #161b22; stroke: #c9d1d9; }
-      .v1 { fill: #2a141a; stroke: #f17b96; }
-      .v2 { fill: #0c2436; stroke: #79b8e6; }
+      .anth { fill: #2a141a; stroke: #f17b96; }
+      .loc { fill: #0c2436; stroke: #79b8e6; }
+      .ext { fill: #1d1530; stroke: #c9a3f0; }
       .label, .lane-label { fill: #c9d1d9; }
-      .v1-label { fill: #f17b96; }
-      .v2-label { fill: #79b8e6; }
+      .lane-sub { fill: #8b949e; }
+      .anth-label { fill: #f17b96; }
+      .loc-label { fill: #79b8e6; }
+      .ext-label { fill: #c9a3f0; }
       .edge { stroke: #c9d1d9; }
+      .edge-cmp { stroke: #c9a3f0; }
       .edge-label { fill: #8b949e; }
       .arrow-head { fill: #c9d1d9; }
     }
@@ -35,43 +41,65 @@
     </marker>
   </defs>
   <rect class="bg" width="100%" height="100%" />
-  <text class="lane-label v1-label" x="20" y="120">V1 — Claude API</text>
-  <text class="lane-label v2-label" x="20" y="240">V2 — Python tools</text>
-  <rect class="node" x="20" y="150" width="120" height="60" rx="8" />
-  <text class="label" x="80" y="184">Discover</text>
-  <rect class="node" x="200" y="150" width="120" height="60" rx="8" />
-  <text class="label" x="260" y="184">Extract</text>
-  <rect class="node v1" x="380" y="80" width="120" height="60" rx="8" />
-  <text class="label" x="440" y="114">Normalize V1</text>
-  <rect class="node v1" x="540" y="80" width="120" height="60" rx="8" />
-  <text class="label" x="600" y="114">Analyze V1</text>
-  <rect class="node v1" x="700" y="80" width="120" height="60" rx="8" />
-  <text class="label" x="760" y="114">Render V1</text>
-  <rect class="node v2" x="380" y="220" width="120" height="60" rx="8" />
-  <text class="label" x="440" y="254">Normalize V2</text>
-  <rect class="node v2" x="540" y="220" width="120" height="60" rx="8" />
-  <text class="label" x="600" y="254">Analyze V2</text>
-  <rect class="node v2" x="700" y="220" width="120" height="60" rx="8" />
-  <text class="label" x="760" y="254">Render V2</text>
-  <rect class="node" x="850" y="150" width="90" height="60" rx="8" />
-  <text class="label" x="895" y="184">Eval</text>
-  <path class="edge" d="M140,180 L200,180" />
-  <text class="edge-label" x="170" y="172">DiscoveryManifest</text>
-  <path class="edge" d="M320,170 L380,120" />
-  <text class="edge-label" x="350" y="138">ExtractionBundle</text>
-  <path class="edge" d="M320,190 L380,250" />
-  <text class="edge-label" x="350" y="226">ExtractionBundle</text>
-  <path class="edge" d="M500,110 L540,110" />
-  <text class="edge-label" x="520" y="102">CanonicalDoc</text>
-  <path class="edge" d="M660,110 L700,110" />
-  <text class="edge-label" x="680" y="102">AnalysisReport</text>
-  <path class="edge" d="M500,250 L540,250" />
-  <text class="edge-label" x="520" y="272">CanonicalDoc</text>
-  <path class="edge" d="M660,250 L700,250" />
-  <text class="edge-label" x="680" y="272">AnalysisReport</text>
-  <path class="edge" d="M820,120 L850,170" />
-  <text class="edge-label" x="850" y="138">RenderArtifacts</text>
-  <path class="edge" d="M820,250 L850,200" />
-  <text class="edge-label" x="850" y="226">RenderArtifacts</text>
-  <text class="edge-label" x="895" y="232">→ EvalReport</text>
+
+  <text class="lane-label anth-label" x="20" y="106">anthropic_sdk pipeline</text>
+  <text class="lane-sub anth-label" x="20" y="124">Anthropic SDK · cloud</text>
+  <text class="lane-label loc-label" x="20" y="246">local pipeline</text>
+  <text class="lane-sub loc-label" x="20" y="264">Python tools · no LLM</text>
+  <text class="lane-label ext-label" x="20" y="406">external evaluators</text>
+  <text class="lane-sub ext-label" x="20" y="424">off-the-shelf · one-shot</text>
+
+  <rect class="node" x="20" y="150" width="100" height="60" rx="8" />
+  <text class="label" x="70" y="184">Discover</text>
+  <rect class="node" x="170" y="150" width="100" height="60" rx="8" />
+  <text class="label" x="220" y="184">Extract</text>
+
+  <rect class="node anth" x="320" y="80" width="110" height="60" rx="8" />
+  <text class="label" x="375" y="114">Norm</text>
+  <rect class="node anth" x="450" y="80" width="110" height="60" rx="8" />
+  <text class="label" x="505" y="114">Analyze</text>
+  <rect class="node anth" x="580" y="80" width="110" height="60" rx="8" />
+  <text class="label" x="635" y="114">Render</text>
+
+  <rect class="node loc" x="320" y="220" width="110" height="60" rx="8" />
+  <text class="label" x="375" y="254">Norm</text>
+  <rect class="node loc" x="450" y="220" width="110" height="60" rx="8" />
+  <text class="label" x="505" y="254">Analyze</text>
+  <rect class="node loc" x="580" y="220" width="110" height="60" rx="8" />
+  <text class="label" x="635" y="254">Render</text>
+
+  <rect class="node" x="730" y="150" width="100" height="60" rx="8" />
+  <text class="label" x="780" y="184">Eval</text>
+
+  <path class="edge" d="M120,180 L170,180" />
+  <text class="edge-label" x="145" y="172">DiscoveryManifest</text>
+  <path class="edge" d="M270,170 L320,120" />
+  <path class="edge" d="M270,190 L320,250" />
+  <text class="edge-label" x="295" y="200">ExtractionBundle</text>
+  <path class="edge" d="M430,110 L450,110" />
+  <path class="edge" d="M560,110 L580,110" />
+  <text class="edge-label" x="495" y="100">CanonicalDoc · AnalysisReport</text>
+  <path class="edge" d="M430,250 L450,250" />
+  <path class="edge" d="M560,250 L580,250" />
+  <text class="edge-label" x="495" y="276">CanonicalDoc · AnalysisReport</text>
+  <path class="edge" d="M690,120 L730,170" />
+  <text class="edge-label" x="725" y="138">RenderArtifacts</text>
+  <path class="edge" d="M690,250 L730,200" />
+  <text class="edge-label" x="725" y="226">RenderArtifacts</text>
+  <text class="edge-label" x="780" y="232">→ EvalReport</text>
+
+  <rect class="node ext" x="170" y="430" width="100" height="60" rx="8" />
+  <text class="label" x="220" y="455">Anthropic</text>
+  <text class="label" x="220" y="475" style="font-size:11px">vanilla · project</text>
+  <rect class="node ext" x="320" y="430" width="120" height="60" rx="8" />
+  <text class="label" x="380" y="455">CC-CLI</text>
+  <text class="label" x="380" y="475" style="font-size:11px">headless · interactive</text>
+  <rect class="node ext" x="490" y="430" width="100" height="60" rx="8" />
+  <text class="label" x="540" y="455">CC-SDK</text>
+  <text class="label" x="540" y="475" style="font-size:11px">deferred</text>
+
+  <path class="edge-cmp" d="M70,210 C 70,360 70,360 220,430" />
+  <text class="edge-label ext-label" x="105" y="320">raw sample</text>
+  <path class="edge-cmp" d="M780,210 L 600,470" />
+  <text class="edge-label ext-label" x="690" y="380">"compare against"</text>
 </svg>
