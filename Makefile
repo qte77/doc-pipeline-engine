@@ -39,9 +39,9 @@ setup_claude_code:  ## Install Claude Code CLI
 		echo "claude installed: $$(claude --version)"
 	fi
 
-setup_npm_tools:  ## Install npm-based dev tools (markdownlint)
-	npm install -gs markdownlint-cli
-	echo "markdownlint version: $$(markdownlint --version)"
+setup_npm_tools:  ## Install npm-based dev tools (markdownlint-cli2)
+	npm install -gs markdownlint-cli2
+	echo "markdownlint-cli2 version: $$(markdownlint-cli2 --version)"
 
 setup_lychee:  ## Install lychee link checker (Rust binary, requires sudo)
 	if command -v lychee > /dev/null 2>&1; then
@@ -92,12 +92,12 @@ lint:  ## Lint Python with ruff
 	echo "--- lint$(if $(RUFF_QUIET), [quiet])"
 	uv run ruff check $(RUFF_QUIET) .
 
-lint_md:  ## Lint Markdown (rules in .markdownlint.json)
+lint_md:  ## Lint Markdown (rules + ignores in .markdownlint-cli2.jsonc)
 	echo "--- lint_md"
-	if command -v markdownlint > /dev/null 2>&1; then
-		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --ignore 'outputs/**'
+	if command -v markdownlint-cli2 > /dev/null 2>&1; then
+		markdownlint-cli2
 	else
-		echo "markdownlint not installed — run: npm install -g markdownlint-cli"
+		echo "markdownlint-cli2 not installed — run: npm install -g markdownlint-cli2"
 	fi
 
 lint_links:  ## Check links in Markdown (lychee, see lychee.toml)

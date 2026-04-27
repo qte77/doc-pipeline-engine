@@ -1,0 +1,30 @@
+// markdownlint-cli2 config — single source of truth for rules + path ignores.
+// Migrated from .markdownlint.json + Makefile inline `--ignore` flags so all
+// markdown lint config lives in one file (per ADR-0004 followup discussion).
+{
+  "config": {
+    // Line length: disabled globally (per the frontmatter-convention rule import).
+    "MD013": false,
+    // First-line H1 satisfied by YAML frontmatter `title:` field.
+    "MD041": { "front_matter_title": "^\\s*title\\s*[:=]" }
+  },
+  "globs": [
+    "**/*.md"
+  ],
+  "ignores": [
+    // Build / dependency directories
+    ".venv/**",
+    "node_modules/**",
+    // Sample binaries (gitignored locally; some categories shipped via download script)
+    "samples/**",
+    // Agent plan files (private)
+    "docs/plans/**",
+    // Harness output artifacts (gitignored)
+    "outputs/**",
+    // External one-shot prompt — read raw by runners; frontmatter would pollute the LLM context
+    "external/PROMPT.md",
+    // Auto-generated contracts reference — duplicate ## Fields / ## JSON Schema headings (MD024)
+    // and table-pipe spacing (MD060) are expected for the artifact
+    "docs/contracts.md"
+  ]
+}
