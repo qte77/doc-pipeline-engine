@@ -17,7 +17,7 @@ import json
 from typing import Any
 
 from doc_pipeline_engine.render.formats import RenderArtifacts, render_artifacts
-from doc_pipeline_engine.stages._v1_client import (
+from doc_pipeline_engine.stages._anthropic_sdk_client import (
     MODEL_DEFAULT,
     _ClaudeClient,
     call_text,
@@ -35,7 +35,7 @@ Output MARKDOWN ONLY (no prose, no JSON, no fences). Use:
 """
 
 
-def render_v1(
+def render_anthropic_sdk(
     report: dict[str, Any],
     model: str = MODEL_DEFAULT,
     client: _ClaudeClient | None = None,

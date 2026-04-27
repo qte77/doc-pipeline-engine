@@ -12,7 +12,7 @@ import json
 from datetime import datetime, timezone
 from typing import Any
 
-from doc_pipeline_engine.stages._v1_client import (
+from doc_pipeline_engine.stages._anthropic_sdk_client import (
     MODEL_DEFAULT,
     _ClaudeClient,
     call_json,
@@ -33,7 +33,7 @@ node_refs values must reference node ids present in the canonical tree.
 """
 
 
-def analyze_v1(
+def analyze_anthropic_sdk(
     canonical: dict[str, Any],
     model: str = MODEL_DEFAULT,
     client: _ClaudeClient | None = None,

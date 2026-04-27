@@ -14,7 +14,7 @@ glued) plus the two fallbacks (zero headings, density cap exceeded).
 from __future__ import annotations
 
 from doc_pipeline_engine.base.contracts import is_valid
-from doc_pipeline_engine.stages.v2_normalize import normalize_v2
+from doc_pipeline_engine.stages.local_normalize import normalize_local
 
 SHA = "0" * 64
 
@@ -40,7 +40,7 @@ def test_numbered_with_space_splits_into_sections_with_levels() -> None:
         "Spec body text.\n"
     )
 
-    canonical = normalize_v2(_bundle(text))
+    canonical = normalize_local(_bundle(text))
     children = canonical["root"]["children"]
 
     assert is_valid("CanonicalDoc", canonical)
@@ -62,7 +62,7 @@ def test_formal_prefix_splits_into_level_one_sections() -> None:
         "Purpose body.\n"
     )
 
-    canonical = normalize_v2(_bundle(text))
+    canonical = normalize_local(_bundle(text))
     children = canonical["root"]["children"]
 
     assert is_valid("CanonicalDoc", canonical)
@@ -80,7 +80,7 @@ def test_numbered_glued_splits_into_sections() -> None:
         "Understanding body text follows.\n"
     )
 
-    canonical = normalize_v2(_bundle(text))
+    canonical = normalize_local(_bundle(text))
     children = canonical["root"]["children"]
 
     assert is_valid("CanonicalDoc", canonical)
@@ -93,7 +93,7 @@ def test_density_cap_falls_back_to_single_leaf() -> None:
     # Every line is heading-like → density 100% > 50% cap; falls back.
     text = "\n".join(f"{i} Heading {i}" for i in range(1, 11))
 
-    canonical = normalize_v2(_bundle(text))
+    canonical = normalize_local(_bundle(text))
     children = canonical["root"]["children"]
 
     assert is_valid("CanonicalDoc", canonical)
@@ -105,7 +105,7 @@ def test_density_cap_falls_back_to_single_leaf() -> None:
 def test_zero_headings_falls_back_to_single_leaf() -> None:
     text = "Just a long paragraph with no heading-like lines anywhere."
 
-    canonical = normalize_v2(_bundle(text))
+    canonical = normalize_local(_bundle(text))
     children = canonical["root"]["children"]
 
     assert is_valid("CanonicalDoc", canonical)

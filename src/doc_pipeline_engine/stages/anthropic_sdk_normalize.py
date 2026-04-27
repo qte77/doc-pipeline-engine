@@ -11,7 +11,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-from doc_pipeline_engine.stages._v1_client import (
+from doc_pipeline_engine.stages._anthropic_sdk_client import (
     MODEL_DEFAULT,
     _ClaudeClient,
     call_json,
@@ -32,7 +32,7 @@ Return JSON ONLY (no prose). Required top-level keys:
 """
 
 
-def normalize_v1(
+def normalize_anthropic_sdk(
     bundle: dict[str, Any],
     model: str = MODEL_DEFAULT,
     client: _ClaudeClient | None = None,

@@ -110,7 +110,7 @@ def _gather_text(node: dict[str, Any]) -> str:
     return "\n\n".join(p for p in parts if p)
 
 
-def analyze_v2(canonical: dict[str, Any]) -> dict[str, Any]:
+def analyze_local(canonical: dict[str, Any]) -> dict[str, Any]:
     """CanonicalDoc → AnalysisReport dict, deterministic."""
     root = canonical["root"]
     return {

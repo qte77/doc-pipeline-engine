@@ -14,7 +14,7 @@ pytest.importorskip("docx")
 
 from doc_pipeline_engine.base.contracts import is_valid  # noqa: E402
 from doc_pipeline_engine.render.formats import RenderArtifacts  # noqa: E402
-from doc_pipeline_engine.stages.v2_eval import eval_v2  # noqa: E402
+from doc_pipeline_engine.stages.local_eval import eval_local  # noqa: E402
 
 SHA = "0" * 64
 
@@ -22,7 +22,7 @@ SHA = "0" * 64
 def test_stages_v2_eval_emits_valid_eval_report() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_v2({}, {}, {}, art)
+    report = eval_local({}, {}, {}, art)
 
     assert is_valid("EvalReport", report)
 
@@ -30,6 +30,6 @@ def test_stages_v2_eval_emits_valid_eval_report() -> None:
 def test_stages_v2_eval_records_pass_when_gates_passed() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_v2({}, {}, {}, art)
+    report = eval_local({}, {}, {}, art)
 
     assert report["verdict"] == "pass"

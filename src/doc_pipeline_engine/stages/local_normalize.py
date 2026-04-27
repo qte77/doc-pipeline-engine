@@ -78,7 +78,7 @@ def _split_into_sections(text: str) -> list[dict[str, Any]]:
     return sections
 
 
-def normalize_v2(bundle: dict[str, Any]) -> dict[str, Any]:
+def normalize_local(bundle: dict[str, Any]) -> dict[str, Any]:
     """ExtractionBundle → CanonicalDoc dict, deterministic."""
     text = bundle["content"]["text"]
     sections = _split_into_sections(text)

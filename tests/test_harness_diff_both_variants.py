@@ -48,7 +48,7 @@ def fake_kreuzberg(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture
-def fake_v1(monkeypatch: pytest.MonkeyPatch) -> None:
+def fake_anthropic_sdk(monkeypatch: pytest.MonkeyPatch) -> None:
     """Replace V1 stage functions with deterministic stubs."""
     valid_canonical = {
         "version": "0.1.0",
@@ -74,19 +74,19 @@ def fake_v1(monkeypatch: pytest.MonkeyPatch) -> None:
     artifacts = RenderArtifacts(md="# v1 md", docx=b"PK\x03\x04", pdf=b"%PDF-stub")
 
     monkeypatch.setattr(
-        "doc_pipeline_engine.stages.v1_normalize.normalize_v1",
+        "doc_pipeline_engine.stages.anthropic_sdk_normalize.normalize_anthropic_sdk",
         lambda bundle, **_: valid_canonical,
     )
     monkeypatch.setattr(
-        "doc_pipeline_engine.stages.v1_analyze.analyze_v1",
+        "doc_pipeline_engine.stages.anthropic_sdk_analyze.analyze_anthropic_sdk",
         lambda canonical, **_: valid_report,
     )
     monkeypatch.setattr(
-        "doc_pipeline_engine.stages.v1_render.render_v1",
+        "doc_pipeline_engine.stages.anthropic_sdk_render.render_anthropic_sdk",
         lambda report, **_: artifacts,
     )
     monkeypatch.setattr(
-        "doc_pipeline_engine.stages.v1_eval.eval_v1",
+        "doc_pipeline_engine.stages.anthropic_sdk_eval.eval_anthropic_sdk",
         lambda *args, **_: valid_eval,
     )
 
@@ -98,7 +98,7 @@ def _write_sample(tmp_path: Path) -> Path:
 
 
 def test_harness_run_both_returns_diff_report(
-    tmp_path: Path, fake_kreuzberg: None, fake_v1: None
+    tmp_path: Path, fake_kreuzberg: None, fake_anthropic_sdk: None
 ) -> None:
     sample = _write_sample(tmp_path)
 
@@ -106,24 +106,24 @@ def test_harness_run_both_returns_diff_report(
 
     assert isinstance(report, DiffReport)
     assert report.sample_sha256 != ""
-    assert isinstance(report.v1, LegResult)
-    assert isinstance(report.v2, LegResult)
+    assert isinstance(report.anthropic_sdk, LegResult)
+    assert isinstance(report.local, LegResult)
 
 
-def test_harness_v1_and_v2_legs_each_emit_three_post_extraction_contracts(
-    tmp_path: Path, fake_kreuzberg: None, fake_v1: None
+def test_harness_anthropic_sdk_and_local_legs_each_emit_three_post_extraction_contracts(
+    tmp_path: Path, fake_kreuzberg: None, fake_anthropic_sdk: None
 ) -> None:
     sample = _write_sample(tmp_path)
 
     report = run_both(sample)
 
     # post-extraction contracts: canonical, analysis, eval
-    assert len(report.v1.contracts) == 3
-    assert len(report.v2.contracts) == 3
+    assert len(report.anthropic_sdk.contracts) == 3
+    assert len(report.local.contracts) == 3
 
 
 def test_harness_extraction_bundle_is_shared_between_legs(
-    tmp_path: Path, fake_kreuzberg: None, fake_v1: None
+    tmp_path: Path, fake_kreuzberg: None, fake_anthropic_sdk: None
 ) -> None:
     sample = _write_sample(tmp_path)
 
@@ -135,23 +135,23 @@ def test_harness_extraction_bundle_is_shared_between_legs(
     # V2 (deterministic) propagates sha256 from the bundle into its canonical doc.
     # V1 is stubbed here with a placeholder sha256, so we don't equality-check it
     # against the bundle — that's covered by the real-API integration test.
-    assert report.v2.contracts[0]["source_sha256"] == report.extraction_bundle["source_sha256"]
+    assert report.local.contracts[0]["source_sha256"] == report.extraction_bundle["source_sha256"]
 
 
 def test_harness_axes_includes_latency_ratio(
-    tmp_path: Path, fake_kreuzberg: None, fake_v1: None
+    tmp_path: Path, fake_kreuzberg: None, fake_anthropic_sdk: None
 ) -> None:
     sample = _write_sample(tmp_path)
 
     report = run_both(sample)
 
-    assert "v1_total_seconds" in report.axes
-    assert "v2_total_seconds" in report.axes
-    assert "latency_ratio_v1_over_v2" in report.axes
+    assert "anthropic_sdk_total_seconds" in report.axes
+    assert "local_total_seconds" in report.axes
+    assert "latency_ratio_anthropic_sdk_over_local" in report.axes
 
 
 def test_harness_writes_artifacts_to_output_dir_when_given(
-    tmp_path: Path, fake_kreuzberg: None, fake_v1: None
+    tmp_path: Path, fake_kreuzberg: None, fake_anthropic_sdk: None
 ) -> None:
     sample = _write_sample(tmp_path)
     out = tmp_path / "outputs"
@@ -159,30 +159,30 @@ def test_harness_writes_artifacts_to_output_dir_when_given(
     report = run_both(sample, output_dir=out)
 
     sha_dir = out / report.sample_sha256
-    assert (sha_dir / "v1" / "summary.md").exists()
-    assert (sha_dir / "v1" / "summary.docx").exists()
-    assert (sha_dir / "v1" / "summary.pdf").exists()
-    assert (sha_dir / "v2" / "summary.md").exists()
+    assert (sha_dir / "anthropic_sdk" / "summary.md").exists()
+    assert (sha_dir / "anthropic_sdk" / "summary.docx").exists()
+    assert (sha_dir / "anthropic_sdk" / "summary.pdf").exists()
+    assert (sha_dir / "local" / "summary.md").exists()
 
 
 def test_harness_to_json_omits_artifact_bytes(
-    tmp_path: Path, fake_kreuzberg: None, fake_v1: None
+    tmp_path: Path, fake_kreuzberg: None, fake_anthropic_sdk: None
 ) -> None:
     sample = _write_sample(tmp_path)
     report = run_both(sample)
 
     payload = _to_json(report)
 
-    assert payload["v1"]["artifacts"]["md_chars"] > 0
-    assert payload["v1"]["artifacts"]["docx_bytes"] > 0
-    assert payload["v1"]["artifacts"]["pdf_bytes"] > 0
+    assert payload["anthropic_sdk"]["artifacts"]["md_chars"] > 0
+    assert payload["anthropic_sdk"]["artifacts"]["docx_bytes"] > 0
+    assert payload["anthropic_sdk"]["artifacts"]["pdf_bytes"] > 0
     # Bytes themselves are not in the JSON payload (would not be serialisable
     # cleanly and would bloat output).
-    assert "docx" not in payload["v1"]["artifacts"]
+    assert "docx" not in payload["anthropic_sdk"]["artifacts"]
 
 
 def test_harness_run_both_raises_when_sample_missing(
-    tmp_path: Path, fake_kreuzberg: None, fake_v1: None
+    tmp_path: Path, fake_kreuzberg: None, fake_anthropic_sdk: None
 ) -> None:
     missing = tmp_path / "nope.pdf"
 

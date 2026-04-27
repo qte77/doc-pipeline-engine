@@ -12,7 +12,7 @@ import json
 from types import SimpleNamespace
 
 from doc_pipeline_engine.base.contracts import is_valid
-from doc_pipeline_engine.stages.v1_analyze import analyze_v1
+from doc_pipeline_engine.stages.anthropic_sdk_analyze import analyze_anthropic_sdk
 
 SHA = "0" * 64
 
@@ -54,7 +54,7 @@ def _canonical() -> dict:
 def test_stages_v1_analyze_emits_valid_analysis_report() -> None:
     client = _stub_client(json.dumps(_VALID_PAYLOAD))
 
-    report = analyze_v1(_canonical(), client=client)
+    report = analyze_anthropic_sdk(_canonical(), client=client)
 
     assert is_valid("AnalysisReport", report)
 
@@ -62,7 +62,7 @@ def test_stages_v1_analyze_emits_valid_analysis_report() -> None:
 def test_stages_v1_analyze_records_analyzer_identity() -> None:
     client = _stub_client(json.dumps(_VALID_PAYLOAD))
 
-    report = analyze_v1(_canonical(), client=client, model="stub-model")
+    report = analyze_anthropic_sdk(_canonical(), client=client, model="stub-model")
 
     assert report["analyzer"]["name"] == "v1_analyze_claude"
     assert report["analyzer"]["model"] == "stub-model"
@@ -71,6 +71,6 @@ def test_stages_v1_analyze_records_analyzer_identity() -> None:
 def test_stages_v1_analyze_propagates_source_sha256() -> None:
     client = _stub_client(json.dumps(_VALID_PAYLOAD))
 
-    report = analyze_v1(_canonical(), client=client)
+    report = analyze_anthropic_sdk(_canonical(), client=client)
 
     assert report["source_sha256"] == SHA
