@@ -21,7 +21,7 @@ pytest.importorskip("markdown")
 pytest.importorskip("weasyprint")
 
 from doc_pipeline_engine.render.formats import RenderArtifacts  # noqa: E402
-from doc_pipeline_engine.stages.v1_render import render_v1  # noqa: E402
+from doc_pipeline_engine.stages.anthropic_sdk_render import render_anthropic_sdk  # noqa: E402
 
 SHA = "0" * 64
 _MD = "# Summary\n\nClaude wrote this."
@@ -47,7 +47,7 @@ def _report() -> dict:
 def test_stages_v1_render_returns_render_artifacts() -> None:
     client = _stub_client(_MD)
 
-    art = render_v1(_report(), client=client)
+    art = render_anthropic_sdk(_report(), client=client)
 
     assert isinstance(art, RenderArtifacts)
     assert art.md == _MD

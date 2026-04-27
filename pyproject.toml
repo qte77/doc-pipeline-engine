@@ -25,34 +25,52 @@ render = [
   "python-docx>=1.1",
   "weasyprint>=62",
 ]
-# Install with: uv sync --extra v1
-# V1 pipeline leg: Claude API for normalize / analyze / render.
-# Marked optional because anthropic calls anthropic.com (cloud locality);
-# §0.5 `local-only` deployment profile must be able to skip it. License is
-# Apache-2.0 (permissive); ANTHROPIC_API_KEY is checked at call time.
-v1 = [
+# Install with: uv sync --extra anthropic_sdk
+# anthropic_sdk pipeline leg: Anthropic Python SDK for normalize / analyze /
+# render / eval. Marked optional because anthropic calls anthropic.com (cloud
+# locality); §0.5 `local-only` deployment profile must be able to skip it.
+# License is Apache-2.0 (permissive); ANTHROPIC_API_KEY is checked at call time.
+# The SDK accepts `base_url` so the leg can also point at Bedrock, Vertex, or
+# a self-hosted Anthropic-compatible endpoint.
+anthropic_sdk = [
   "anthropic>=0.40",
 ]
-# Install with: uv sync --extra v2
-# V2 pipeline leg: deterministic Python tools for normalize / analyze / render.
-# Marked optional for footprint (spaCy + transitive deps ~150 MB); local-only
-# by construction. spaCy needs `make install-models` for en_core_web_sm.
-# Note: spaCy currently lacks Python 3.14 wheels. Use `--extra v2-render`
-# (jinja2 only) on 3.14 environments; full `--extra v2` requires Python ≤ 3.13.
-v2 = [
+# Install with: uv sync --extra local
+# local pipeline leg: deterministic Python tools for normalize / analyze /
+# render. No LLM, no cloud calls. Marked optional for footprint (spaCy +
+# transitive deps ~150 MB). spaCy needs `make install_v2_nlp` for
+# en_core_web_sm.
+# Note: spaCy currently lacks Python 3.14 wheels. Use `--extra local-render`
+# (jinja2 only) on 3.14 environments; full `--extra local` requires
+# Python ≤ 3.13.
+local = [
   "jinja2>=3.1",
   "spacy>=3.7",
 ]
-# Subset of v2 for environments where spaCy can't install (e.g. Python 3.14).
-# Enables v2_render and v2_normalize/v2_eval; v2_analyze runs without entities.
-v2-render = [
+# Subset of local for environments where spaCy can't install (e.g. Python
+# 3.14). Enables local_render and local_normalize / local_eval; local_analyze
+# runs without entities.
+local-render = [
   "jinja2>=3.1",
 ]
-# Install with: uv sync --extra v2-eval
-# DeepEval faithfulness probe for V2 leg (local heuristic by default).
-# Wired by PR 6 harness; not used by v2_eval directly in v1 of the prototype.
-v2-eval = [
+# Install with: uv sync --extra local-eval
+# DeepEval faithfulness probe for the local leg (local heuristic by default).
+local-eval = [
   "deepeval>=0.20",
+]
+# Deprecated aliases (will be removed in §0.5.0). Point at the renamed extras
+# so existing devcontainer scripts and CI configs keep working for one cycle.
+v1 = [
+  "doc-pipeline-engine[anthropic_sdk]",
+]
+v2 = [
+  "doc-pipeline-engine[local]",
+]
+v2-render = [
+  "doc-pipeline-engine[local-render]",
+]
+v2-eval = [
+  "doc-pipeline-engine[local-eval]",
 ]
 
 [dependency-groups]

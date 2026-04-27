@@ -14,7 +14,7 @@ pytest.importorskip("docx")
 
 from doc_pipeline_engine.base.contracts import is_valid  # noqa: E402
 from doc_pipeline_engine.render.formats import RenderArtifacts  # noqa: E402
-from doc_pipeline_engine.stages.v1_eval import eval_v1  # noqa: E402
+from doc_pipeline_engine.stages.anthropic_sdk_eval import eval_anthropic_sdk  # noqa: E402
 
 SHA = "0" * 64
 
@@ -53,7 +53,7 @@ def _report() -> dict:
 def test_stages_v1_eval_emits_valid_eval_report() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_v1(_bundle(), _canonical(), _report(), art)
+    report = eval_anthropic_sdk(_bundle(), _canonical(), _report(), art)
 
     assert is_valid("EvalReport", report)
 
@@ -61,7 +61,7 @@ def test_stages_v1_eval_emits_valid_eval_report() -> None:
 def test_stages_v1_eval_records_pass_when_gates_passed() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_v1(_bundle(), _canonical(), _report(), art)
+    report = eval_anthropic_sdk(_bundle(), _canonical(), _report(), art)
 
     assert report["verdict"] == "pass"
     assert report["scores"]["schema_valid"]["passed"] is True

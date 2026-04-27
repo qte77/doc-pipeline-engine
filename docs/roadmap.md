@@ -75,6 +75,15 @@ mkdocs-material + mkdocstrings serves the public API reference and the existing 
 - Bird's-eye architecture SVG with `prefers-color-scheme` theming, embedded in `docs/architecture.md` and `README.md`.
 - ADR-0002 records the decision.
 
+## 0.2.3 — Rename legs + external evaluators
+
+**Status**: in progress (PR A: rename done; PR B: external evaluators in flight)
+
+Two-step refactor:
+
+- **PR A** — rename pipeline legs from PR-ordering labels (`v1`/`v2`) to self-describing names (`anthropic_sdk`/`local`). Forward-looking docs adopt the new names; historical run-1/2/3 results keep `v1`/`v2` wording as snapshots. Deprecated extras + Makefile aliases ship for one release cycle. See [ADR-0003](adr/0003-rename-legs-anthropic-sdk-local.md).
+- **PR B** — add external one-shot evaluators (Anthropic SDK, Claude Code CLI headless/interactive/SDK) under `external/`. Vanilla and project-augmented variants compare against the renamed `anthropic_sdk` / `local` pipeline outputs in run-4 prototype results. ADR-0004 records the design.
+
 ## 0.3.0 — Stream
 
 NDJSON (newline-delimited JSON) interface over the runner. Enables CLI composition, audit logging, and IPC.

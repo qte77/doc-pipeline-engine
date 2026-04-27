@@ -38,7 +38,7 @@ def _load_env() -> Any:
     )
 
 
-def render_v2(report: dict[str, Any], title: str = "Quick Summary") -> RenderArtifacts:
+def render_local(report: dict[str, Any], title: str = "Quick Summary") -> RenderArtifacts:
     """AnalysisReport → RenderArtifacts (md + docx + pdf)."""
     env = _load_env()
     template = env.get_template(_TEMPLATE_NAME)

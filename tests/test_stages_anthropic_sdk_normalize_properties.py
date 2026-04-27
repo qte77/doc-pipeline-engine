@@ -12,7 +12,7 @@ import json
 from types import SimpleNamespace
 
 from doc_pipeline_engine.base.contracts import is_valid
-from doc_pipeline_engine.stages.v1_normalize import normalize_v1
+from doc_pipeline_engine.stages.anthropic_sdk_normalize import normalize_anthropic_sdk
 
 SHA = "0" * 64
 
@@ -51,7 +51,7 @@ def _bundle() -> dict:
 def test_stages_v1_normalize_emits_valid_canonical_doc() -> None:
     client = _stub_client(json.dumps(_VALID_CANONICAL_PAYLOAD))
 
-    canonical = normalize_v1(_bundle(), client=client)
+    canonical = normalize_anthropic_sdk(_bundle(), client=client)
 
     assert is_valid("CanonicalDoc", canonical)
 
@@ -59,6 +59,6 @@ def test_stages_v1_normalize_emits_valid_canonical_doc() -> None:
 def test_stages_v1_normalize_propagates_source_sha256() -> None:
     client = _stub_client(json.dumps(_VALID_CANONICAL_PAYLOAD))
 
-    canonical = normalize_v1(_bundle(), client=client)
+    canonical = normalize_anthropic_sdk(_bundle(), client=client)
 
     assert canonical["source_sha256"] == SHA

@@ -5,7 +5,7 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-"""Backend-dispatch tests for _v1_client.
+"""Backend-dispatch tests for _anthropic_sdk_client.
 
 Verifies the precedence: explicit client > ANTHROPIC_API_KEY (Anthropic SDK)
 > claude CLI on PATH > raise. Subprocess and Anthropic SDK calls are
@@ -18,7 +18,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from doc_pipeline_engine.stages import _v1_client
+from doc_pipeline_engine.stages import _anthropic_sdk_client
 
 
 def _stub_sdk_client(text: str) -> object:
@@ -27,9 +27,9 @@ def _stub_sdk_client(text: str) -> object:
     return SimpleNamespace(messages=SimpleNamespace(create=_create))
 
 
-def test_v1_client_explicit_client_wins(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_anthropic_sdk_client_explicit_client_wins(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ANTHROPIC_API_KEY", "should-not-be-used")
-    monkeypatch.setattr(_v1_client, "_has_claude_cli", lambda: True)
+    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
     sentinel_called = {"sdk": False, "cli": False}
 
     def _boom_sdk(*_a: object, **_kw: object) -> str:
@@ -40,10 +40,10 @@ def test_v1_client_explicit_client_wins(monkeypatch: pytest.MonkeyPatch) -> None
         sentinel_called["cli"] = True
         raise AssertionError("explicit client must short-circuit CLI fallback")
 
-    monkeypatch.setattr(_v1_client, "make_client", _boom_sdk)
-    monkeypatch.setattr(_v1_client, "_call_via_cli", _boom_cli)
+    monkeypatch.setattr(_anthropic_sdk_client, "make_client", _boom_sdk)
+    monkeypatch.setattr(_anthropic_sdk_client, "_call_via_cli", _boom_cli)
 
-    out = _v1_client.call_text(
+    out = _anthropic_sdk_client.call_text(
         _stub_sdk_client("hello"), model="m", system="s", user="u"
     )
 
@@ -51,24 +51,24 @@ def test_v1_client_explicit_client_wins(monkeypatch: pytest.MonkeyPatch) -> None
     assert sentinel_called == {"sdk": False, "cli": False}
 
 
-def test_v1_client_uses_sdk_when_api_key_set(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_anthropic_sdk_client_uses_sdk_when_api_key_set(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-test")
-    monkeypatch.setattr(_v1_client, "_has_claude_cli", lambda: True)
-    monkeypatch.setattr(_v1_client, "make_client", lambda: _stub_sdk_client("from-sdk"))
+    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
+    monkeypatch.setattr(_anthropic_sdk_client, "make_client", lambda: _stub_sdk_client("from-sdk"))
 
     def _boom_cli(*_a: object, **_kw: object) -> str:
         raise AssertionError("CLI must not run when API key is set")
 
-    monkeypatch.setattr(_v1_client, "_call_via_cli", _boom_cli)
+    monkeypatch.setattr(_anthropic_sdk_client, "_call_via_cli", _boom_cli)
 
-    assert _v1_client.call_text(None, model="m", system="s", user="u") == "from-sdk"
+    assert _anthropic_sdk_client.call_text(None, model="m", system="s", user="u") == "from-sdk"
 
 
-def test_v1_client_falls_back_to_cli_when_no_api_key(
+def test_anthropic_sdk_client_falls_back_to_cli_when_no_api_key(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_v1_client, "_has_claude_cli", lambda: True)
+    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
 
     captured: dict[str, object] = {}
 
@@ -81,9 +81,9 @@ def test_v1_client_falls_back_to_cli_when_no_api_key(
             returncode=0,
         )
 
-    monkeypatch.setattr(_v1_client.subprocess, "run", _fake_run)
+    monkeypatch.setattr(_anthropic_sdk_client.subprocess, "run", _fake_run)
 
-    out = _v1_client.call_text(
+    out = _anthropic_sdk_client.call_text(
         None, model="claude-opus-4-7", system="be terse", user="hi"
     )
 
@@ -95,19 +95,19 @@ def test_v1_client_falls_back_to_cli_when_no_api_key(
     assert captured["input"] == "hi"
 
 
-def test_v1_client_raises_when_no_backend_available(
+def test_anthropic_sdk_client_raises_when_no_backend_available(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_v1_client, "_has_claude_cli", lambda: False)
+    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: False)
 
     with pytest.raises(RuntimeError, match="No V1 backend available"):
-        _v1_client.call_text(None, model="m", system="s", user="u")
+        _anthropic_sdk_client.call_text(None, model="m", system="s", user="u")
 
 
-def test_v1_client_cli_propagates_is_error(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_anthropic_sdk_client_cli_propagates_is_error(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_v1_client, "_has_claude_cli", lambda: True)
+    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
 
     def _fake_run(_cmd: list[str], **_kw: object) -> object:
         return SimpleNamespace(
@@ -116,15 +116,15 @@ def test_v1_client_cli_propagates_is_error(monkeypatch: pytest.MonkeyPatch) -> N
             returncode=0,
         )
 
-    monkeypatch.setattr(_v1_client.subprocess, "run", _fake_run)
+    monkeypatch.setattr(_anthropic_sdk_client.subprocess, "run", _fake_run)
 
     with pytest.raises(RuntimeError, match="claude CLI returned error"):
-        _v1_client.call_text(None, model="m", system="s", user="u")
+        _anthropic_sdk_client.call_text(None, model="m", system="s", user="u")
 
 
-def test_v1_client_call_json_parses_result(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_anthropic_sdk_client_call_json_parses_result(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    monkeypatch.setattr(_v1_client, "_has_claude_cli", lambda: True)
+    monkeypatch.setattr(_anthropic_sdk_client, "_has_claude_cli", lambda: True)
 
     def _fake_run(_cmd: list[str], **_kw: object) -> object:
         return SimpleNamespace(
@@ -135,8 +135,8 @@ def test_v1_client_call_json_parses_result(monkeypatch: pytest.MonkeyPatch) -> N
             returncode=0,
         )
 
-    monkeypatch.setattr(_v1_client.subprocess, "run", _fake_run)
+    monkeypatch.setattr(_anthropic_sdk_client.subprocess, "run", _fake_run)
 
-    out = _v1_client.call_json(None, model="m", system="s", user="u")
+    out = _anthropic_sdk_client.call_json(None, model="m", system="s", user="u")
 
     assert out == {"key": "value"}

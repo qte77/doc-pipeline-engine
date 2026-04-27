@@ -14,7 +14,7 @@ are extracted deterministically from the canonical tree regardless.
 from __future__ import annotations
 
 from doc_pipeline_engine.base.contracts import is_valid
-from doc_pipeline_engine.stages.v2_analyze import analyze_v2
+from doc_pipeline_engine.stages.local_analyze import analyze_local
 
 SHA = "0" * 64
 
@@ -42,7 +42,7 @@ def _canonical(*texts: str) -> dict:
 def test_stages_v2_analyze_emits_valid_analysis_report() -> None:
     canonical = _canonical("First sentence. Second sentence.")
 
-    report = analyze_v2(canonical)
+    report = analyze_local(canonical)
 
     assert is_valid("AnalysisReport", report)
 
@@ -50,7 +50,7 @@ def test_stages_v2_analyze_emits_valid_analysis_report() -> None:
 def test_stages_v2_analyze_extracts_first_sentence_per_leaf_as_claim() -> None:
     canonical = _canonical("Alpha is one. Beta is two.", "Gamma is three.")
 
-    report = analyze_v2(canonical)
+    report = analyze_local(canonical)
 
     claim_texts = [c["text"] for c in report["claims"]]
     assert "Alpha is one." in claim_texts
@@ -60,7 +60,7 @@ def test_stages_v2_analyze_extracts_first_sentence_per_leaf_as_claim() -> None:
 def test_stages_v2_analyze_claims_reference_their_source_node() -> None:
     canonical = _canonical("Alpha is one.")
 
-    report = analyze_v2(canonical)
+    report = analyze_local(canonical)
 
     assert report["claims"][0]["node_refs"] == ["s.1"]
 
@@ -68,18 +68,18 @@ def test_stages_v2_analyze_claims_reference_their_source_node() -> None:
 def test_stages_v2_analyze_emits_at_least_one_claim_for_empty_doc() -> None:
     canonical = _canonical()  # no children
 
-    report = analyze_v2(canonical)
+    report = analyze_local(canonical)
 
     assert len(report["claims"]) >= 1
 
 
 def test_stages_v2_analyze_records_analyzer_identity() -> None:
-    report = analyze_v2(_canonical("text."))
+    report = analyze_local(_canonical("text."))
 
     assert report["analyzer"]["name"] == "v2_analyze_local"
 
 
 def test_stages_v2_analyze_propagates_source_sha256() -> None:
-    report = analyze_v2(_canonical("text."))
+    report = analyze_local(_canonical("text."))
 
     assert report["source_sha256"] == SHA

@@ -5,11 +5,11 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-"""V1 eval: emit a minimal EvalReport.
+"""V2 eval: emit a minimal EvalReport.
 
-For v1 we only record schema-validity (1.0 if all upstream gates passed —
-which the runner enforces). A faithfulness probe via Claude is left for
-PR 6 (the harness) to add when comparative scoring across legs is wired.
+Same shape as v1_eval — schema-validity scoring only. DeepEval faithfulness
+probe is wired by PR 6 (the harness) when comparative scoring across legs
+is needed.
 """
 from __future__ import annotations
 
@@ -21,14 +21,14 @@ from doc_pipeline_engine.render.formats import RenderArtifacts
 CONTRACT_VERSION = "0.1.0"
 
 
-def eval_v1(
+def eval_local(
     bundle: dict[str, Any],
     canonical: dict[str, Any],
     report: dict[str, Any],
     artifacts: RenderArtifacts,
 ) -> dict[str, Any]:
-    """Emit a minimal EvalReport for the V1 leg."""
-    _ = (bundle, canonical, report, artifacts)  # kept for symmetry with V2 signature
+    """Emit a minimal EvalReport for the V2 leg."""
+    _ = (bundle, canonical, report, artifacts)
     return {
         "version": CONTRACT_VERSION,
         "evaluated_at": datetime.now(timezone.utc).isoformat(),

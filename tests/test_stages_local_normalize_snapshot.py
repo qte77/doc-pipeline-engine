@@ -9,7 +9,7 @@
 from __future__ import annotations
 
 from doc_pipeline_engine.base.contracts import is_valid
-from doc_pipeline_engine.stages.v2_normalize import normalize_v2
+from doc_pipeline_engine.stages.local_normalize import normalize_local
 
 SHA = "0" * 64
 
@@ -26,13 +26,13 @@ def _bundle(text: str = "Hello world.") -> dict:
 
 
 def test_stages_v2_normalize_emits_valid_canonical_doc() -> None:
-    canonical = normalize_v2(_bundle())
+    canonical = normalize_local(_bundle())
 
     assert is_valid("CanonicalDoc", canonical)
 
 
 def test_stages_v2_normalize_propagates_source_sha256() -> None:
-    canonical = normalize_v2(_bundle())
+    canonical = normalize_local(_bundle())
 
     assert canonical["source_sha256"] == SHA
 
@@ -40,7 +40,7 @@ def test_stages_v2_normalize_propagates_source_sha256() -> None:
 def test_stages_v2_normalize_root_carries_extracted_text_in_first_section() -> None:
     text = "Some extracted text."
 
-    canonical = normalize_v2(_bundle(text))
+    canonical = normalize_local(_bundle(text))
 
     assert canonical["root"]["children"][0]["text"] == text
 
@@ -48,7 +48,7 @@ def test_stages_v2_normalize_root_carries_extracted_text_in_first_section() -> N
 def test_stages_v2_normalize_tier_summary_truncates_at_200_and_1000_chars() -> None:
     long_text = "abc " * 400  # 1600 chars
 
-    canonical = normalize_v2(_bundle(long_text))
+    canonical = normalize_local(_bundle(long_text))
 
     assert len(canonical["tier_summary"]["l0"]) <= 201  # 200 + ellipsis
     assert len(canonical["tier_summary"]["l1"]) <= 1001
