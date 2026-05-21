@@ -5,7 +5,7 @@
 	setup_uv setup_dev setup_claude_code setup_npm_tools setup_lychee \
 	test test_contracts test_rerun test_fix_snapshots \
 	lint lint_md lint_links validate clean help \
-	docs docs_serve docs_index
+	docs docs_serve docs_index docs_contracts
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -39,9 +39,9 @@ setup_claude_code:  ## Install Claude Code CLI
 		echo "claude installed: $$(claude --version)"
 	fi
 
-setup_npm_tools:  ## Install npm-based dev tools (markdownlint)
-	npm install -gs markdownlint-cli
-	echo "markdownlint version: $$(markdownlint --version)"
+setup_npm_tools:  ## Install npm-based dev tools (markdownlint-cli2)
+	npm install -gs markdownlint-cli2
+	echo "markdownlint-cli2 version: $$(markdownlint-cli2 --version)"
 
 setup_lychee:  ## Install lychee link checker (Rust binary, requires sudo)
 	if command -v lychee > /dev/null 2>&1; then
@@ -92,12 +92,12 @@ lint:  ## Lint Python with ruff
 	echo "--- lint$(if $(RUFF_QUIET), [quiet])"
 	uv run ruff check $(RUFF_QUIET) .
 
-lint_md:  ## Lint Markdown (markdownlint, disable MD013)
+lint_md:  ## Lint Markdown (rules + ignores in .markdownlint-cli2.jsonc)
 	echo "--- lint_md"
-	if command -v markdownlint > /dev/null 2>&1; then
-		markdownlint '**/*.md' --ignore '.venv/**' --ignore 'samples/**' --ignore 'docs/plans/**' --ignore 'outputs/**' --disable MD013
+	if command -v markdownlint-cli2 > /dev/null 2>&1; then
+		markdownlint-cli2
 	else
-		echo "markdownlint not installed — run: npm install -g markdownlint-cli"
+		echo "markdownlint-cli2 not installed — run: npm install -g markdownlint-cli2"
 	fi
 
 lint_links:  ## Check links in Markdown (lychee, see lychee.toml)
@@ -118,6 +118,13 @@ validate:  ## Pre-commit gate: lint + test + lint_md + lint_links
 
 # MARK: DOCS
 
+
+docs_contracts:  ## Regenerate docs/contracts.md from src/doc_pipeline_engine/models/
+	uv run python scripts/gen_contracts_md.py
+	@if ! git diff --quiet docs/contracts.md; then \
+		echo "docs/contracts.md drifted from src/doc_pipeline_engine/models/ — review the diff"; \
+		exit 1; \
+	fi
 
 docs_index:  ## Regenerate docs/docstrings.md (auto-generated API ref index)
 	PREFIX="::: "

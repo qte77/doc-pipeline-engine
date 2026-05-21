@@ -77,12 +77,23 @@ mkdocs-material + mkdocstrings serves the public API reference and the existing 
 
 ## 0.2.3 — Rename legs + external evaluators
 
-**Status**: in progress (PR A: rename done; PR B: external evaluators in flight)
+**Status**: in progress (PR A merged via #54; PR B + run-4 results doc remain)
 
 Two-step refactor:
 
-- **PR A** — rename pipeline legs from PR-ordering labels (`v1`/`v2`) to self-describing names (`anthropic_sdk`/`local`). Forward-looking docs adopt the new names; historical run-1/2/3 results keep `v1`/`v2` wording as snapshots. Deprecated extras + Makefile aliases ship for one release cycle. See [ADR-0003](adr/0003-rename-legs-anthropic-sdk-local.md).
-- **PR B** — add external one-shot evaluators (Anthropic SDK, Claude Code CLI headless/interactive/SDK) under `external/`. Vanilla and project-augmented variants compare against the renamed `anthropic_sdk` / `local` pipeline outputs in run-4 prototype results. ADR-0004 records the design.
+- **PR A — rename legs** ✅ (#54). `v1` / `v2` → `anthropic_sdk` / `local`. Forward-looking docs adopt the new names; historical run-1/2/3 results keep `v1` / `v2` wording as snapshots. Deprecated extras + Makefile aliases ship for one release cycle. See [ADR-0003](adr/0003-rename-legs-anthropic-sdk-local.md).
+- **PR B — external evaluators**: Anthropic SDK + Claude Code CLI (headless + interactive) one-shot summarizers under `external/`. Vanilla and project-augmented variants compare against the renamed `anthropic_sdk` / `local` pipeline outputs in the run-4 prototype results doc. The CC-CLI fallback that lived in `_anthropic_sdk_client.py` is removed (rolling back the relevant part of #41) — subscription-only users now run `external/cc_cli/run_headless.sh`. See [ADR-0004](adr/0004-external-evaluators-vs-pipeline.md).
+- **PR C — CC SDK** (deferred): `external/cc_sdk/run_oneshot.py` using `claude-agent-sdk`; gated on PyPI availability.
+
+**Delivered in PR B**:
+
+- `external/anthropic_sdk/run_oneshot.py` — Anthropic SDK one-shot, vanilla + project flags.
+- `external/cc_cli/run_headless.sh` — `claude --print --bare` (vanilla) / no-bare (project), wrapped through `npx codeburn` for cost capture.
+- `external/cc_cli/interactive.md` — user-driven TUI workflow.
+- `external/PROMPT.md` + `external/README.md` — shared one-shot prompt + matrix overview.
+- `scripts/gen_contracts_md.py` + `docs/contracts.md` — auto-generated contracts reference; consumed by external runners (inlined for SDK, referenced for CC).
+- Migrated markdown linting to `markdownlint-cli2` for single-file config (`.markdownlint-cli2.jsonc`).
+- ADR-0004; bird's-eye SVG redrawn with three-lane structure.
 
 ## 0.3.0 — Stream
 

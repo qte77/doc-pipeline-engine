@@ -51,6 +51,8 @@ nav:
       - "ADR-0001 Pydantic contracts": adr/0001-pydantic-as-contract-source-of-truth.md
       - "ADR-0002 mkdocs site": adr/0002-mkdocs-material-mkdocstrings-for-api-docs.md
       - "ADR-0003 Rename legs": adr/0003-rename-legs-anthropic-sdk-local.md
+      - "ADR-0004 External evaluators": adr/0004-external-evaluators-vs-pipeline.md
+  - Contracts: contracts.md
   - Code: docstrings.md
   - Agents:
       - Rules: AGENTS.md
