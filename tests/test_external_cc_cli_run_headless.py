@@ -82,8 +82,8 @@ def shim_env(tmp_path: Path) -> dict[str, str]:
 
 
 def _run_script(*, sample: Path, config: str, output_dir: Path, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
-    return subprocess.run(
-        ["bash", str(SCRIPT), str(sample), "--config", config, "--output-dir", str(output_dir)],
+    return subprocess.run(  # noqa: S603
+        ["bash", str(SCRIPT), str(sample), "--config", config, "--output-dir", str(output_dir)],  # noqa: S607
         env=env,
         capture_output=True,
         text=True,
