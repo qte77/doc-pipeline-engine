@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `pyproject.toml` `[tool.ruff.lint]` adds `S` (bandit-equivalent security checks) and `C90` (McCabe complexity, `max-complexity = 10`) rule sets, bringing the repo toward the cross-fleet ruff alignment. `tests/**` per-file-ignores gain `S101` (pytest's `assert` idiom). Tracking follow-up issue #75 covers the remaining rules. Resolves #72.
 - **Pipeline legs renamed**: `v1` → `anthropic_sdk`, `v2` → `local`. The PR-ordering labels obscured what the legs actually do; the new names describe the transport flexibility (Anthropic SDK can also point at Bedrock / Vertex / local LLM gateways) and the locality property (`local` does no LLM and no cloud calls). All `stages/v{1,2}_*.py` files renamed via `git mv`; `harness.py` `DiffReport` fields, axes keys, and CLI flag (`--anthropic-sdk-model`) updated; `pyproject.toml` extras renamed (`anthropic_sdk`, `local`, `local-render`, `local-eval`); `Makefile` `install_v2_nlp` → `install_local_nlp`. The old extras + Makefile target ship as deprecated aliases for one release cycle. Output dirs change from `outputs/<sha>/v1/` → `outputs/<sha>/anthropic_sdk/` and `v2/` → `local/`. Forward-looking docs (architecture / roadmap / CONTRIBUTING / prototype plan / landscape) adopt the new names; historical run-1/2/3 results keep `v1`/`v2` wording as snapshots. See [ADR-0003](docs/adr/0003-rename-legs-anthropic-sdk-local.md).
 
 ### Added
