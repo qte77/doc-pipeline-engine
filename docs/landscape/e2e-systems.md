@@ -1,8 +1,8 @@
 ---
-title: Prior Art Landscape
-purpose: E2E document pipeline prior art — academic surveys, OSS systems, commercial IDP, reference architectures
+title: E2E Systems Landscape
+purpose: End-to-end document pipeline systems and prior art — academic surveys, OSS systems, commercial IDP, reference architectures, gap analysis
 created: 2026-04-26
-updated: 2026-04-26
+updated: 2026-05-21
 validated_links: 2026-04-26
 category: landscape
 ---
