@@ -25,7 +25,7 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 | Tool | Primary role | License | Runtime | Formats | Verdict |
 | --- | --- | --- | --- | --- | --- |
 | **docling** | Layout-aware PDF/Office → structured doc | MIT | Python + torch | PDF, DOCX, PPTX, HTML, images | **Primary** — best layout fidelity, native target for `CanonicalDoc`. |
-| **Kreuzberg** | Async multi-format extraction facade | MIT | Python (pypdfium2, Tesseract, python-docx, …) | PDF, Office, images, email, HTML | **Primary (breadth)** — covers the long tail with one adapter. |
+| **Kreuzberg** | Async multi-format extraction facade | **MIT (≤ v4.7.4) / ELv2 (≥ v4.8)** | Python (pypdfium2, Tesseract, python-docx, …) | PDF, Office, images, email, HTML | **Primary (breadth, MIT line via `extract`) / Opt-in (ELv2 line via `kreuzberg-elv2`)** — long-tail breadth; default pin is MIT v4.7.4. See [ADR-0005](../adr/0005-kreuzberg-elv2-mitigation.md). |
 | **claude_cli_adapter** | LLM-based extraction via Claude Code CLI | n/a (our code) | Claude CLI | Any (LLM-mediated) | **Primary (reference)** — end-to-end wired first; cross-validation baseline. |
 | **GLM-OCR** | Vision-LLM OCR for complex scans | Apache-2.0 | GPU preferred | Images, scanned PDF | Stub adapter — specialized scan/handwriting path. |
 | **PaddleOCR-VL** | Vision-LLM OCR, CJK-strong | Apache-2.0 | GPU preferred | Images, scanned PDF | Stub adapter — non-Latin script fallback. |
@@ -35,7 +35,7 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 
 ### Notes
 
-**docling vs Kreuzberg** — not redundant. docling is the layout-accurate path for PDFs that feed `CanonicalDoc`; Kreuzberg is the pragmatic catch-all for the formats docling doesn't handle well (email, xlsx, legacy Office). Run them side by side in [§0.4.0](../roadmap.md#040--adapters) cross-validation.
+**docling vs Kreuzberg** — not redundant. docling is the layout-accurate path for PDFs that feed `CanonicalDoc`; Kreuzberg is the pragmatic catch-all for the formats docling doesn't handle well (email, xlsx, legacy Office). Run them side by side in [§0.4.0](../roadmap.md#040--adapters) cross-validation. **Kreuzberg licence-gate (2026-04-08):** v4.8+ moved to Elastic License 2.0; default pin is `<4.8` (MIT, frozen at v4.7.4). If v4.7.4 DOCX heading detection regresses for your samples, docling becomes the primary DOCX path (see [ADR-0005](../adr/0005-kreuzberg-elv2-mitigation.md)).
 
 **Tesseract positioning** — don't expose as its own adapter. It's a dependency of the Python wrappers; surfacing it separately would duplicate configuration surface for no gain.
 

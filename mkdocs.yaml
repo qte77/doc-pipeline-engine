@@ -52,6 +52,7 @@ nav:
       - "ADR-0002 mkdocs site": adr/0002-mkdocs-material-mkdocstrings-for-api-docs.md
       - "ADR-0003 Rename legs": adr/0003-rename-legs-anthropic-sdk-local.md
       - "ADR-0004 External evaluators": adr/0004-external-evaluators-vs-pipeline.md
+      - "ADR-0005 Kreuzberg ELv2 mitigation": adr/0005-kreuzberg-elv2-mitigation.md
   - Contracts: contracts.md
   - Code: docstrings.md
   - Agents:

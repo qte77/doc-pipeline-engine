@@ -13,9 +13,19 @@ dependencies = [
 [project.optional-dependencies]
 # Install with: uv sync --extra extract
 # Kreuzberg covers PDF/Office/images/email/text via Tesseract+pypdfium2.
-# MIT, local-only, no cloud.
+# MIT (≤ v4.7.4) — pinned to the last MIT release. Upstream relicensed to
+# Elastic License 2.0 starting at v4.8.0 (2026-04-08); see ADR-0005 and issue #76.
+# For the ELv2 line, install the [kreuzberg-elv2] extra instead.
 extract = [
-  "kreuzberg>=2.0",
+  "kreuzberg>=2.0,<4.8",
+]
+# Install with: uv sync --extra kreuzberg-elv2
+# Latest Kreuzberg under Elastic License 2.0 (source-available, not OSI-OSS).
+# ELv2 restricts offering the software as a managed/hosted service to third
+# parties. Use only if your deployment is comfortable with that constraint.
+# See ADR-0005.
+kreuzberg-elv2 = [
+  "kreuzberg>=4.8",
 ]
 # Install with: uv sync --extra render
 # Shared rendering: Markdown → HTML → PDF (WeasyPrint), Markdown → DOCX (python-docx).
