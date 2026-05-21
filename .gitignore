@@ -44,3 +44,6 @@ docs/LICENSE.md
 
 # Claude Code (machine-local settings only)
 .claude/settings.local.json
+
+# cc-meta hook seed artifact — project agent memory, not committed
+MEMORY.md
