@@ -7,7 +7,7 @@ validated_links: 2026-04-26
 category: landscape
 ---
 
-End-to-end (E2E) document pipelines for business / enterprise — academic surveys, OSS systems, commercial IDP, and reference architectures. Companion files: [ingest.md](ingest.md), [process.md](process.md), [output.md](output.md).
+End-to-end (E2E) document pipelines for business / enterprise — academic surveys, OSS systems, commercial IDP, and reference architectures. Companion files: [ingest.md](ingest.md), [process.md](process.md), [output.md](output.md), [domain-extraction.md](domain-extraction.md).
 
 This file informs USP positioning. It is *not* a buyer's guide.
 

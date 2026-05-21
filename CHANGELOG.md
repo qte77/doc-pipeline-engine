@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `docs/landscape/domain-extraction.md` — new sibling landscape file surveying fine-tuned + domain-pretrained extraction models per industry (biomedical, legal, financial, scientific/patents, cybersecurity, HR, retail, agriculture/food, plus sparse-domain sections for mech-elec-cert and government/regulatory). Includes License tier reference (Apache/MIT / BSD / LGPL / CC-BY-SA / CC-BY-NC / GPL-AGPL / Undeclared) and PHI/de-identification cross-cutting note. Distinct from `process.md` (stage-scoped) — this file is domain-scoped.
 - `docs/landscape/process.md` §6 — schema-templated extraction landscape (NuExtract3 + outlines/instructor cross-refs). (#81)
 - `external/` directory tree — off-the-shelf one-shot summarizers (Anthropic SDK + CC CLI + interactive doc) as comparison baseline. See [ADR-0004](docs/adr/0004-external-evaluators-vs-pipeline.md). (#61)
 - `scripts/gen_contracts_md.py` + committed `docs/contracts.md` — auto-generated contracts reference consumed by external evaluators.
