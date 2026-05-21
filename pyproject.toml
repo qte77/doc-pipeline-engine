@@ -109,14 +109,19 @@ target-version = "py311"
 # D rules enforce docstring presence so mkdocstrings has something to render.
 # Narrow set: only require module / class / function / package docstrings.
 # Google convention; private (_-prefixed) names skipped automatically.
-select = ["D100", "D101", "D103", "D104"]
+# S = bandit-equivalent security checks. C90 = McCabe complexity (≤ 10).
+select = ["D100", "D101", "D103", "D104", "S", "C90"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
 [tool.ruff.lint.per-file-ignores]
 # Tests, scripts, and helpers are internal — docstrings aren't required.
-"tests/**" = ["D"]
+# S101 (assert) is fine in tests; tests are the place to use it.
+"tests/**" = ["D", "S101"]
 "scripts/**" = ["D"]
 "src/doc_pipeline_engine/stages/_*.py" = ["D"]
 "src/doc_pipeline_engine/models/_common.py" = ["D"]
