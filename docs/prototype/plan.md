@@ -92,4 +92,4 @@ PDF is the cleanest A/B — neither variant shares Office-format deps in extract
 
 - [Architecture](../architecture.md) — stage graph + contracts
 - [Roadmap](../roadmap.md) — milestone scope per version
-- [../landscape/ingest.md](../landscape/ingest.md), [../landscape/process.md](../landscape/process.md), [../landscape/output.md](../landscape/output.md), [../landscape/e2e-systems.md](../landscape/e2e-systems.md) — tool surveys feeding this plan
+- [../landscape/ingest.md](../landscape/ingest.md), [../landscape/process.md](../landscape/process.md), [../landscape/output.md](../landscape/output.md), [../landscape/e2e-systems.md](../landscape/e2e-systems.md), [../landscape/domain-extraction.md](../landscape/domain-extraction.md) — tool surveys feeding this plan

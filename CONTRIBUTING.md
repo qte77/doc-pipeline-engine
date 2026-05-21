@@ -118,6 +118,7 @@ Authoritative sources — update these, don't duplicate:
 - `docs/landscape/process.md` — process survey (chunking, NER, RAG indexing, normalization)
 - `docs/landscape/output.md` — output survey (rendering, office formats, templating, conformance)
 - `docs/landscape/e2e-systems.md` — E2E pipeline systems survey, prior art, and USP positioning
+- `docs/landscape/domain-extraction.md` — domain-specific fine-tuned extraction models per industry (biomedical, legal, financial, cybersecurity, ...) for §0.5.0 domain packs
 - `docs/prototype/plan.md` — dual-variant E2E prototype plan (Claude Code vs landscape tools)
 - `AGENTS.md` — AI agent behavioral rules
 - `CONTRIBUTING.md` — this file

@@ -39,6 +39,7 @@ nav:
       - Process: landscape/process.md
       - Output: landscape/output.md
       - E2E Systems: landscape/e2e-systems.md
+      - Domain Extraction: landscape/domain-extraction.md
   - Prototype:
       - Plan: prototype/plan.md
       - Samples: prototype/samples.md

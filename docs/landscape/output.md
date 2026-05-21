@@ -7,7 +7,7 @@ validated_links: 2026-04-26
 category: landscape
 ---
 
-Survey of candidates for the **output** stage — rendering, office formats, templating, and `OutputFormat` / `FormatConformance` validators. Companion files: [ingest.md](ingest.md), [process.md](process.md), [e2e-systems.md](e2e-systems.md).
+Survey of candidates for the **output** stage — rendering, office formats, templating, and `OutputFormat` / `FormatConformance` validators. Companion files: [ingest.md](ingest.md), [process.md](process.md), [e2e-systems.md](e2e-systems.md), [domain-extraction.md](domain-extraction.md).
 
 Output emits documents validating against `OutputFormat` (`id`, `version`, `tier`) and `FormatConformance` (`output_format_id`, `conformant`). Tiers from [architecture.md](../architecture.md):
 

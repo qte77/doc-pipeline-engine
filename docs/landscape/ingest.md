@@ -7,7 +7,7 @@ validated_links: 2026-04-26
 category: landscape
 ---
 
-Survey of candidates for the **ingest** stage — extraction backends, source connectors, and crawling/discovery providers. Companion files: [process.md](process.md), [output.md](output.md), [e2e-systems.md](e2e-systems.md).
+Survey of candidates for the **ingest** stage — extraction backends, source connectors, and crawling/discovery providers. Companion files: [process.md](process.md), [output.md](output.md), [e2e-systems.md](e2e-systems.md), [domain-extraction.md](domain-extraction.md).
 
 ## Selection criteria
 
