@@ -1,9 +1,9 @@
 ---
 title: Process Landscape
-purpose: Survey of chunking, table/figure extraction, NER, RAG indexing, and CanonicalDoc normalization for the process stage
+purpose: Survey of chunking, table/figure extraction, NER, RAG indexing, schema-templated extraction, and CanonicalDoc normalization for the process stage
 created: 2026-04-26
-updated: 2026-04-26
-validated_links: 2026-04-26
+updated: 2026-05-21
+validated_links: 2026-05-21
 category: landscape
 ---
 
@@ -82,6 +82,22 @@ Framework vs vector store are orthogonal. Recommended default: LlamaIndex (frame
 
 - `v2_normalize` reconstructs a flat heading tree from the Kreuzberg-extracted plain text via three regex families (formal-prefix `SECTION`/`SEC.`/`CHAPTER`/`ARTICLE`/`PART`, numbered `5.1 Title`, glued numbered `1Title`) with a 50% density-cap fallback to single-leaf. Real nested hierarchy and docling-based normalize remain deferred to [§0.5.0](../roadmap.md#050--domain-packs) Comprehensive tier.
 
+## 6. Schema-templated extraction
+
+Given a JSON schema template, return JSON conforming to that template. Distinct from §3 NER (entity-span tagging) and from naive prompted-LLM extraction (no schema guarantee). Maps onto `AnalysisReport` (claims, entities, relations, citations) and the structured fields of `CanonicalDoc`.
+
+| Tool | Approach | License | Runtime | Locality | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| **NuExtract3** | 4B VLM fine-tuned for schema-templated extraction (built on Qwen3.5-4B) | Apache-2.0 | Python + transformers; GGUF Q4_K_M ~2.71 GB CPU; ~8 GB VRAM BF16 | local | **Candidate (`external/` benchmark first)** — schema fit for `AnalysisReport` / `CanonicalDoc`; CPU-feasible but seconds-per-doc on Q4. Land as `external/nuextract/run_oneshot.py` benchmark; promote to in-process leg if quality justifies. |
+| **outlines** (cross-ref §3) | Constrained decoding over any local LLM | Apache-2.0 | Python + torch + local LLM | local | See §3 — generic constrain-anything path with general-purpose LLMs. |
+| **instructor** (cross-ref §3) | Function-calling structured output | MIT | Python; OpenAI-compatible API | cloud-by-default | See §3 — opt-in cloud path; respect `local-only` profile. |
+
+**Notes** — NuExtract3 differentiates by being a *fine-tuned* dedicated extraction model (single weights file), where `outlines + local-LLM` is the *generic-LLM constrained-decoding* path and `instructor` is the *cloud-function-calling* path. NuMind ships a `convert_json_schema_to_nuextract_template()` helper that maps Pydantic schemas to NuExtract templates with a thin type-vocabulary adapter (`verbatim-string` / `date-time` / enums / arrays).
+
+NuExtract3 is a vision-language model — it can read PDFs as images directly, so it overlaps slightly with `Extract` for born-digital and scanned PDFs. The recommended pipeline position is still **downstream of Kreuzberg** (Kreuzberg supplies text+layout; NuExtract3 maps text → schema), but a text-skipping VLM mode is available for scans where Kreuzberg / Tesseract struggle.
+
+Self-reported benchmarks (NuMind, ~600-doc internal set): NuExtract3 at 0.651 vs Qwen3.5-9B at 0.479 and Qwen3.5-4B at 0.417 — outperforms general LLMs ~2× its size on schema-compliance. No independent third-party replication yet.
+
 ## What "canonical" means concretely
 
 Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
@@ -100,6 +116,7 @@ Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
 - Default embedding model for the Chroma/LlamaIndex path — `all-MiniLM-L6-v2` (~80 MB CPU) or larger? Determines whether GPU is required for Comprehensive RAG.
 - Should `tier_summary` carry pre-computed entity spans, or are entities always derived at analyze time? Affects whether NER lives in process or analyze.
 - Pandoc binary GPL: confirm subprocess invocation (no linking) is acceptable for Apache-2.0 distribution, or gate behind `[pandoc]`.
+- Does NuExtract3 deserve its own pipeline leg (`nuextract`) when contracts stabilize in v0.3+, or stay an `external/` benchmark? Decision gated on the benchmark numbers from `external/nuextract/run_oneshot.py` (follow-up).
 
 ## References
 
@@ -138,3 +155,9 @@ Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
 
 - docling: <https://github.com/docling-project/docling>
 - pypandoc: <https://github.com/JessicaTegner/pypandoc>
+
+### Schema-templated extraction
+
+- NuExtract3: <https://huggingface.co/numind/NuExtract3>
+- NuExtract3-GGUF: <https://huggingface.co/numind/NuExtract3-GGUF>
+- NuMind models: <https://huggingface.co/numind>
