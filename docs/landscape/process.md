@@ -7,7 +7,7 @@ validated_links: 2026-05-21
 category: landscape
 ---
 
-Survey of candidates for the **process** stage — chunking, supplemental table/figure extraction, NER, RAG indexing, and normalization to `CanonicalDoc` (`ExtractionBundle → CanonicalDoc`, [roadmap §0.5.0](../roadmap.md#050--domain-packs)). Companion files: [ingest.md](ingest.md), [output.md](output.md), [prior-art.md](prior-art.md).
+Survey of candidates for the **process** stage — chunking, supplemental table/figure extraction, NER, RAG indexing, and normalization to `CanonicalDoc` (`ExtractionBundle → CanonicalDoc`, [roadmap §0.5.0](../roadmap.md#050--domain-packs)). Companion files: [ingest.md](ingest.md), [output.md](output.md), [e2e-systems.md](e2e-systems.md).
 
 `CanonicalDoc` fields: `version`, `source_sha256`, `built_at`, `input_format`, `root` (normalized tree), `tier_summary` (Quick vs Comprehensive — see [architecture.md](../architecture.md)). "Canonical" means a normalized tree rooted at `root` carrying tier-aware summary.
 

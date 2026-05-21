@@ -7,7 +7,7 @@ validated_links: 2026-04-26
 category: landscape
 ---
 
-Survey of candidates for the **ingest** stage — extraction backends, source connectors, and crawling/discovery providers. Companion files: [process.md](process.md), [output.md](output.md), [prior-art.md](prior-art.md).
+Survey of candidates for the **ingest** stage — extraction backends, source connectors, and crawling/discovery providers. Companion files: [process.md](process.md), [output.md](output.md), [e2e-systems.md](e2e-systems.md).
 
 ## Selection criteria
 
@@ -108,7 +108,7 @@ Produce the file list that becomes `DiscoveryManifest` (`version`, `source`, `di
 
 - docling: <https://github.com/docling-project/docling>
 - Kreuzberg: <https://github.com/kreuzberg-dev/kreuzberg>
-- GLM-OCR: <https://github.com/zai-org/GLM-4>
+- GLM-OCR: <https://github.com/zai-org/GLM-OCR>
 - PaddleOCR-VL: <https://github.com/PaddlePaddle/PaddleOCR>
 - Tesseract: <https://github.com/tesseract-ocr/tesseract>
 - PyMuPDF: <https://github.com/pymupdf/PyMuPDF>

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - `pyproject.toml` `[tool.ruff.lint]` adds `S` (bandit-equivalent security checks) and `C90` (McCabe complexity, `max-complexity = 10`) rule sets, bringing the repo toward the cross-fleet ruff alignment. `tests/**` per-file-ignores gain `S101` (pytest's `assert` idiom). Tracking follow-up issue #75 covers the remaining rules. Resolves #72.
 - **Pipeline legs renamed**: `v1` → `anthropic_sdk`, `v2` → `local`. The PR-ordering labels obscured what the legs actually do; the new names describe the transport flexibility (Anthropic SDK can also point at Bedrock / Vertex / local LLM gateways) and the locality property (`local` does no LLM and no cloud calls). All `stages/v{1,2}_*.py` files renamed via `git mv`; `harness.py` `DiffReport` fields, axes keys, and CLI flag (`--anthropic-sdk-model`) updated; `pyproject.toml` extras renamed (`anthropic_sdk`, `local`, `local-render`, `local-eval`); `Makefile` `install_v2_nlp` → `install_local_nlp`. The old extras + Makefile target ship as deprecated aliases for one release cycle. Output dirs change from `outputs/<sha>/v1/` → `outputs/<sha>/anthropic_sdk/` and `v2/` → `local/`. Forward-looking docs (architecture / roadmap / CONTRIBUTING / prototype plan / landscape) adopt the new names; historical run-1/2/3 results keep `v1`/`v2` wording as snapshots. See [ADR-0003](docs/adr/0003-rename-legs-anthropic-sdk-local.md).
 
@@ -32,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - Pydantic v2 models replace the JSON-Schema gate as the single source of truth for stage contracts. `src/doc_pipeline_engine/models/` ships one `BaseModel` per contract (10 total) with a `REGISTRY` mapping. `base/contracts.py` rewritten as a thin Pydantic-backed wrapper — public API (`validate`, `is_valid`) unchanged, internally dispatches into `Model.model_validate(...)` and raises `ContractValidationError`. `runner.py` raises `PipelineError` from `ContractValidationError` (no longer depends on `jsonschema`). Resolves the typed-contract goal of [§0.2.1](docs/roadmap.md#021--typed-contracts); see [ADR-0001](docs/adr/0001-pydantic-as-contract-source-of-truth.md).
 
 ### Added
@@ -49,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - `stages/v2_normalize.py` — reconstructs a flat heading tree from Kreuzberg's plain text via three regex families (formal-prefix `SECTION`/`SEC.`/`CHAPTER`/`ARTICLE`/`PART`, numbered `5.1 Title`, glued numbered `1Title`). Each detected heading becomes one section node carrying `title` + body text; falls back to single-leaf on zero headings or detected density >50% of non-empty lines. Resolves [#33](https://github.com/qte77/doc-pipeline-engine/issues/33): V2 now produces N claims per document instead of one, matching V1's structural granularity. `v2_analyze` / `v2_render` / `v2_eval` untouched.
 
 ### Added
@@ -80,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - `Makefile` `install_models` — kept as a one-line alias for `install_v2_nlp` for one release cycle; removal queued for §0.5.0. Naming convention going forward: `install_<use_case>` (snake_case, each target installs the apt package + Python extra + model needed for one capability, in one command).
 
 ### Added
@@ -92,6 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - Reorganized docs into topical subdirs: `docs/landscape-*.md` → `docs/landscape/*.md` (drops the redundant `landscape-` prefix), `docs/prototype-*.md` → `docs/prototype/*.md`. All cross-references in `CHANGELOG.md`, `CONTRIBUTING.md`, `README.md`, `docs/roadmap.md`, `docs/llms.txt`, `.github/templates/llms.txt.tpl`, and intra-doc links were updated.
 - `.gitignore` — ignore `outputs/` (harness-generated artifacts: per-sample md/docx/pdf and `v2_summary.json`)
 - `Makefile` — drop redundant `@` prefixes and backslash continuations in the `help` recipe (`.SILENT` and `.ONESHELL` already declared); ignore `outputs/**` in `markdownlint`
@@ -127,16 +132,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - `.claude/settings.json` enables `python-dev` and `commit-helper` plugins from the `qte77-claude-code-utils` marketplace; `CONTRIBUTING.md` documents the plugin set under Setup
 
 ### Added
 
 - `docs/landscape/process.md` — process-stage survey (chunking, table/figure extraction, NER, RAG indexing, CanonicalDoc normalization)
 - `docs/landscape/output.md` — output-stage survey (rendering, office formats, templating, FormatConformance validators)
-- `docs/landscape/prior-art.md` — E2E pipeline prior art (arXiv 2025 surveys, OSS systems, commercial IDP) and USP gap analysis
+- `docs/landscape/e2e-systems.md` — E2E pipeline systems survey (arXiv 2025 surveys, OSS systems, commercial IDP) and USP gap analysis. Originally landed as `prior-art.md`; renamed in a later [Unreleased] entry.
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - `docs/landscape.md` → `docs/landscape/ingest.md`; expanded with source connectors (SharePoint, Confluence, Drive, S3, IMAP, Exchange) and crawling/discovery sections (polyfetch-scrape, trafilatura, httpx, pathlib, watchdog)
 - `CONTRIBUTING.md` documentation hierarchy updated to reference the four landscape files
 
@@ -156,6 +163,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Renamed `docs/landscape/prior-art.md` → `docs/landscape/e2e-systems.md` (via `git mv`, history preserved). Reasons: (1) sibling-symmetric with `ingest.md` / `process.md` / `output.md` (stage-scoped), where this file is *system*-scoped — name now signals that; (2) "prior art" had a patents-y feel and inaccurately implied "prior" for actively-maintained competitors like R2R and Unstructured. Frontmatter title updated ("Prior Art Landscape" → "E2E Systems Landscape") and purpose expanded to mention gap analysis. All internal references updated: `mkdocs.yaml` nav entry "Prior Art" → "E2E Systems"; `README.md`, `CONTRIBUTING.md`, `docs/prototype/plan.md`, and the three sibling landscape files' "Companion files" lines. Also fixes the GLM-OCR References URL in `ingest.md` (was pointing at `zai-org/GLM-4`, corrected to `zai-org/GLM-OCR`).
 - Package layout: `workers/` → `src/doc_pipeline_engine/`
 - Build system: setuptools → hatchling, pip → uv sync
 - Makefile: MARK sections, auto-help, lint_md, lint_links

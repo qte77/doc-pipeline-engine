@@ -38,7 +38,7 @@ nav:
       - Ingest: landscape/ingest.md
       - Process: landscape/process.md
       - Output: landscape/output.md
-      - Prior Art: landscape/prior-art.md
+      - E2E Systems: landscape/e2e-systems.md
   - Prototype:
       - Plan: prototype/plan.md
       - Samples: prototype/samples.md
