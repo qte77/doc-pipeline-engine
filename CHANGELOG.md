@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `docs/landscape/process.md` §6 — Schema-templated extraction landscape. Surveys **NuExtract3** (NuMind, 4B Apache-2.0 VLM fine-tuned for schema-templated JSON extraction; GGUF Q4_K_M CPU-runnable) as the dedicated-model path, cross-referencing `outlines` + `instructor` already listed in §3. Recommends landing as `external/nuextract/run_oneshot.py` benchmark first; promotion to in-process leg gated on benchmark numbers. Adds open question about whether NuExtract3 deserves a `nuextract` pipeline leg in v0.3+.
+
 ### Changed
 
 - `pyproject.toml` `[tool.ruff.lint]` adds `S` (bandit-equivalent security checks) and `C90` (McCabe complexity, `max-complexity = 10`) rule sets, bringing the repo toward the cross-fleet ruff alignment. `tests/**` per-file-ignores gain `S101` (pytest's `assert` idiom). Tracking follow-up issue #75 covers the remaining rules. Resolves #72.
