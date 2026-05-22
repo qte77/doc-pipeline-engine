@@ -64,7 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `anthropic_sdk` leg of the parallel-diff harness runs in subscription-only environments (claude CLI but no `ANTHROPIC_API_KEY`). Previously crashed at `_anthropic_sdk_client.make_client()`.
 - `_anthropic_sdk_client._call_via_cli` passes the user prompt via stdin (was hitting argv length limit on the 220K-char contract DOCX).
 
-
 ## [0.1.0] - 2026-04-23
 
 ### Added
