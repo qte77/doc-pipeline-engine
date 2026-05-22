@@ -68,7 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Pin `extract` extra to `kreuzberg>=2.0,<4.8` to stay on the MIT line (v4.7.4 is the last MIT release; upstream relicensed to Elastic License 2.0 starting at v4.8.0 on 2026-04-08). New opt-in `[kreuzberg-elv2]` extra (`kreuzberg>=4.8`) for downstream consumers comfortable with ELv2 restrictions (no managed-service offering, no notice removal). Default install path stays Apache-2.0-clean. See [ADR-0005](docs/adr/0005-kreuzberg-elv2-mitigation.md). Resolves #76.
 
-
 ## [0.1.0] - 2026-04-23
 
 ### Added
