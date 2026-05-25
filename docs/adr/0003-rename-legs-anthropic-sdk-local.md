@@ -2,14 +2,16 @@
 title: ADR-0003 — Rename pipeline legs `v1` → `anthropic_sdk`, `v2` → `local`
 purpose: Records the leg-naming refactor that replaces PR-ordering labels with self-describing names ahead of the external-evaluator work in §0.2.3
 created: 2026-04-27
-updated: 2026-04-27
-validated_links: 2026-04-27
+updated: 2026-05-25
+validated_links: 2026-05-25
 category: technical
 ---
 
-**Status**: Accepted (2026-04-27)
+## Status
 
-## Context
+Accepted — 2026-04-27
+
+## Context and Problem Statement
 
 The two pipeline legs have lived under `v1` / `v2` names since
 §0.2.0. Those labels describe **PR-ordering** — the Anthropic-SDK
@@ -28,9 +30,71 @@ more than they describe:
 - The §0.2.3 external-evaluator work introduces a third comparison
   surface; calling it `v3` would compound the confusion.
 
-## Decision
+## Decision Drivers
 
-Rename the legs **before** the external evaluators land:
+- PR-ordering labels (`v1` / `v2`) describe scaffolding sequence, not leg behavior, forcing readers to look up the mapping every time
+- Transport flexibility of the Anthropic SDK leg is invisible under `v1`; locality property of the no-LLM leg is invisible under `v2`
+- A third comparison track (`§0.2.3`) would compound the confusion if named `v3`
+
+## Considered Options
+
+### Option 1 — Rename to `anthropic_sdk` / `local`
+
+**Pros**
+
+- `anthropic_sdk` describes the transport (Anthropic Python SDK), covering Anthropic cloud, Bedrock, Vertex, or any compatible endpoint
+- `local` describes the defining locality property (no LLM, no cloud calls; Tesseract OCR + optional spaCy NER)
+- Third comparison track can be named descriptively from the start without compounding confusion
+
+**Cons**
+
+- Broad mechanical rename across source files, tests, identifiers, `pyproject.toml` extras, Makefile, and output directories
+- Existing locally cached outputs from prior runs need a one-time manual rename or fresh regeneration
+
+### Option 2 — `api` / `local`
+
+**Pros**
+
+- Shorter names; `local` still carries its locality signal
+
+**Cons**
+
+- `api` understates the SDK's transport flexibility (the SDK isn't married to Anthropic cloud)
+
+### Option 3 — `sdk` / `tools`
+
+**Pros**
+
+- Mechanism-based naming is unambiguous about what each leg uses
+
+**Cons**
+
+- Pure mechanism naming; loses the locality signal `local` carries and the cloud-by-default signal `anthropic_sdk` carries
+
+### Option 4 — `llm` / `local`
+
+**Pros**
+
+- `llm` / `local` contrast is immediately intuitive to newcomers
+
+**Cons**
+
+- `llm` is generic enough to confuse with external-evaluator variants that also use LLMs (CC, external Anthropic SDK)
+
+### Option 5 — Glossary-only: keep `v1` / `v2` in code, add a doc table mapping
+
+**Pros**
+
+- Smallest diff; no code changes required
+
+**Cons**
+
+- Every new contributor still has to look up the mapping; the opacity remains in the codebase
+
+## Decision Outcome
+
+Chosen: **Option 1 — Rename to `anthropic_sdk` / `local`**. Rename the legs
+**before** the external evaluators land:
 
 - `v1` → **`anthropic_sdk`** — describes the transport (Anthropic
   Python SDK), which can point at Anthropic cloud, Bedrock, Vertex,
@@ -81,20 +145,6 @@ manual rename — `mv outputs/<sha>/v1 outputs/<sha>/anthropic_sdk`
 — or fresh runs to regenerate; the harness writes to the new
 paths after this PR.)
 
-## Rejected alternatives
-
-- **`api` / `local`** — `api` understates the SDK's transport
-  flexibility (the SDK isn't married to Anthropic cloud).
-- **`sdk` / `tools`** — pure mechanism naming; loses the locality
-  signal `local` carries (and the cloud-by-default signal
-  `anthropic_sdk` carries).
-- **`llm` / `local`** — `llm` is generic enough to confuse with
-  external-evaluator variants that also use LLMs (CC, external
-  Anthropic SDK).
-- **Glossary-only — keep `v1` / `v2` in code, add a doc table
-  mapping** — smallest diff, but every new contributor would still
-  have to look up the mapping. The opacity remains.
-
 ## Consequences
 
 - **Forward-looking docs** (architecture, roadmap, CONTRIBUTING,
@@ -110,7 +160,7 @@ paths after this PR.)
   operational cost for users with cached local outputs;
   acceptable.
 
-## Sources
+## More Information
 
 - Plan file:
   [`doc-pipeline-external-evals-and-leg-rename.md`](https://github.com/qte77/doc-pipeline-engine/issues)

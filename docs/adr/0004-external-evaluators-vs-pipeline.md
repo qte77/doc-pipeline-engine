@@ -2,14 +2,16 @@
 title: ADR-0004 — External evaluators vs the in-process pipeline
 purpose: Records the decision to ship Anthropic SDK + Claude Code one-shot summarizers as external evaluators in `external/` rather than as in-process pipeline legs
 created: 2026-04-27
-updated: 2026-04-27
-validated_links: 2026-04-27
+updated: 2026-05-25
+validated_links: 2026-05-25
 category: technical
 ---
 
-**Status**: Accepted (2026-04-27)
+## Status
 
-## Context
+Accepted — 2026-04-27
+
+## Context and Problem Statement
 
 The in-process pipeline ships two stage-decomposed legs (`anthropic_sdk`
 and `local`, both in `src/doc_pipeline_engine/stages/`). Each leg goes
@@ -42,8 +44,63 @@ and CC's role as an external benchmark. It also made every CLI run
 execute four Claude calls (one per stage) instead of one off-the-shelf
 call, defeating the "off-the-shelf" intent.
 
-## Decision
+## Decision Drivers
 
+- Off-the-shelf one-shot summarizers must not run through pipeline stages — wedging CC-CLI into V1 executed 4 calls per sample and conflated transport with benchmarking
+- External evaluators receive the raw sample file to preserve off-the-shelf realism, including each tool's own extraction quality
+- The 2×2×3 variant matrix (Anthropic + CC × vanilla/project × headless/interactive/agent-sdk) must not force a Stage shape onto one-shot tools
+
+## Considered Options
+
+### Option 1 — External `external/` directory with standalone runners
+
+**Pros**
+
+- No pipeline stages imposed on one-shot tools; each runner is a few lines
+- Off-the-shelf realism preserved: external evaluators process the raw sample file including their own extraction
+- CC's native PDF-reading capability remains part of the test; extraction-quality differences are surfaced
+- Subscription-only users have a clear path via `external/cc_cli/run_headless.sh`
+
+**Cons**
+
+- Cost axis is asymmetric across variants (SDK per-call from envelope, CC per-session via codeburn, `local` is free)
+- Subscription-only users no longer have a V1 path; behavior change vs pre-#54 main
+
+### Option 2 — CC-CLI as transport fallback inside V1 stages (rolled-back #41 design)
+
+**Pros**
+
+- Single code path for all LLM-backed runs; existing V1 call sites work for CC users without separate scripts
+
+**Cons**
+
+- Runs 4 Claude calls per sample (one per stage), conflating external comparison with V1's transport choice
+- Defeats off-the-shelf intent: a real user sends one call, not four
+
+### Option 3 — Third in-process leg in `harness.py`
+
+**Pros**
+
+- Unified harness runs all legs; results land in the same report structure
+
+**Cons**
+
+- Forces a Stage shape onto one-shot tools; tests would have to invent fake `Discover` / `Extract` outputs for a leg that doesn't go through them
+
+### Option 4 — Share `Extract` output with external evaluators (apples-to-apples on summarization quality alone)
+
+**Pros**
+
+- Isolates summarization quality from extraction quality; fairer comparison of the LLM reasoning step
+
+**Cons**
+
+- Loses CC's native PDF-reading capability from the test
+- Hides extraction-quality differences, which are part of what the prototype measures
+
+## Decision Outcome
+
+Chosen: **Option 1 — External `external/` directory with standalone runners**.
 External one-shot summarizers live in **`external/`** as standalone
 runners, **not** as in-process pipeline stages. Their outputs land in
 `outputs/<sha>/external/<variant>/` and are compared against the
@@ -104,18 +161,6 @@ so their summaries can structurally match the pipeline output:
   output through codeburn; codeburn emits `CODEBURN_COST_USD=<float>`
   on stderr; the runner writes that to `meta.json.cost_usd`.
 
-## Rejected alternatives
-
-- **CC-CLI as transport fallback inside V1 stages** (the rolled-back
-  #41 design) — runs 4 Claude calls per sample, conflates external
-  comparison with V1's transport choice, defeats off-the-shelf intent.
-- **Third in-process leg in `harness.py`** — forces a Stage shape onto
-  one-shot tools; tests would have to invent fake `Discover` /
-  `Extract` outputs for a leg that doesn't go through them.
-- **Share `Extract` output with external evaluators** (apples-to-apples
-  on summarization quality alone) — loses CC's native PDF-reading
-  capability from the test, hides extraction-quality differences.
-
 ## Consequences
 
 - Subscription-only users no longer have a V1 path; they use
@@ -137,7 +182,7 @@ so their summaries can structurally match the pipeline output:
   (airgap-yes / airgap-conditional / airgap-no). The `local` pipeline
   is the only `airgap-yes` variant.
 
-## Sources
+## More Information
 
 - [github.com/getagentseal/codeburn](https://github.com/getagentseal/codeburn)
   — cost-monitoring wrapper for Claude Code.
