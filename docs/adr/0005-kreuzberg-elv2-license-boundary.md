@@ -2,14 +2,14 @@
 title: ADR-0005 — Pin Kreuzberg below v4.8 to stay on the MIT line; gate ELv2 as opt-in
 purpose: Records the decision to cap the kreuzberg dependency at the last MIT release and ship v4.8+ ELv2 behind an opt-in extra
 created: 2026-05-25
-updated: 2026-05-25
-validated_links: 2026-05-25
+updated: 2026-05-26
+validated_links: 2026-05-26
 category: technical
 ---
 
 ## Status
 
-Proposed — 2026-05-25
+Accepted — 2026-05-26
 
 ## Context and Problem Statement
 
