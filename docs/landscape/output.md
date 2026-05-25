@@ -2,8 +2,8 @@
 title: Output Landscape
 purpose: Survey of rendering, office formats, templating, and conformance validators for the output stage
 created: 2026-04-26
-updated: 2026-04-26
-validated_links: 2026-04-26
+updated: 2026-05-25
+validated_links: 2026-05-25
 category: landscape
 ---
 
@@ -26,13 +26,13 @@ Output emits documents validating against `OutputFormat` (`id`, `version`, `tier
 
 | Tool | License | Runtime | Output formats | Verdict |
 | --- | --- | --- | --- | --- |
-| **WeasyPrint** | BSD-3-Clause | Python-native | PDF, PNG (from HTML/CSS) | **Primary (PDF)** — pure-Python HTML→PDF; good CSS3 support; no Haskell/Rust install. |
+| **WeasyPrint** ([repo](https://github.com/Kozea/WeasyPrint)) | BSD-3-Clause | Python-native | PDF, PNG (from HTML/CSS) | **Primary (PDF)** — v68.1 (2026-05-25), 9k stars. Pure-Python HTML→PDF; good CSS3 support; no Haskell/Rust install. |
 | **ReportLab** | BSD-3-Clause / commercial (RLPDF) | Python-native | PDF | **Primary (programmatic PDF)** — battle-tested; preferred for data-heavy tables and charts in Comprehensive. |
-| **Typst** | Apache-2.0 | External binary (Rust); `typst` Python binding | PDF, PNG, SVG | **Optional** — modern TeX replacement; Python binding removes shell-out. |
-| **Pandoc** | **GPL-2.0-or-later** | External binary (Haskell) | MD, DOCX, PDF (LaTeX/Typst), HTML, EPUB, LaTeX, RST, … | **Optional** — broadest converter; subprocess use does not impose GPL on the caller, but ship behind `[pandoc]` extra to make the choice explicit. |
-| **Quarto** | MIT (depends on Pandoc internally) | External binary (Deno + Pandoc) | HTML, PDF, DOCX, PPTX, EPUB | **Optional** — best for IMRaD/science reports; heavy install; transitive Pandoc concern. |
-| **Sphinx** | BSD-2-Clause | Python-native (LaTeX for PDF) | HTML, PDF, EPUB, man | **Optional** — autodoc/tech-spec output; heavy for single-doc use. |
-| **mdBook** | MPL-2.0 | External binary (Rust) | HTML book, PDF (via print) | **Optional** — multi-chapter docs sites; MPL-2.0 file-scoped copyleft, acceptable as subprocess. |
+| **Typst** ([repo](https://github.com/typst/typst)) | Apache-2.0 | External binary (Rust); `typst` Python binding | PDF, PNG, SVG | **Optional** — v0.14.2 (2026-05-25), 54k stars. Modern TeX replacement; Python binding removes shell-out. |
+| **Pandoc** ([repo](https://github.com/jgm/pandoc)) | **GPL-2.0-or-later** | External binary (Haskell) | MD, DOCX, PDF (LaTeX/Typst), HTML, EPUB, LaTeX, RST, … | **Optional** — v3.9.0.2 (2026-05), 44k stars. Broadest converter; subprocess use does not impose GPL on the caller, but ship behind `[pandoc]` extra to make the choice explicit. |
+| **Quarto** ([repo](https://github.com/quarto-dev/quarto-cli)) | MIT (COPYING.md; GitHub API returns NOASSERTION) | External binary (Deno + Pandoc) | HTML, PDF, DOCX, PPTX, EPUB | **Optional** — v1.9.38 (2026-05-25), 6k stars. Best for IMRaD/science reports; heavy install; transitive Pandoc concern. |
+| **Sphinx** ([repo](https://github.com/sphinx-doc/sphinx)) | BSD-2-Clause (LICENSE.rst; GitHub API returns NOASSERTION) | Python-native (LaTeX for PDF) | HTML, PDF, EPUB, man | **Optional** — 8k stars. Autodoc/tech-spec output; heavy for single-doc use. |
+| **mdBook** ([repo](https://github.com/rust-lang/mdBook)) | MPL-2.0 | External binary (Rust) | HTML book, PDF (via print) | **Optional** — 22k stars. Multi-chapter docs sites; MPL-2.0 file-scoped copyleft, acceptable as subprocess. |
 
 **Notes** — WeasyPrint + ReportLab cover the two Python-native PDF paths and form the default for Comprehensive PDF. Typst is the cleanest binary path for production-quality PDFs. Pandoc is the Swiss-army-knife behind a license gate.
 
@@ -40,20 +40,20 @@ Output emits documents validating against `OutputFormat` (`id`, `version`, `tier
 
 | Tool | License | Runtime | Formats | Verdict |
 | --- | --- | --- | --- | --- |
-| **python-docx** | MIT | Python-native | DOCX | **Primary** — standard DOCX writer; first-class `CanonicalDoc → DOCX` adapter target. |
-| **docxtpl** | LGPL-2.1 | Python-native (wraps python-docx) | DOCX | **Primary (templates)** — Jinja2-in-DOCX; LGPL is library-use safe for Apache-2.0 callers when not modifying the lib. Confirm with legal before redistributing modified copies. |
-| **python-pptx** | MIT | Python-native | PPTX | **Primary** — only serious Python PPTX writer. |
+| **python-docx** ([repo](https://github.com/python-openxml/python-docx)) | MIT | Python-native | DOCX | **Primary** — 6k stars, last push 2025-06-17. Standard DOCX writer; first-class `CanonicalDoc → DOCX` adapter target. |
+| **docxtpl** ([repo](https://github.com/elapouya/python-docx-template)) | LGPL-2.1 | Python-native (wraps python-docx) | DOCX | **Primary (templates)** — 3k stars, last push 2026-05-18. Jinja2-in-DOCX; LGPL is library-use safe for Apache-2.0 callers when not modifying the lib. Confirm with legal before redistributing modified copies. |
+| **python-pptx** ([repo](https://github.com/scanny/python-pptx)) | MIT | Python-native | PPTX | **Primary** — 3k stars, last push 2024-08-07. Only serious Python PPTX writer. |
 | **openpyxl** | MIT | Python-native | XLSX (read+write) | **Primary** — standard XLSX writer; required for tabular outputs. |
-| **xlsxwriter** | BSD-2-Clause | Python-native | XLSX (write only) | **Secondary** — richer chart/formatting API; use when output requires complex Excel charts. |
-| **odfpy** | Apache-2.0 / LGPL-2.1 (dual) | Python-native | ODS, ODT, ODP | **Optional** — ODF rarely required by primary consumers. |
+| **xlsxwriter** ([repo](https://github.com/jmcnamara/XlsxWriter)) | BSD-2-Clause | Python-native | XLSX (write only) | **Secondary** — 4k stars, last push 2026-03-22. Richer chart/formatting API; use when output requires complex Excel charts. |
+| **odfpy** ([repo](https://github.com/eea/odfpy)) | Apache-2.0 / GPL-2.0 (dual; LICENSE files confirm both — API reports NOASSERTION) | Python-native | ODS, ODT, ODP | **Optional** — 357 stars, last push 2026-04-07. ODF rarely required by primary consumers. Note: prior entry listed LGPL-2.1 incorrectly; repo contains `APACHE-LICENSE-2.0.txt` and `GPL-LICENSE-2.txt`. |
 
 ## 3. Templating engines
 
 | Tool | License | Runtime | Use case | Verdict |
 | --- | --- | --- | --- | --- |
-| **Jinja2** | BSD-3-Clause | Python-native | HTML, MD, LaTeX, Typst text templates | **Primary** — de-facto standard; covers Quick and Comprehensive text templates. |
+| **Jinja2** ([repo](https://github.com/pallets/jinja)) | BSD-3-Clause | Python-native | HTML, MD, LaTeX, Typst text templates | **Primary** — v3.1.6 (2025-06-14), 11k stars. De-facto standard; covers Quick and Comprehensive text templates. |
 | **pystache** | MIT | Python-native | Mustache logic-less templates | **Optional** — pick where logic-less is required for cross-language template sharing. |
-| **chevron** | MIT | Python-native | Mustache | **Avoid** — unmaintained since 2021; prefer pystache. |
+| **chevron** | MIT | Python-native | Mustache | **Avoid** — last push 2023-08-24, no releases; prefer pystache. |
 | **mjml-python** | MIT | Python-native (transpiler port) | Responsive HTML email | **Optional** — gate behind `[email]` extra. |
 
 **Notes** — Jinja2 is the only must-have. Pick one Mustache impl (pystache) if needed; don't ship both.
@@ -66,12 +66,12 @@ Backs the `FormatConformance` contract. Practical pattern: rely on writer librar
 | --- | --- | --- | --- | --- |
 | **python-docx structural check** | MIT | Python-native | DOCX (OOXML constructor raises on malformed) | **Runtime** — pair with `lxml` schema validation for deeper checks. |
 | **WeasyPrint runtime errors** | BSD-3-Clause | Python-native | HTML/CSS for PDF rendering | **Runtime** — raises on unrenderable input. |
-| **pymarkdownlnt** | MIT | Python-native | CommonMark / GFM Markdown | **Runtime** — backs Quick-tier Markdown conformance. |
-| **markdownlint-cli2** | MIT | Node.js | Markdown | **CI gate** — richer ruleset; only if Node already present. |
-| **veraPDF** | GPL-3.0 + MPL-2.0 (dual) | **JVM** | PDF/A-1b/2b/3b/u, PDF/UA | **Optional / CI-only** — best PDF/A validator; JVM dep. Gate behind `[pdf-a]` or run only in CI. |
+| **pymarkdownlnt** ([repo](https://github.com/jackdewinter/pymarkdown)) | MIT | Python-native | CommonMark / GFM Markdown | **Runtime** — v0.9.37 (2026-05-19), 136 stars. Backs Quick-tier Markdown conformance. |
+| **markdownlint-cli2** ([repo](https://github.com/DavidAnson/markdownlint-cli2)) | MIT | Node.js | Markdown | **CI gate** — 815 stars, last push 2026-05-21. Richer ruleset; only if Node already present. |
+| **veraPDF** ([repo](https://github.com/veraPDF/veraPDF-library)) | GPL-3.0 + MPL-2.0 (dual) | **JVM** | PDF/A-1b/2b/3b/u, PDF/UA | **Optional / CI-only** — v1.30.1 (2026-05-19), 330 stars. Best PDF/A validator; JVM dep. Gate behind `[pdf-a]` or run only in CI. |
 | **vnu (Nu HTML Checker)** | MIT | **JVM** | HTML5 | **Optional / CI-only** — same opt-in pattern as veraPDF. |
-| **htmlhint** | MIT | Node.js | HTML lint | **CI gate** — lighter than vnu. |
-| **mammoth** (read-side) | BSD-2-Clause | Python-native | DOCX semantic round-trip | **Optional** — semantic-issue signal, not strict schema validation. |
+| **htmlhint** ([repo](https://github.com/HTMLHint/HTMLHint)) | MIT | Node.js | HTML lint | **CI gate** — 3k stars, last push 2026-05-21. Lighter than vnu. |
+| **mammoth** ([repo](https://github.com/mwilliamson/python-mammoth)) (read-side) | BSD-2-Clause | Python-native | DOCX semantic round-trip | **Optional** — 1k stars, last push 2026-05-24. Semantic-issue signal, not strict schema validation. |
 
 **Notes** — There is no Python-native PDF/A validator. veraPDF (JVM) is the only production-grade option; don't embed in the runtime hot path.
 
