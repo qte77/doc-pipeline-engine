@@ -18,7 +18,7 @@
 - [Landscape — Ingest](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/ingest.md): Extraction backends, source connectors, crawling
 - [Landscape — Process](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/process.md): Chunking, NER, RAG indexing, normalization
 - [Landscape — Output](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/output.md): Rendering, office formats, templating, conformance
-- [Landscape — Prior art](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/prior-art.md): E2E pipeline competitors and USP positioning
+- [Landscape — E2E systems](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/e2e-systems.md): End-to-end pipeline competitors, prior art, and USP positioning
 
 ## Governance
 
