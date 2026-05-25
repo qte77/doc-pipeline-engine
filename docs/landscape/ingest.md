@@ -2,8 +2,8 @@
 title: Ingest Landscape
 purpose: Survey of extraction backends, source connectors, and crawling/discovery providers for the ingest stage
 created: 2026-04-26
-updated: 2026-04-26
-validated_links: 2026-04-26
+updated: 2026-05-25
+validated_links: 2026-05-25
 category: landscape
 ---
 
@@ -25,7 +25,7 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 | Tool | Primary role | License | Runtime | Formats | Verdict |
 | --- | --- | --- | --- | --- | --- |
 | **docling** | Layout-aware PDF/Office → structured doc | MIT | Python + torch | PDF, DOCX, PPTX, HTML, images | **Primary** — best layout fidelity, native target for `CanonicalDoc`. |
-| **Kreuzberg** | Async multi-format extraction facade | MIT | Python (pypdfium2, Tesseract, python-docx, …) | PDF, Office, images, email, HTML | **Primary (breadth)** — covers the long tail with one adapter. |
+| **Kreuzberg** | Async multi-format extraction facade | MIT (≤4.7); ELv2 (≥4.8, Tier G — see [domain-extraction.md license tier reference](domain-extraction.md#license-tier-reference)) | Python (pypdfium2, Tesseract, python-docx, …) | PDF, Office, images, email, HTML | **Primary (breadth)** — covers the long tail with one adapter. See [ADR-0005](../adr/0005-kreuzberg-elv2-license-boundary.md). |
 | **claude_cli_adapter** | LLM-based extraction via Claude Code CLI | n/a (our code) | Claude CLI | Any (LLM-mediated) | **Primary (reference)** — end-to-end wired first; cross-validation baseline. |
 | **GLM-OCR** | Vision-LLM OCR for complex scans | Apache-2.0 | GPU preferred | Images, scanned PDF | Stub adapter — specialized scan/handwriting path. |
 | **PaddleOCR-VL** | Vision-LLM OCR, CJK-strong | Apache-2.0 | GPU preferred | Images, scanned PDF | Stub adapter — non-Latin script fallback. |

@@ -2,14 +2,16 @@
 title: ADR-0002 — mkdocs-material + mkdocstrings for API docs
 purpose: Records the decision to use mkdocs-material with mkdocstrings[python] for the auto-generated API docs site, mirroring qte77/Agents-eval
 created: 2026-04-27
-updated: 2026-04-27
-validated_links: 2026-04-27
+updated: 2026-05-25
+validated_links: 2026-05-25
 category: technical
 ---
 
-**Status**: Accepted (2026-04-27)
+## Status
 
-## Context
+Accepted — 2026-04-27
+
+## Context and Problem Statement
 
 §0.2.1 made Pydantic models the source of truth for stage contracts.
 The `Field(description=...)` payloads on every model are wire-doc
@@ -30,9 +32,49 @@ Three pressures pushed for a docs site:
    re-implementing instead of mirroring would create needless
    variance.
 
-## Decision
+## Decision Drivers
 
-Adopt **mkdocs-material + mkdocstrings[python] + mkdocs-autorefs**,
+- Pydantic Field rendering: `Field(description=...)` payloads are invisible without a renderer; mkdocstrings[python] renders them inline
+- Single nav for prose + API: existing prose docs and API reference deserve unified navigation
+- qte77 ecosystem precedent: mirroring Agents-eval avoids needless variance across the ecosystem
+
+## Considered Options
+
+### Option 1 — mkdocs-material + mkdocstrings[python] + mkdocs-autorefs
+
+- Good, because renders Pydantic model fields with `description` strings inline, fulfilling ADR-0001's promise
+- Good, because single nav covers both prose docs and auto-generated API reference
+- Good, because mirrors the canonical `qte77/Agents-eval` setup; maintenance tracks that repo's workflow changes
+- Good, because Markdown-native authoring suits contributors who already write Markdown
+- Bad, because docstrings become load-bearing for site quality; ruff `D`-rules must be enforced
+- Bad, because `mkdocs.yaml` + deploy workflow + `[dependency-groups] docs` are new surface area to maintain
+- Bad, because one-time manual setup required: repo `Settings → Pages → Source = "GitHub Actions"`
+
+### Option 2 — Sphinx + autodoc
+
+- Good, because mature ecosystem with broad plugin support and extensive documentation
+- Bad, because heavier, RST friction, larger learning curve for contributors who already write Markdown
+- Bad, because mkdocstrings's Markdown-native authoring beats this for our docs surface
+
+### Option 3 — pdoc
+
+- Good, because simpler setup with lower configuration overhead
+- Bad, because no prose-doc nav; the entire `docs/` tree would need a separate site or hand-curated index
+
+### Option 4 — Hand-written API pages
+
+- Good, because no build tooling dependency; pages are authored and versioned directly
+- Bad, because drift risk; `::: doc_pipeline_engine.stages.v2_normalize` stubs would have to be maintained by hand each time a stage is added
+- Bad, because the auto-generated `docstrings.md` (one entry per `.py` module via `find src`) eliminates that need
+
+### Option 5 — Pin `gh-pages` branch deploy (`mkdocs gh-deploy --force`)
+
+- Good, because familiar deploy pattern; no Pages source configuration required in repo settings
+- Bad, because Agents-eval moved to `actions/deploy-pages` already; following that flow keeps a second branch out of the tree
+
+## Decision Outcome
+
+Chosen: **Option 1 — mkdocs-material + mkdocstrings[python] + mkdocs-autorefs**,
 mirroring `/workspaces/qte77/Agents-eval/mkdocs.yaml` and its deploy
 workflow. Specifics:
 
@@ -66,21 +108,6 @@ workflow. Specifics:
 - Docs deps live in `[dependency-groups] docs` (uv-style), not
   `[project.optional-dependencies]`. Runtime deps untouched.
 
-## Rejected alternatives
-
-- **Sphinx + autodoc** — heavier, RST friction, larger learning curve
-  for contributors who already write Markdown. mkdocstrings's
-  Markdown-native authoring beats this for our docs surface.
-- **pdoc** — simpler but no prose-doc nav; the entire docs/ tree
-  would need a separate site or hand-curated index.
-- **Hand-written API pages** — drift risk; we'd have to maintain
-  `::: doc_pipeline_engine.stages.v2_normalize` stubs by hand each
-  time a stage is added. The auto-generated `docstrings.md` (one
-  entry per `.py` module via `find src`) eliminates that.
-- **Pin `gh-pages` branch deploy** (`mkdocs gh-deploy --force`) —
-  Agents-eval moved to `actions/deploy-pages` already; following
-  that flow keeps a second branch out of the tree.
-
 ## Consequences
 
 - Docstrings become load-bearing for site quality. Ruff `D`-rules
@@ -96,7 +123,7 @@ workflow. Specifics:
 - One-time manual setup: repo `Settings → Pages → Source = "GitHub
   Actions"` before the first PR-merged deploy succeeds.
 
-## Sources
+## More Information
 
 - mkdocs-material: <https://squidfunk.github.io/mkdocs-material/>
 - mkdocstrings (Python handler): <https://mkdocstrings.github.io/python/>

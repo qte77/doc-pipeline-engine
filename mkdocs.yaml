@@ -47,11 +47,7 @@ nav:
       - "Run 1 — V2 only": prototype/results/2026-04-26-run-1-v2-only.md
       - "Run 2 — V1+V2": prototype/results/2026-04-26-run-2-v1-cli.md
       - "Run 3 — V2 headings": prototype/results/2026-04-26-run-3-v2-headings.md
-  - ADRs:
-      - "ADR-0001 Pydantic contracts": adr/0001-pydantic-as-contract-source-of-truth.md
-      - "ADR-0002 mkdocs site": adr/0002-mkdocs-material-mkdocstrings-for-api-docs.md
-      - "ADR-0003 Rename legs": adr/0003-rename-legs-anthropic-sdk-local.md
-      - "ADR-0004 External evaluators": adr/0004-external-evaluators-vs-pipeline.md
+  - ADRs: adr/index.md
   - Contracts: contracts.md
   - Code: docstrings.md
   - Agents:
