@@ -18,7 +18,7 @@
 - [Landscape — Ingest](${BLOB}/docs/landscape/ingest.md): Extraction backends, source connectors, crawling
 - [Landscape — Process](${BLOB}/docs/landscape/process.md): Chunking, NER, RAG indexing, normalization
 - [Landscape — Output](${BLOB}/docs/landscape/output.md): Rendering, office formats, templating, conformance
-- [Landscape — Prior art](${BLOB}/docs/landscape/prior-art.md): E2E pipeline competitors and USP positioning
+- [Landscape — E2E systems](${BLOB}/docs/landscape/e2e-systems.md): End-to-end pipeline competitors, prior art, and USP positioning
 
 ## Governance
 
