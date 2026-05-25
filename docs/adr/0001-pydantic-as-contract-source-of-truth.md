@@ -41,51 +41,31 @@ Three pressures pushed for a typed-model layer:
 
 ### Option 1 — Pydantic v2 models as single source of truth
 
-**Pros**
-
-- Field completion, type-checking, and rename signals available in editors
-- Pydantic models with `Field(description=...)` render natively in mkdocstrings
-- Single point of change for every contract; no drift between schema and code
-- Expressive validators (`@field_validator`, `@model_validator`) available
-
-**Cons**
-
-- §0.1.0 wire format is no longer pinned to a hand-written file; field changes are visible only in the model diff
-- Downstream consumers that previously read `contracts/*.schema.json` via path must switch to importing the model or shelling out to the CLI dump command
+- Good, because field completion, type-checking, and rename signals available in editors
+- Good, because Pydantic models with `Field(description=...)` render natively in mkdocstrings
+- Good, because single point of change for every contract; no drift between schema and code
+- Good, because expressive validators (`@field_validator`, `@model_validator`) available
+- Bad, because §0.1.0 wire format is no longer pinned to a hand-written file; field changes are visible only in the model diff
+- Bad, because downstream consumers that previously read `contracts/*.schema.json` via path must switch to importing the model or shelling out to the CLI dump command
 
 ### Option 2 — Keep JSON Schemas authoritative; codegen Pydantic stubs from them
 
-**Pros**
-
-- Wire format remains explicitly declared in hand-written schema files
-- Existing JSON Schema tooling and consumers keep working unchanged
-
-**Cons**
-
-- Loses Pydantic's expressive validators (`@field_validator`, `@model_validator`)
-- Adds a codegen step on every contract change
-- Leaves the wire format frozen at whatever the schema said — including its inconsistencies
+- Good, because wire format remains explicitly declared in hand-written schema files
+- Good, because existing JSON Schema tooling and consumers keep working unchanged
+- Bad, because loses Pydantic's expressive validators (`@field_validator`, `@model_validator`)
+- Bad, because adds a codegen step on every contract change
+- Bad, because leaves the wire format frozen at whatever the schema said — including its inconsistencies
 
 ### Option 3 — Hybrid: both authoritative
 
-**Pros**
-
-- Retains JSON Schema as an explicit contract artifact alongside typed Python models
-
-**Cons**
-
-- Divergence risk; CI drift checks become load-bearing
+- Good, because retains JSON Schema as an explicit contract artifact alongside typed Python models
+- Bad, because divergence risk; CI drift checks become load-bearing
 
 ### Option 4 — Keep both authoritative; regenerate JSON in CI from models
 
-**Pros**
-
-- On-disk JSON Schema files remain available for external tooling and IDE/GitHub blob view
-
-**Cons**
-
-- Extra build step with no consumer benefit once a CLI dump exposes the schema
-- On-disk files would still get stale reads in IDEs / GitHub blob view
+- Good, because on-disk JSON Schema files remain available for external tooling and IDE/GitHub blob view
+- Bad, because extra build step with no consumer benefit once a CLI dump exposes the schema
+- Bad, because on-disk files would still get stale reads in IDEs / GitHub blob view
 
 ## Decision Outcome
 

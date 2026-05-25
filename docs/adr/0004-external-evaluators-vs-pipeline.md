@@ -54,49 +54,29 @@ call, defeating the "off-the-shelf" intent.
 
 ### Option 1 — External `external/` directory with standalone runners
 
-**Pros**
-
-- No pipeline stages imposed on one-shot tools; each runner is a few lines
-- Off-the-shelf realism preserved: external evaluators process the raw sample file including their own extraction
-- CC's native PDF-reading capability remains part of the test; extraction-quality differences are surfaced
-- Subscription-only users have a clear path via `external/cc_cli/run_headless.sh`
-
-**Cons**
-
-- Cost axis is asymmetric across variants (SDK per-call from envelope, CC per-session via codeburn, `local` is free)
-- Subscription-only users no longer have a V1 path; behavior change vs pre-#54 main
+- Good, because no pipeline stages imposed on one-shot tools; each runner is a few lines
+- Good, because off-the-shelf realism preserved: external evaluators process the raw sample file including their own extraction
+- Good, because CC's native PDF-reading capability remains part of the test; extraction-quality differences are surfaced
+- Good, because subscription-only users have a clear path via `external/cc_cli/run_headless.sh`
+- Bad, because cost axis is asymmetric across variants (SDK per-call from envelope, CC per-session via codeburn, `local` is free)
+- Bad, because subscription-only users no longer have a V1 path; behavior change vs pre-#54 main
 
 ### Option 2 — CC-CLI as transport fallback inside V1 stages (rolled-back #41 design)
 
-**Pros**
-
-- Single code path for all LLM-backed runs; existing V1 call sites work for CC users without separate scripts
-
-**Cons**
-
-- Runs 4 Claude calls per sample (one per stage), conflating external comparison with V1's transport choice
-- Defeats off-the-shelf intent: a real user sends one call, not four
+- Good, because single code path for all LLM-backed runs; existing V1 call sites work for CC users without separate scripts
+- Bad, because runs 4 Claude calls per sample (one per stage), conflating external comparison with V1's transport choice
+- Bad, because defeats off-the-shelf intent: a real user sends one call, not four
 
 ### Option 3 — Third in-process leg in `harness.py`
 
-**Pros**
-
-- Unified harness runs all legs; results land in the same report structure
-
-**Cons**
-
-- Forces a Stage shape onto one-shot tools; tests would have to invent fake `Discover` / `Extract` outputs for a leg that doesn't go through them
+- Good, because unified harness runs all legs; results land in the same report structure
+- Bad, because forces a Stage shape onto one-shot tools; tests would have to invent fake `Discover` / `Extract` outputs for a leg that doesn't go through them
 
 ### Option 4 — Share `Extract` output with external evaluators (apples-to-apples on summarization quality alone)
 
-**Pros**
-
-- Isolates summarization quality from extraction quality; fairer comparison of the LLM reasoning step
-
-**Cons**
-
-- Loses CC's native PDF-reading capability from the test
-- Hides extraction-quality differences, which are part of what the prototype measures
+- Good, because isolates summarization quality from extraction quality; fairer comparison of the LLM reasoning step
+- Bad, because loses CC's native PDF-reading capability from the test
+- Bad, because hides extraction-quality differences, which are part of what the prototype measures
 
 ## Decision Outcome
 

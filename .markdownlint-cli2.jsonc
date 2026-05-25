@@ -6,9 +6,7 @@
     // Line length: disabled globally (per the frontmatter-convention rule import).
     "MD013": false,
     // First-line H1 satisfied by YAML frontmatter `title:` field.
-    "MD041": { "front_matter_title": "^\\s*title\\s*[:=]" },
-    // ADRs use bold **Pros** / **Cons** labels inside option subsections — intentional, not headings.
-    "MD036": false
+    "MD041": { "front_matter_title": "^\\s*title\\s*[:=]" }
   },
   "globs": [
     "**/*.md"

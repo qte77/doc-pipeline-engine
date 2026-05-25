@@ -40,56 +40,31 @@ more than they describe:
 
 ### Option 1 — Rename to `anthropic_sdk` / `local`
 
-**Pros**
-
-- `anthropic_sdk` describes the transport (Anthropic Python SDK), covering Anthropic cloud, Bedrock, Vertex, or any compatible endpoint
-- `local` describes the defining locality property (no LLM, no cloud calls; Tesseract OCR + optional spaCy NER)
-- Third comparison track can be named descriptively from the start without compounding confusion
-
-**Cons**
-
-- Broad mechanical rename across source files, tests, identifiers, `pyproject.toml` extras, Makefile, and output directories
-- Existing locally cached outputs from prior runs need a one-time manual rename or fresh regeneration
+- Good, because `anthropic_sdk` describes the transport (Anthropic Python SDK), covering Anthropic cloud, Bedrock, Vertex, or any compatible endpoint
+- Good, because `local` describes the defining locality property (no LLM, no cloud calls; Tesseract OCR + optional spaCy NER)
+- Good, because third comparison track can be named descriptively from the start without compounding confusion
+- Bad, because broad mechanical rename across source files, tests, identifiers, `pyproject.toml` extras, Makefile, and output directories
+- Bad, because existing locally cached outputs from prior runs need a one-time manual rename or fresh regeneration
 
 ### Option 2 — `api` / `local`
 
-**Pros**
-
-- Shorter names; `local` still carries its locality signal
-
-**Cons**
-
-- `api` understates the SDK's transport flexibility (the SDK isn't married to Anthropic cloud)
+- Good, because shorter names; `local` still carries its locality signal
+- Bad, because `api` understates the SDK's transport flexibility (the SDK isn't married to Anthropic cloud)
 
 ### Option 3 — `sdk` / `tools`
 
-**Pros**
-
-- Mechanism-based naming is unambiguous about what each leg uses
-
-**Cons**
-
-- Pure mechanism naming; loses the locality signal `local` carries and the cloud-by-default signal `anthropic_sdk` carries
+- Good, because mechanism-based naming is unambiguous about what each leg uses
+- Bad, because pure mechanism naming; loses the locality signal `local` carries and the cloud-by-default signal `anthropic_sdk` carries
 
 ### Option 4 — `llm` / `local`
 
-**Pros**
-
-- `llm` / `local` contrast is immediately intuitive to newcomers
-
-**Cons**
-
-- `llm` is generic enough to confuse with external-evaluator variants that also use LLMs (CC, external Anthropic SDK)
+- Good, because `llm` / `local` contrast is immediately intuitive to newcomers
+- Bad, because `llm` is generic enough to confuse with external-evaluator variants that also use LLMs (CC, external Anthropic SDK)
 
 ### Option 5 — Glossary-only: keep `v1` / `v2` in code, add a doc table mapping
 
-**Pros**
-
-- Smallest diff; no code changes required
-
-**Cons**
-
-- Every new contributor still has to look up the mapping; the opacity remains in the codebase
+- Good, because smallest diff; no code changes required
+- Bad, because every new contributor still has to look up the mapping; the opacity remains in the codebase
 
 ## Decision Outcome
 

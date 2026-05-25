@@ -42,60 +42,35 @@ Three pressures pushed for a docs site:
 
 ### Option 1 — mkdocs-material + mkdocstrings[python] + mkdocs-autorefs
 
-**Pros**
-
-- Renders Pydantic model fields with `description` strings inline, fulfilling ADR-0001's promise
-- Single nav covers both prose docs and auto-generated API reference
-- Mirrors the canonical `qte77/Agents-eval` setup; maintenance tracks that repo's workflow changes
-- Markdown-native authoring suits contributors who already write Markdown
-
-**Cons**
-
-- Docstrings become load-bearing for site quality; ruff `D`-rules must be enforced
-- `mkdocs.yaml` + deploy workflow + `[dependency-groups] docs` are new surface area to maintain
-- One-time manual setup required: repo `Settings → Pages → Source = "GitHub Actions"`
+- Good, because renders Pydantic model fields with `description` strings inline, fulfilling ADR-0001's promise
+- Good, because single nav covers both prose docs and auto-generated API reference
+- Good, because mirrors the canonical `qte77/Agents-eval` setup; maintenance tracks that repo's workflow changes
+- Good, because Markdown-native authoring suits contributors who already write Markdown
+- Bad, because docstrings become load-bearing for site quality; ruff `D`-rules must be enforced
+- Bad, because `mkdocs.yaml` + deploy workflow + `[dependency-groups] docs` are new surface area to maintain
+- Bad, because one-time manual setup required: repo `Settings → Pages → Source = "GitHub Actions"`
 
 ### Option 2 — Sphinx + autodoc
 
-**Pros**
-
-- Mature ecosystem with broad plugin support and extensive documentation
-
-**Cons**
-
-- Heavier, RST friction, larger learning curve for contributors who already write Markdown
-- mkdocstrings's Markdown-native authoring beats this for our docs surface
+- Good, because mature ecosystem with broad plugin support and extensive documentation
+- Bad, because heavier, RST friction, larger learning curve for contributors who already write Markdown
+- Bad, because mkdocstrings's Markdown-native authoring beats this for our docs surface
 
 ### Option 3 — pdoc
 
-**Pros**
-
-- Simpler setup with lower configuration overhead
-
-**Cons**
-
-- No prose-doc nav; the entire `docs/` tree would need a separate site or hand-curated index
+- Good, because simpler setup with lower configuration overhead
+- Bad, because no prose-doc nav; the entire `docs/` tree would need a separate site or hand-curated index
 
 ### Option 4 — Hand-written API pages
 
-**Pros**
-
-- No build tooling dependency; pages are authored and versioned directly
-
-**Cons**
-
-- Drift risk; `::: doc_pipeline_engine.stages.v2_normalize` stubs would have to be maintained by hand each time a stage is added
-- The auto-generated `docstrings.md` (one entry per `.py` module via `find src`) eliminates that need
+- Good, because no build tooling dependency; pages are authored and versioned directly
+- Bad, because drift risk; `::: doc_pipeline_engine.stages.v2_normalize` stubs would have to be maintained by hand each time a stage is added
+- Bad, because the auto-generated `docstrings.md` (one entry per `.py` module via `find src`) eliminates that need
 
 ### Option 5 — Pin `gh-pages` branch deploy (`mkdocs gh-deploy --force`)
 
-**Pros**
-
-- Familiar deploy pattern; no Pages source configuration required in repo settings
-
-**Cons**
-
-- Agents-eval moved to `actions/deploy-pages` already; following that flow keeps a second branch out of the tree
+- Good, because familiar deploy pattern; no Pages source configuration required in repo settings
+- Bad, because Agents-eval moved to `actions/deploy-pages` already; following that flow keeps a second branch out of the tree
 
 ## Decision Outcome
 

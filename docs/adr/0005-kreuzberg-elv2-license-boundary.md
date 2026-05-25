@@ -49,44 +49,29 @@ ELv2 — at the time of discovery.
 
 ### Option 1 — Pin `kreuzberg<4.8` as the default; ship v4.8+ ELv2 behind an opt-in `[kreuzberg-elv2]` extra
 
-**Pros**
-
-- Keeps the default install Apache-2.0-compatible
-- Preserves Kreuzberg's load-bearing breadth on the MIT line
-- Mirrors the Tier-G gating template already used for MinerU and PyMuPDF
-- Makes the licence choice explicit and downstream
-
-**Cons**
-
-- We own security backports for the MIT line going forward
-- Python 3.14 wheels may eventually require v4.8+ (re-evaluate then)
-- Extra to maintain
+- Good, because keeps the default install Apache-2.0-compatible
+- Good, because preserves Kreuzberg's load-bearing breadth on the MIT line
+- Good, because mirrors the Tier-G gating template already used for MinerU and PyMuPDF
+- Good, because makes the licence choice explicit and downstream
+- Bad, because we own security backports for the MIT line going forward
+- Bad, because Python 3.14 wheels may eventually require v4.8+ (re-evaluate then)
+- Bad, because extra to maintain
 
 ### Option 2 — Accept ELv2 as the default
 
-**Pros**
-
-- Zero extra maintenance burden
-- Stays on the upstream-maintained line
-
-**Cons**
-
-- Bleeds ELv2 onto every consumer of `doc-pipeline-engine[extract]`
-- Source-available constraint violates the Apache-2.0 distribution
+- Good, because zero extra maintenance burden
+- Good, because stays on the upstream-maintained line
+- Bad, because bleeds ELv2 onto every consumer of `doc-pipeline-engine[extract]`
+- Bad, because source-available constraint violates the Apache-2.0 distribution
   promise
 
 ### Option 3 — Replace Kreuzberg with docling for the catch-all role
 
-**Pros**
-
-- docling is MIT and already the planned Primary layout-aware backend
-- Removes a dependency
-
-**Cons**
-
-- docling does not currently cover email, xlsx, legacy Office, or HTML
+- Good, because docling is MIT and already the planned Primary layout-aware backend
+- Good, because removes a dependency
+- Bad, because docling does not currently cover email, xlsx, legacy Office, or HTML
   to Kreuzberg's breadth; gaps would need bespoke adapters
-- Out of scope for v1; wholesale extraction-stage rewrite
+- Bad, because out of scope for v1; wholesale extraction-stage rewrite
 
 ## Decision Outcome
 
