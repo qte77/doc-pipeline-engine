@@ -2,8 +2,8 @@
 title: Architecture
 purpose: Stage graph, contracts, runtime modes, and design decisions for the pipeline engine
 created: 2026-04-23
-updated: 2026-04-27
-validated_links: 2026-04-26
+updated: 2026-05-25
+validated_links: 2026-05-25
 category: technical
 ---
 
@@ -76,14 +76,12 @@ Quick draft always produced first — doubles as the executive summary inside co
 
 ## Design decisions
 
-**Two-surface split** — the engine is the data plane (heavy Python: extraction, validation, rendering). An optional control plane (Claude Code plugin or other orchestrator) owns skills, agents, hooks. Separation lets the engine stay lightweight and version independently.
+Architectural decisions live as ADRs under [`adr/`](adr/index.md). Quick index of the made decisions:
 
-**Four orchestration patterns** (to be evaluated) — P1: plain skill chain, P2: parallel subagents, P3: team mode, P4: hybrid. All run the same stage graph; they differ in who runs each stage. Contracts are orchestration-agnostic by design.
+- [ADR-0006](adr/0006-apache-2-0-with-notice-over-mit.md) — Apache-2.0 with NOTICE over MIT
+- [ADR-0007](adr/0007-two-surface-split-engine-and-control-plane.md) — Two-surface split (engine vs control plane)
+- [ADR-0008](adr/0008-hatchling-and-uv-over-setuptools-and-pip.md) — Hatchling + uv over setuptools + pip
+- [ADR-0009](adr/0009-ten-contracts-with-five-simplified-stubs.md) — 10 contracts shipped with 5 simplified stubs
+- [ADR-0010](adr/0010-samples-gitignored-with-download-script-as-sot.md) — Samples gitignored; download script is the single source of truth
 
-**Apache-2.0 over MIT** — Apache-2.0 includes patent grant and NOTICE file support. NOTICE is needed because `samples/` bundles third-party content under mixed licenses (CC-BY, Public Domain, IETF Trust, EU reuse).
-
-**Hatchling over setuptools** — lighter, faster, PEP 621 native. `uv sync` replaces pip everywhere.
-
-**10 contracts, 5 simplified** — all 10 schemas kept to reserve contract slots. Five speculative schemas (ClassificationManifest, FormatMatch, FormatConformance, InputFormat, OutputFormat) reduced to minimal stubs. Roadmap documents when each gets wired.
-
-**Samples gitignored** — ~95 binary files too large for git. Download script is the single source of truth — carries metadata (URL, license, description) and generates `samples/SAMPLES.md` on each run.
+**Four orchestration patterns** (to be evaluated; no ADR yet) — P1: plain skill chain, P2: parallel subagents, P3: team mode, P4: hybrid. All run the same stage graph; they differ in who runs each stage. Contracts are orchestration-agnostic by design.

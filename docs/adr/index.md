@@ -2,8 +2,8 @@
 title: Architectural Decision Records
 purpose: Index of all ADRs for doc-pipeline-engine; one line per record with status and scope
 created: 2026-05-25
-updated: 2026-05-25
-validated_links: 2026-05-25
+updated: 2026-05-26
+validated_links: 2026-05-26
 category: technical
 ---
 
@@ -28,6 +28,11 @@ from the replacement.
 | [0003](0003-rename-legs-anthropic-sdk-local.md) | Rename pipeline legs `v1` → `anthropic_sdk`, `v2` → `local` | Accepted (2026-04-27) | Pipeline: self-describing leg names ahead of external evaluators |
 | [0004](0004-external-evaluators-vs-pipeline.md) | External evaluators vs the in-process pipeline | Accepted (2026-04-27) | Prototype: one-shot summarizers live in `external/`, not as stages |
 | [0005](0005-kreuzberg-elv2-license-boundary.md) | Pin Kreuzberg below v4.8 to stay on the MIT line; gate ELv2 as opt-in | Proposed (2026-05-25) | Licence: cap `kreuzberg<4.8`; ship v4.8+ behind `[kreuzberg-elv2]` extra |
+| [0006](0006-apache-2-0-with-notice-over-mit.md) | Apache-2.0 with NOTICE over MIT | Accepted (2026-05-25) | Licence: patent grant + NOTICE for mixed-licence samples content |
+| [0007](0007-two-surface-split-engine-and-control-plane.md) | Two-surface split: engine (data plane) vs control plane | Accepted (2026-05-25) | Architecture: engine stays embeddable; orchestrator-agnostic via contracts |
+| [0008](0008-hatchling-and-uv-over-setuptools-and-pip.md) | Hatchling + uv over setuptools + pip | Accepted (2026-05-25) | Toolchain: PEP 621 native; `uv sync` replaces pip everywhere |
+| [0009](0009-ten-contracts-with-five-simplified-stubs.md) | 10 contracts shipped with 5 simplified stubs | Accepted (2026-05-25) | Contracts: slot reservation; ClassificationManifest / FormatMatch / FormatConformance / InputFormat / OutputFormat as stubs |
+| [0010](0010-samples-gitignored-with-download-script-as-sot.md) | Samples gitignored via download script as single source of truth | Accepted (2026-05-25) | Samples: `scripts/download-samples.sh` is SoT; binaries not in git |
 
 ## Adding a new ADR
 
