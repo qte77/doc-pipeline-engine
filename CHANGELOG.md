@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+- Pin `extract` extra to `kreuzberg>=2.0,<4.8` to stay on the MIT line
+  (v4.7.4 is the last MIT release; upstream relicensed to Elastic License 2.0
+  starting at v4.8.0 on 2026-04-08). New opt-in `[kreuzberg-elv2]` extra
+  (`kreuzberg>=4.8`) for downstream consumers comfortable with ELv2
+  restrictions (no managed-service offering, attribution required). Default
+  install path stays Apache-2.0-clean. See
+  [ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md). Resolves #76.
+
 ### Added
 
 - `docs/landscape/domain-extraction.md` — new sibling landscape file surveying fine-tuned + domain-pretrained extraction models per industry (biomedical, legal, financial, scientific/patents, cybersecurity, HR, retail, agriculture/food, plus sparse-domain sections for mech-elec-cert and government/regulatory). Includes License tier reference (Apache/MIT / BSD / LGPL / CC-BY-SA / CC-BY-NC / GPL-AGPL / Undeclared) and PHI/de-identification cross-cutting note. Distinct from `process.md` (stage-scoped) — this file is domain-scoped.
