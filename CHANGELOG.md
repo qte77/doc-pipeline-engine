@@ -23,6 +23,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Six new ADRs adopting [MADR 3.x](https://adr.github.io/madr/): `0005` Kreuzberg ELv2 licence boundary; `0006` Apache-2.0 + NOTICE over MIT; `0007` two-surface split (engine vs control plane); `0008` Hatchling + uv over setuptools + pip; `0009` 10 contracts with 5 simplified stubs; `0010` samples gitignored via download script as SoT. ADRs 0006–0010 promote decisions previously buried in `docs/architecture.md` lines 78–89. (#97 / #99 / #104)
+- `docs/adr/index.md` — MADR-style index page with status legend, Records table, and "Adding a new ADR" guide. Auto-listing target for `mkdocs.yaml` nav. (#97)
+- `.claude/rules/frontmatter-convention.md` `## ADR Exception (MADR 3.x)` section — ADRs use `## More Information` instead of `## Sources`; bare-URL precedent preserved. Upstreamed as proposal in qte77/claude-code-plugins#160. (#97)
+- New landscape candidates: **Knowhere** (Ontos-AI, Apache-2.0, closest competitor parallel to R2R) and **DocETL** (UC Berkeley EPIC) in `e2e-systems.md`; **adaptive-chunking** (ekimetrics, MIT, LREC 2026) and **chonkie** / **LightRAG** / **nano-graphrag** / **docling-core** in `process.md`; **MinerU** (Tier-G licence — Apache-2.0 + commercial threshold + attribution + termination), **crawl4ai**, **ColPali**, and **marker** (GPL-3.0 gate) in `ingest.md`. (#95)
+- `pyproject.toml` `[kreuzberg-elv2]` opt-in extra at `kreuzberg>=4.8` for consumers explicitly accepting ELv2 restrictions. (#104)
+
 - `docs/landscape/domain-extraction.md` — new sibling landscape file surveying fine-tuned + domain-pretrained extraction models per industry (biomedical, legal, financial, scientific/patents, cybersecurity, HR, retail, agriculture/food, plus sparse-domain sections for mech-elec-cert and government/regulatory). Includes License tier reference (Apache/MIT / BSD / LGPL / CC-BY-SA / CC-BY-NC / GPL-AGPL / Undeclared) and PHI/de-identification cross-cutting note. Distinct from `process.md` (stage-scoped) — this file is domain-scoped.
 - `docs/landscape/process.md` §6 — schema-templated extraction landscape (NuExtract3 + outlines/instructor cross-refs). (#81)
 - `external/` directory tree — off-the-shelf one-shot summarizers (Anthropic SDK + CC CLI + interactive doc) as comparison baseline. See [ADR-0004](docs/adr/0004-external-evaluators-vs-pipeline.md). (#61)
@@ -54,6 +60,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- All existing ADRs (`0001` Pydantic source-of-truth / `0002` mkdocs-material / `0003` leg rename / `0004` external evaluators) retrofitted to MADR 3.x structure: `## Status` heading (was inline bold prose); `## Context and Problem Statement`; new `## Decision Drivers`; `## Considered Options` with `### Option N — name` subsections using MADR-canonical inline `- Good, because …` / `- Bad, because …` bullets; `## Decision Outcome`; `## More Information` (was `## Sources`, bare-URL format preserved). Existing `## Consequences` sections kept verbatim. (#97)
+- `mkdocs.yaml` ADR nav simplified from four explicit entries to single `adr/index.md` reference; future ADRs auto-list via the index page without `mkdocs.yaml` edits. (#97)
+- `docs/architecture.md` "Design decisions" section: replaced inline 5-decision narrative with one-line cross-refs to ADR-0006…0010; pre-decision "Four orchestration patterns P1–P4" bullet kept inline (no ADR until evaluation lands). (#99)
+- `docs/landscape/ingest.md` Kreuzberg row: licence column now `MIT (≤4.7); ELv2 (≥4.8, Tier G)`; cross-link to ADR-0005. (#95 / #97)
+- `docs/landscape/process.md`: Flair demoted to **Avoid** (superseded by GLiNER family); GLiNER row expanded with GLiREL (zero-shot relation extraction) + gliner-multitask sibling; Camelot pinned to active fork `camelot-dev/camelot` (atlanhq fork flagged dead); table-transformer upstream flagged dormant; NuExtract3 benchmark caveat strengthened; instructor "cloud-by-default" framing softened (v1.x added ollama + litellm backends); Chroma v0.5+ native BM25 hybrid noted. (#95)
+- `docs/landscape/e2e-systems.md` licence corrections: R2R Apache-2.0 → MIT (+ maintenance stall flagged: last commit 2025-11-07); AWS GenAI IDP Apache-2.0 → MIT-0; `sample-aws-idp-pipeline` corrected to Amazon Software License (proprietary, not Apache-2.0; verified by reading LICENSE directly); LlamaIndex rebrand qualifier added; `thetanishqrathore/IDP` expanded scope; `awesome-document-understanding` flagged dormant. Gap-analysis claims 1/5/6 updated (claim 1 strengthened by R2R stall; claim 5 marked aspirational until §0.5.0; claim 6 under pressure). (#95)
+- `docs/landscape/output.md` full GitHub-API-verified currency audit (original sweep was network-blocked); `odfpy` licence corrected from claimed Apache-2.0/LGPL-2.1 to actual Apache-2.0 + GPL-2.0 dual (treat as GPL-2.0 for distribution); Quarto/Sphinx licences confirmed by direct LICENSE-file reads. (#95)
+- `docs/llms.txt` + `.github/templates/llms.txt.tpl` — landscape entry repointed at `e2e-systems.md` (was stale `prior-art.md` 404 from earlier rename in #83); link label "Prior art" → "E2E systems". CI lychee did not catch this (scans `**/*.md` only; `llms.txt` is `.txt`). (#101)
 - Rename `docs/landscape/prior-art.md` → `e2e-systems.md` (+ companion-link updates in three sibling landscape files + `mkdocs.yaml` nav + `README.md` + `CONTRIBUTING.md` + `docs/prototype/plan.md`) + GLM-OCR References URL fix in `ingest.md` (`zai-org/GLM-4` → `zai-org/GLM-OCR`). (#83)
 - Enable Ruff `S` (bandit) and `C90` (mccabe, `max-complexity=10`); `tests/**` get `S101` ignore. Resolves #72; follow-up #75 tracks remaining rules. (#79)
 - Migrate markdown linting from `markdownlint-cli` to `markdownlint-cli2` (single-file config in `.markdownlint-cli2.jsonc`).
@@ -66,6 +80,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- `docs/landscape/e2e-systems.md` entry for `aws-samples/document-processing-pipeline-for-regulated-industries` — dormant since 2021-10-25 (4+ years stale); no longer a useful reference. (#95)
 - CC-CLI fallback in `stages/_anthropic_sdk_client.py` (rolled back from #41/#30). Subscription-only users now run `external/cc_cli/run_headless.sh`. Three CLI-dispatch tests removed; explicit-client + SDK + no-API-key tests preserved.
 - `contracts/` directory (10 hand-written JSON Schema files) — superseded by Pydantic models per [ADR-0001](docs/adr/0001-pydantic-as-contract-source-of-truth.md). `tests/test_contracts.py` and the `jsonschema` runtime dep gone with it.
 
