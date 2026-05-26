@@ -2,8 +2,8 @@
 title: Ingest Landscape
 purpose: Survey of extraction backends, source connectors, and crawling/discovery providers for the ingest stage
 created: 2026-04-26
-updated: 2026-05-25
-validated_links: 2026-05-25
+updated: 2026-05-26
+validated_links: 2026-05-26
 category: landscape
 ---
 
@@ -33,6 +33,7 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 | **PyMuPDF (fitz)** | Fast PDF text + layout + images | **AGPL-3.0** (or commercial) | Python + native | PDF | **Optional only** — best-in-class for born-digital PDFs, but AGPL would bleed into consumers. Ship behind an opt-in extra. |
 | **MinerU** (`opendatalab/MinerU`) | Layout-aware PDF/Office → Markdown/JSON; layout-analysis + OCR + table/formula models; strong CJK | **Apache-2.0 + additional terms** (Tier G — see [domain-extraction.md license tier reference](domain-extraction.md#license-tier-reference)): commercial threshold at 100M MAU / USD 20M MRR triggers separate commercial licence; mandatory online-service attribution; auto-termination on non-compliance. GitHub flags as `NOASSERTION`. | Python; GPU strongly preferred (CPU very slow); models ~3-5 GB | PDF, DOCX, PPTX, XLSX | **Opt-in extra (`[mineru]`)** — 64.8 k stars, v3.1.15 (2026-05-19), used by Knowhere as default parser ([e2e-systems.md §2](e2e-systems.md#2-oss-e2e-systems)). Complementary to docling for CJK + complex-layout PDFs. Same Tier-G treatment as Kreuzberg ELv2 ([issue #76](https://github.com/qte77/doc-pipeline-engine/issues/76)): document the thresholds + attribution duty before shipping in any default profile. |
 | **marker** ([repo](https://github.com/datalab-to/marker)) | Layout-aware PDF → Markdown; depends on surya (GPL-3.0) for layout detection | **GPL-3.0** (Tier G — see [domain-extraction.md license tier reference](domain-extraction.md#license-tier-reference)) | Python + torch; GPU preferred | PDF, DOCX, images | **Opt-in (gate)** — v1.10.2 (2026-05), 35k stars. Strong on complex PDFs; GPL-3.0 chains from surya hard dep. Same gate pattern as PyMuPDF: `pip install doc-pipeline-engine[marker]` only; must not appear in default install. |
+| **LibreOffice / soffice** ([site](https://www.libreoffice.org/)) | Format-faithful Office conversion engine (legacy `.doc`/`.xls`/`.ppt`, ODF `.odt`/`.ods`/`.odp`, complex `.rtf`); `--cat` dumps text to stdout, `--accept=socket,…;urp` enables persistent UNO daemon | **MPL-2.0 OR LGPL-3.0-or-later** (subprocess-safe; copyleft does not propagate through process boundary) | Native binary; ~200–300 MB RSS; 2–20 s cold start | All Office + ODF + RTF + many more (HTML, EPUB, PDF input/output) | **Candidate (landscape only)** — v25.8.7.2 (2026-05); actively maintained by The Document Foundation. Gap-filler for ODF, complex RTF, legacy `.ppt`/`.xls` where docling and Kreuzberg have lower fidelity. Not wired yet — operational complexity (cold start, profile lock contention) defers to [§0.4.0](../roadmap.md#040--adapters). If gaps confirmed there, ship behind `[libreoffice]` extra. |
 | **Apache Tika** | Broad content-extraction server | Apache-2.0 | **JVM** | ~1000+ formats | **Optional (server-mode)** — JVM dep too heavy as default; useful as a remote adapter for enterprise consumers with existing Tika infra. |
 
 ### Notes
@@ -46,6 +47,14 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 **MinerU license risk** — GitHub reports `NOASSERTION`. Reading the LICENSE file directly: Apache-2.0 *plus* a Llama-style commercial threshold (100M MAU OR USD 20M MRR), a mandatory online-service attribution clause, and auto-termination on non-compliance. Same Tier-G treatment as Kreuzberg ELv2. Practical impact: fine for internal and SMB use, but cannot redistribute as plain Apache-2.0 without surfacing the restrictions; cannot run as an unbranded online service. Gate behind `pip install doc-pipeline-engine[mineru]` and document the thresholds + attribution duty in the NOTICE file before any default-profile inclusion.
 
 **Tika cost/benefit** — once you need a JVM, operations teams notice. Ship as a remote-server adapter (`tika.url=...`) rather than an embedded dep, so Java stays out of our install footprint.
+
+**LibreOffice / soffice adoption path** — actively maintained (v25.8.7.2, 2026-05) and licence-clean (MPL-2.0 OR LGPL-3.0-or-later; copyleft does not propagate via subprocess invocation under the standard FSF interpretation — relevant FSF clarification at <https://www.gnu.org/licenses/gpl-faq.html#MereAggregation>). Two-phase adoption when ODF/RTF/legacy-PPT gaps justify it:
+
+- **Phase 1 (subprocess-per-file)** — `soffice --headless --cat <file>` dumps text to stdout. Cleaner than `--convert-to txt` (no intermediate file, no `--outdir`). Per-process isolation via `-env:UserInstallation=file:///tmp/lo-<uuid>` prevents user-profile lock contention under concurrent invocations. Cold-start tax (2–20 s) is the cost.
+- **Phase 2 (UNO socket daemon)** — `soffice --headless --accept="socket,host=127.0.0.1,port=2002;urp"` once; subsequent conversions go over UNO (`urp` binary protocol) at near-zero startup. **Sandbox required**: LibreOffice's own help text states *"API access allows execution of arbitrary commands"* — treat the UNO endpoint as a security-sensitive surface. Phase 2 is an architecture decision worth an ADR.
+- **Bonus** — `soffice --script-cat <file>` dumps embedded VBA/JS macros without running them. Distinct from text extraction; relevant for any future security/policy gate that needs to detect macro-bearing documents.
+
+Gate decision deferred to [§0.4.0](../roadmap.md#040--adapters): benchmark Kreuzberg vs. LibreOffice on a real ODF / RTF / legacy `.ppt` sample set; if Kreuzberg fidelity is sufficient, **LibreOffice stays a landscape-only entry**.
 
 ## 2. Source connectors
 
@@ -119,6 +128,8 @@ Produce the file list that becomes `DiscoveryManifest` (`version`, `source`, `di
 - Tesseract: <https://github.com/tesseract-ocr/tesseract>
 - PyMuPDF: <https://github.com/pymupdf/PyMuPDF>
 - MinerU: <https://github.com/opendatalab/MinerU>
+- LibreOffice: <https://www.libreoffice.org/>
+- LibreOffice licences: <https://www.libreoffice.org/about-us/licenses/>
 - Apache Tika: <https://tika.apache.org/>
 
 ### Source connectors
