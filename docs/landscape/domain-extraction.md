@@ -2,8 +2,8 @@
 title: Domain-specific Extraction Models Landscape
 purpose: Survey of fine-tuned and domain-pretrained extraction models per industry (biomedical, legal, financial, cybersecurity, ...) for §0.5.0 domain packs and downstream consumers
 created: 2026-05-21
-updated: 2026-05-21
-validated_links: 2026-05-21
+updated: 2026-05-26
+validated_links: 2026-05-26
 category: landscape
 ---
 
@@ -208,10 +208,11 @@ These domains were searched (deep-sweep methodology in the audit notes) and have
 
 **None of the models in this file de-identify text.** For pipelines processing real clinical notes, HR documents containing personal data, or other PHI/PII-bearing sources, a dedicated scrubber must run *before* domain-specific NER. This is a hard requirement under [§0.5.0](../roadmap.md#050--domain-packs) `local-only` profile when source is EHR/hospital data, internal HR systems, or any regulated record.
 
-- **`presidio-analyzer`** (Microsoft, MIT) — Python-native PII detection + de-identification; covers PHI, financial PII, generic PII. Pairs with spaCy backends.
-- **`philter`** (UCSF, BSD-3-Clause) — rule-based clinical-note de-identifier; HIPAA Safe Harbor coverage.
+- **`presidio-analyzer`** (Microsoft, MIT) — Python-native PII detection + de-identification; covers PHI, financial PII, generic PII. Pairs with spaCy backends. Reversibility requires pairing with separate `presidio-anonymizer`.
+- **`philter`** (UCSF, BSD-3-Clause) — rule-based clinical-note de-identifier; HIPAA Safe Harbor coverage. Strips data; not reversible.
+- **`pseudonymize-text`** ([qte77/pseudonymize-text](https://github.com/qte77/pseudonymize-text), Apache-2.0) — same-governance sibling repo; bulk-pseudonymize names, emails, phones, IBANs, SSNs, credit cards, addresses, organizations across folder trees. **Deterministic** (HMAC-SHA256 + secret key, namespaced per entity type) and **reversible** (mapping file kept separate from output + key). Audit-first two-step CLI: `detect` writes a JSONL plan; `apply` executes byte-identically. GDPR/ENISA/EDPB/NIST framing. Lightweight (stdlib + `python-stdnum` + `phonenumberslite` + Pydantic); optional spaCy via `[ner]` extra. Status: v0.0.2 ("Planning"); pin tightly until ≥0.1.
 
-Both belong as a pre-NER stage in the pipeline. Neither is currently in the canonical `process.md` stage tables; consider adding to [process.md §3](process.md#3-entity-extraction--ner) as a "de-identification (pre-NER)" subsection in a future cycle.
+All three are pre-NER stage candidates; not currently in the canonical `process.md` stage tables. Consider adding a "de-identification (pre-NER)" subsection to [process.md §3](process.md#3-entity-extraction--ner) once the `§0.5.0 cloud-redacted` deployment profile is wired ([§0.5.0](../roadmap.md#050--domain-packs)). The redactor-default decision (`presidio` vs `pseudonymize-text` vs `philter`) is tracked separately as an upcoming ADR.
 
 ## License tier reference
 
@@ -362,3 +363,4 @@ Domain-extraction models surface licence categories that the general-tool landsc
 
 - presidio-analyzer: <https://github.com/microsoft/presidio>
 - philter: <https://github.com/BCHSI/philter-ucsf>
+- pseudonymize-text: <https://github.com/qte77/pseudonymize-text>
