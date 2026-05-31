@@ -162,4 +162,4 @@ Evaluation harnesses and quality gates.
 - Graph-RAG
 - Certification packages (ISO 13485, IEC 62304, 21 CFR Part 11)
 - CAD/LOB ingest
-- PDF roundtrip pseudonymization — pair Extract with [`utils-pseudonomyze-text`](https://github.com/qte77/pseudonymize-text) and rebuild a redacted PDF that preserves layout. Today only the extracted text can be tokenized (`pseudonymize` defers PDF input per its [roadmap](https://github.com/qte77/pseudonymize-text/blob/main/docs/roadmap.md)); the original PDF cannot be reassembled.
+- PDF roundtrip pseudonymization — pair Extract with [`utils-pseudonomyze-text`](https://github.com/qte77/pseudonymize-text) and rebuild a redacted PDF that preserves layout. Today only the extracted text can be tokenized (`pseudonymize` defers PDF/Office/image input per its [roadmap](https://github.com/qte77/pseudonymize-text/blob/main/docs/roadmap.md)), so for mixed-format inboxes the only viable order is `Discover → Extract → Pseudonymize → Analyze`; the original PDF cannot be reassembled. Redactor-default decision tracked in [issue #107](https://github.com/qte77/doc-pipeline-engine/issues/107).
