@@ -7,8 +7,6 @@
 
 Modular document processing engine with contract-gated pipeline stages. Standalone module — usable independently or as a component in larger systems (e.g. polyforge, office-polyforge).
 
-![Pipeline overview — Discover → Extract → V1/V2 fork → Eval](docs/assets/architecture-bird.svg)
-
 ## Quickstart
 
 ```bash
@@ -21,12 +19,11 @@ make test_contracts # schema round-trip tests
 Reproducible dev env at `.devcontainer/devcontainer.json` (Python 3.13 + Claude Code + lint tooling). Optional system deps install on demand per use case:
 
 - `make install_image_ocr` — Tesseract for image-sample extraction
-- `make install_v2_nlp` — spaCy `en_core_web_sm` for V2 NER entities
+- `make install_local_nlp` — spaCy `en_core_web_sm` for `local`-leg NER entities
 
-V1 stages (Claude API leg) work with either `ANTHROPIC_API_KEY` set
-(uses the Anthropic SDK) or the `claude` CLI on PATH (uses the user's
-Claude subscription). Set neither and the stages raise with install
-hints.
+`anthropic_sdk` stages work with `ANTHROPIC_API_KEY` set (uses the
+Anthropic SDK). Subscription-only users run `external/cc_cli/run_headless.sh`
+instead — see [ADR-0004](docs/adr/0004-external-evaluators-vs-pipeline.md).
 
 ## Docs
 

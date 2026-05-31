@@ -2,8 +2,8 @@
 title: Roadmap
 purpose: Versioned milestones (0.1 → 0.6+) with status, scope, and reasoning per release
 created: 2026-04-23
-updated: 2026-04-27
-validated_links: 2026-04-26
+updated: 2026-05-28
+validated_links: 2026-05-31
 category: requirements
 ---
 
@@ -61,7 +61,7 @@ Pydantic v2 models replace the JSON-Schema gate. Models become the single source
 
 ## 0.2.2 — API docs site
 
-**Status**: in progress
+**Status**: done
 
 mkdocs-material + mkdocstrings serves the public API reference and the existing prose tree on GitHub Pages. Pydantic `Field(description=...)` payloads from §0.2.1 render inline.
 
@@ -72,12 +72,12 @@ mkdocs-material + mkdocstrings serves the public API reference and the existing 
 - `[dependency-groups] docs` in `pyproject.toml` (`mkdocs`, `mkdocs-material`, `mkdocstrings[python]`, `mkdocs-autorefs`).
 - `make docs`, `make docs_serve`, `make docs_index` Makefile targets.
 - Google-style docstring pass on `src/doc_pipeline_engine/` enforced by ruff `D`-rules.
-- Bird's-eye architecture SVG with `prefers-color-scheme` theming, embedded in `docs/architecture.md` and `README.md`.
+- Bird's-eye architecture SVG at `docs/assets/images/architecture-bird.svg` with `prefers-color-scheme` theming, embedded inside a `<details>` block in `docs/architecture.md`.
 - ADR-0002 records the decision.
 
 ## 0.2.3 — Rename legs + external evaluators
 
-**Status**: in progress (PR A merged via #54; PR B + run-4 results doc remain)
+**Status**: done for PR A (#54) + PR B; PR C (CC SDK) deferred — gated on PyPI availability
 
 Two-step refactor:
 
@@ -162,3 +162,4 @@ Evaluation harnesses and quality gates.
 - Graph-RAG
 - Certification packages (ISO 13485, IEC 62304, 21 CFR Part 11)
 - CAD/LOB ingest
+- PDF roundtrip pseudonymization — pair Extract with [`utils-pseudonomyze-text`](https://github.com/qte77/pseudonymize-text) and rebuild a redacted PDF that preserves layout. Today only the extracted text can be tokenized (`pseudonymize` defers PDF input per its [roadmap](https://github.com/qte77/pseudonymize-text/blob/main/docs/roadmap.md)); the original PDF cannot be reassembled.

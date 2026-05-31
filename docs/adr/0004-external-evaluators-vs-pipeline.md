@@ -143,12 +143,12 @@ so their summaries can structurally match the pipeline output:
 
 ## Consequences
 
-- Subscription-only users no longer have a V1 path; they use
-  `external/cc_cli/run_headless.sh` instead. Behavior change vs
-  pre-#54 main.
-- Cost axis is asymmetric (V1 reports per-call from SDK envelope, V2
-  is free, external CC variants report per-session via codeburn,
-  external Anthropic variants report per-call). Apples-to-apples cost
+- Subscription-only users no longer have an `anthropic_sdk` in-process
+  path; they use `external/cc_cli/run_headless.sh` instead. Behavior
+  change vs pre-#54 main.
+- Cost axis is asymmetric (`anthropic_sdk` reports per-call from SDK
+  envelope, `local` is free, external CC variants report per-session
+  via codeburn, external Anthropic variants report per-call). Apples-to-apples cost
   view is a §0.6.0 Eval concern; for run-4 we surface the differences
   honestly and let the reader normalize.
 - The 2×2×3 variant matrix is large but each cell is a few lines;

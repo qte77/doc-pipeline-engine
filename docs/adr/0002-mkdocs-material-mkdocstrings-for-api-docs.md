@@ -64,7 +64,7 @@ Three pressures pushed for a docs site:
 ### Option 4 — Hand-written API pages
 
 - Good, because no build tooling dependency; pages are authored and versioned directly
-- Bad, because drift risk; `::: doc_pipeline_engine.stages.v2_normalize` stubs would have to be maintained by hand each time a stage is added
+- Bad, because drift risk; `::: doc_pipeline_engine.stages.local_normalize` stubs would have to be maintained by hand each time a stage is added
 - Bad, because the auto-generated `docstrings.md` (one entry per `.py` module via `find src`) eliminates that need
 
 ### Option 5 — Pin `gh-pages` branch deploy (`mkdocs gh-deploy --force`)
@@ -88,8 +88,8 @@ workflow. Specifics:
   `paths: [src]` + `show_root_heading: true` +
   `show_submodules: true`.
 - Nav covers Home (README), Architecture, Roadmap, Landscape (4),
-  Prototype (plan + samples + 3 results), ADRs (0001, 0002), Code
-  (auto-generated `docstrings.md`), Contributing, Changelog,
+  Prototype (plan + samples + 3 results), ADRs (via `adr/index.md`),
+  Code (auto-generated `docstrings.md`), Contributing, Changelog,
   License.
 - **`docs/index.md`, `docs/docstrings.md`, and the README/CHANGELOG/
   LICENSE/CONTRIBUTING/AGENTS copies** are **build artifacts** —

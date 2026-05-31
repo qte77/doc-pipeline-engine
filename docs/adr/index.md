@@ -27,7 +27,7 @@ from the replacement.
 | [0002](0002-mkdocs-material-mkdocstrings-for-api-docs.md) | mkdocs-material + mkdocstrings for API docs | Accepted (2026-04-27) | Docs site: theme, plugin chain, GH Pages deploy |
 | [0003](0003-rename-legs-anthropic-sdk-local.md) | Rename pipeline legs `v1` → `anthropic_sdk`, `v2` → `local` | Accepted (2026-04-27) | Pipeline: self-describing leg names ahead of external evaluators |
 | [0004](0004-external-evaluators-vs-pipeline.md) | External evaluators vs the in-process pipeline | Accepted (2026-04-27) | Prototype: one-shot summarizers live in `external/`, not as stages |
-| [0005](0005-kreuzberg-elv2-license-boundary.md) | Pin Kreuzberg below v4.8 to stay on the MIT line; gate ELv2 as opt-in | Proposed (2026-05-25) | Licence: cap `kreuzberg<4.8`; ship v4.8+ behind `[kreuzberg-elv2]` extra |
+| [0005](0005-kreuzberg-elv2-license-boundary.md) | Pin Kreuzberg below v4.8 to stay on the MIT line; gate ELv2 as opt-in | Accepted (2026-05-26) | Licence: cap `kreuzberg<4.8`; ship v4.8+ behind `[kreuzberg-elv2]` extra |
 | [0006](0006-apache-2-0-with-notice-over-mit.md) | Apache-2.0 with NOTICE over MIT | Accepted (2026-05-25) | Licence: patent grant + NOTICE for mixed-licence samples content |
 | [0007](0007-two-surface-split-engine-and-control-plane.md) | Two-surface split: engine (data plane) vs control plane | Accepted (2026-05-25) | Architecture: engine stays embeddable; orchestrator-agnostic via contracts |
 | [0008](0008-hatchling-and-uv-over-setuptools-and-pip.md) | Hatchling + uv over setuptools + pip | Accepted (2026-05-25) | Toolchain: PEP 621 native; `uv sync` replaces pip everywhere |
