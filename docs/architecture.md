@@ -7,7 +7,12 @@ validated_links: 2026-05-25
 category: technical
 ---
 
-![Pipeline overview — Discover → Extract → V1/V2 fork → Eval](assets/architecture-bird.svg)
+<details>
+<summary>Architecture overview (click to expand)</summary>
+
+![Pipeline overview — Discover → Extract → V1/V2 fork → Eval](assets/images/architecture-bird.svg)
+
+</details>
 
 ## Core idea
 
