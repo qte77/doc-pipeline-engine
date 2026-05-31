@@ -49,7 +49,8 @@ nav:
       - "Run 3 — V2 headings": prototype/results/2026-04-26-run-3-v2-headings.md
   - ADRs: adr/index.md
   - Contracts: contracts.md
-  - Code: docstrings.md
+  - Code: docstrings.md  # build artifact, gitignored; generated at deploy time per ADR-0002
+
   - Agents:
       - Rules: AGENTS.md
       - Learnings: AGENT_LEARNINGS.md
