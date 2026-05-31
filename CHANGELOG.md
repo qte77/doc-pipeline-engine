@@ -11,6 +11,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- `docs/assets/architecture-bird.svg` → `docs/assets/images/architecture-bird.svg`: relocated under an `images/` subdirectory to match the cross-repo convention now shared with `qte77/utils-pseudonomyze-text`. Reference in `docs/architecture.md` updated.
+- `docs/architecture.md`: bird's-eye SVG embed wrapped in a collapsed `<details>` block (summary "Architecture overview (click to expand)") so the doc stays scannable.
+- `docs/assets/images/architecture-bird.svg` `<style>`: added `@media (max-width: 600px)` rule that hides the three lane labels (`.lane-label`, `.lane-sub`) below 600 px rendered width, where they become illegible.
+
+### Removed
+
+- Bird's-eye SVG embed at the top of `README.md`. The diagram now lives only in `docs/architecture.md` (collapsed) — README top is reserved for orientation (name, badges, value prop).
+
+### Fixed
+
+- `docs/roadmap.md` § 0.2.2: status `in progress` → `done` — all Delivered items shipped, ADR-0002 Accepted.
+- `docs/roadmap.md` § 0.2.2: stale claim "embedded in `docs/architecture.md` and `README.md`" replaced — SVG now only in `docs/architecture.md` (inside `<details>`) at the new `docs/assets/images/` path.
+- `docs/roadmap.md` § 0.2.3: status updated — PR A (#54) and PR B delivered; only PR C (CC SDK) remains deferred (gated on `claude-agent-sdk` PyPI availability).
+- `docs/roadmap.md` § Future PDF roundtrip bullet: broken cross-repo anchor `pseudonymize-text/.../USAGE.md#pdfs-via-doc-pipeline-engine` removed (anchor never existed on the target side); now links to `pseudonymize-text/.../docs/roadmap.md`.
+- `docs/roadmap.md` frontmatter: `validated_links` date refreshed to 2026-05-31.
+- `docs/adr/index.md`: ADR-0005 row status `Proposed (2026-05-25)` → `Accepted (2026-05-26)` (matched the ADR file's own status header).
+- `docs/adr/0002-mkdocs-material-mkdocstrings-for-api-docs.md` § Decision Outcome: nav-claim "ADRs (0001, 0002)" → "ADRs (via `adr/index.md`)" — nav was simplified to a single entry covering all ADRs.
+- `docs/adr/0002-…` § Option 4: stale `v2_normalize` module reference updated to `local_normalize` per ADR-0003.
+- `docs/adr/0004-external-evaluators-vs-pipeline.md` § Consequences: `V1` / `V2` leg names replaced with `anthropic_sdk` / `local` per ADR-0003 (Consequences should reflect post-decision state).
+- `README.md` Devcontainer section: `make install_v2_nlp` → `make install_local_nlp`; surrounding "V1 stages" / "V2 NER entities" wording updated to canonical leg names per ADR-0003.
+- `mkdocs.yaml`: `Code: docstrings.md` nav line annotated as build-artifact-generated-at-deploy (per ADR-0002), so a reader doesn't mistake the absent working-tree file for a defect.
+
 ### Security
 
 - Pin `extract` extra to `kreuzberg>=2.0,<4.8` to stay on the MIT line
@@ -71,7 +95,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Rename `docs/landscape/prior-art.md` → `e2e-systems.md` (+ companion-link updates in three sibling landscape files + `mkdocs.yaml` nav + `README.md` + `CONTRIBUTING.md` + `docs/prototype/plan.md`) + GLM-OCR References URL fix in `ingest.md` (`zai-org/GLM-4` → `zai-org/GLM-OCR`). (#83)
 - Enable Ruff `S` (bandit) and `C90` (mccabe, `max-complexity=10`); `tests/**` get `S101` ignore. Resolves #72; follow-up #75 tracks remaining rules. (#79)
 - Migrate markdown linting from `markdownlint-cli` to `markdownlint-cli2` (single-file config in `.markdownlint-cli2.jsonc`).
-- `docs/assets/architecture-bird.svg` redrawn with three lanes (anthropic_sdk + local + external evaluators side-panel).
+- Bird's-eye architecture SVG redrawn with three lanes (anthropic_sdk + local + external evaluators side-panel); later relocated to `docs/assets/images/architecture-bird.svg` per the Changed entry above.
 - Pipeline legs renamed: `v1` → `anthropic_sdk`, `v2` → `local`. Output dirs, extras, Makefile targets, CLI flag, and stage filenames updated. Deprecated aliases ship for one cycle. See [ADR-0003](docs/adr/0003-rename-legs-anthropic-sdk-local.md).
 - Pydantic v2 models replace the JSON-Schema gate as the contract source-of-truth. See [ADR-0001](docs/adr/0001-pydantic-as-contract-source-of-truth.md).
 - `stages/local_normalize.py` (formerly `v2_normalize`) — flat heading tree via three regex families with 50% density-cap fallback. Resolves [#33](https://github.com/qte77/doc-pipeline-engine/issues/33).
