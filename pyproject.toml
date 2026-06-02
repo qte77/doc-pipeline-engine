@@ -17,7 +17,7 @@ dependencies = [
 # Elastic License 2.0 starting at v4.8.0 (2026-04-08); see ADR-0005 and issue #76.
 # For the ELv2 line, install the [kreuzberg-elv2] extra instead.
 extract = [
-  "kreuzberg>=2.0,<4.8",
+  "kreuzberg>=2.0,<4.10",
 ]
 # Install with: uv sync --extra kreuzberg-elv2
 # Latest Kreuzberg under Elastic License 2.0 (source-available, not OSI-OSS).
