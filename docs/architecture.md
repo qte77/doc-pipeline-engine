@@ -50,6 +50,19 @@ Reserved stages (stub contracts, wired later):
 - CheckOutputConformance → FormatConformance
 - Format definitions → InputFormat, OutputFormat
 
+## Supported input formats
+
+The Extract stage delegates to Kreuzberg. Format support follows from
+Kreuzberg's adapters:
+
+| Format | Status | Path |
+| --- | --- | --- |
+| PDF | supported | pypdfium2 |
+| DOCX, XLSX, PPTX | supported | Kreuzberg native |
+| TXT, MD, HTML | supported | Kreuzberg native |
+| PNG, JPG, TIFF | supported | Tesseract OCR (requires `make install_image_ocr`) |
+| **SVG** | **not supported** | Vector XML, no OCR/text path. Pre-rasterize to PNG if needed. |
+
 ## Package layout
 
 ```text
