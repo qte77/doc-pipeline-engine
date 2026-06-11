@@ -2,8 +2,8 @@
 title: Architectural Decision Records
 purpose: Index of all ADRs for doc-pipeline-engine; one line per record with status and scope
 created: 2026-05-25
-updated: 2026-05-26
-validated_links: 2026-05-26
+updated: 2026-06-11
+validated_links: 2026-06-11
 category: technical
 ---
 
@@ -33,6 +33,7 @@ from the replacement.
 | [0008](0008-hatchling-and-uv-over-setuptools-and-pip.md) | Hatchling + uv over setuptools + pip | Accepted (2026-05-25) | Toolchain: PEP 621 native; `uv sync` replaces pip everywhere |
 | [0009](0009-ten-contracts-with-five-simplified-stubs.md) | 10 contracts shipped with 5 simplified stubs | Accepted (2026-05-25) | Contracts: slot reservation; ClassificationManifest / FormatMatch / FormatConformance / InputFormat / OutputFormat as stubs |
 | [0010](0010-samples-gitignored-with-download-script-as-sot.md) | Samples gitignored via download script as single source of truth | Accepted (2026-05-25) | Samples: `scripts/download-samples.sh` is SoT; binaries not in git |
+| [0011](0011-content-layout-owned-by-docling.md) | docling owns content.layout population (bbox + provenance) | Accepted (2026-06-11) | Extraction: `content.layout` filled from docling; pdfplumber cross-check; LiteParse / OmniParse rejected |
 
 ## Adding a new ADR
 
