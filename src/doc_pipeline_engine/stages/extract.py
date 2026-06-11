@@ -14,6 +14,9 @@ the extra installed raises a clear error.
 The unit tests substitute ``_extract_file_sync`` and ``_kreuzberg_version``
 via monkeypatch so they run without the extra. Real-Kreuzberg behavior is
 covered by tests marked ``integration``.
+
+Supported input formats: see docs/architecture.md → "Supported input formats".
+SVG is not supported.
 """
 from __future__ import annotations
 
