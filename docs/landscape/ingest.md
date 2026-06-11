@@ -2,8 +2,8 @@
 title: Ingest Landscape
 purpose: Survey of extraction backends, source connectors, and crawling/discovery providers for the ingest stage
 created: 2026-04-26
-updated: 2026-05-26
-validated_links: 2026-05-26
+updated: 2026-06-11
+validated_links: 2026-06-11
 category: landscape
 ---
 
@@ -29,12 +29,17 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 | **claude_cli_adapter** | LLM-based extraction via Claude Code CLI | n/a (our code) | Claude CLI | Any (LLM-mediated) | **Primary (reference)** — end-to-end wired first; cross-validation baseline. |
 | **GLM-OCR** | Vision-LLM OCR for complex scans | Apache-2.0 | GPU preferred | Images, scanned PDF | Stub adapter — specialized scan/handwriting path. |
 | **PaddleOCR-VL** | Vision-LLM OCR, CJK-strong; PP-OCRv5 + PP-StructureV3 + PP-ChatOCRv4 in v3.0+ | Apache-2.0 | GPU preferred | Images, scanned PDF | **Optional (CJK PDF primary)** — v3.5.0 (2026-05-19), 79k stars. Promoted from stub; PP-OCRv5 is a major VLM upgrade that makes this a direct competitor to docling for CJK PDFs. Gate behind `[paddleocr]` extra; benchmark against docling at §0.4.0. |
+| **olmOCR** ([repo](https://github.com/allenai/olmocr)) | VLM OCR (Qwen2.5-VL 7B) → clean text/Markdown | Apache-2.0 (Tier A) | **GPU** ≥12 GB VRAM; vLLM + poppler; ~30 GB disk | PDF, PNG, JPEG | **Stub adapter** — v0.4.27 (2026-03), 17k stars. Apache-2.0 VLM scan path; English-heavy alternative to GLM-OCR. GPU-bound → `[olmocr]` extra; benchmark vs PaddleOCR-VL at §0.4.0. |
 | **Tesseract** | Classical OCR engine | Apache-2.0 | Native C++ binary | Images, scanned PDF | **Transitive** — reached via Kreuzberg/docling; baseline OCR floor, not a direct adapter. |
 | **PyMuPDF (fitz)** | Fast PDF text + layout + images | **AGPL-3.0** (or commercial) | Python + native | PDF | **Optional only** — best-in-class for born-digital PDFs, but AGPL would bleed into consumers. Ship behind an opt-in extra. |
+| **pdfplumber** ([repo](https://github.com/jsvine/pdfplumber)) | Per-word/char bounding boxes + table extraction (born-digital) | MIT (Tier A) | Pure-Python (pdfminer.six + Pillow); no GPU | PDF (born-digital) | **Optional (geometry/tables)** — v0.11.9 (2026-01), 10.4k stars. Pure-Python `LayoutBlock` geometry + tables for born-digital PDFs and a docling cross-check; fills `bbox`/`text` but not semantic `kind` (no classifier). Weak on scans. See [ADR-0011](../adr/0011-content-layout-owned-by-docling.md). |
+| **pdfminer.six** ([repo](https://github.com/pdfminer/pdfminer.six)) | Char-level PDF text + positions | MIT (Tier A) | Pure-Python | PDF | **Transitive** — pdfplumber's engine; reach it through pdfplumber's API, not a direct adapter. |
 | **MinerU** (`opendatalab/MinerU`) | Layout-aware PDF/Office → Markdown/JSON; layout-analysis + OCR + table/formula models; strong CJK | **Apache-2.0 + additional terms** (Tier G — see [domain-extraction.md license tier reference](domain-extraction.md#license-tier-reference)): commercial threshold at 100M MAU / USD 20M MRR triggers separate commercial licence; mandatory online-service attribution; auto-termination on non-compliance. GitHub flags as `NOASSERTION`. | Python; GPU strongly preferred (CPU very slow); models ~3-5 GB | PDF, DOCX, PPTX, XLSX | **Opt-in extra (`[mineru]`)** — 64.8 k stars, v3.1.15 (2026-05-19), used by Knowhere as default parser ([e2e-systems.md §2](e2e-systems.md#2-oss-e2e-systems)). Complementary to docling for CJK + complex-layout PDFs. Same Tier-G treatment as Kreuzberg ELv2 ([issue #76](https://github.com/qte77/doc-pipeline-engine/issues/76)): document the thresholds + attribution duty before shipping in any default profile. |
-| **marker** ([repo](https://github.com/datalab-to/marker)) | Layout-aware PDF → Markdown; depends on surya (GPL-3.0) for layout detection | **GPL-3.0** (Tier G — see [domain-extraction.md license tier reference](domain-extraction.md#license-tier-reference)) | Python + torch; GPU preferred | PDF, DOCX, images | **Opt-in (gate)** — v1.10.2 (2026-05), 35k stars. Strong on complex PDFs; GPL-3.0 chains from surya hard dep. Same gate pattern as PyMuPDF: `pip install doc-pipeline-engine[marker]` only; must not appear in default install. |
+| **marker** ([repo](https://github.com/datalab-to/marker)) | Layout-aware PDF → Markdown; depends on surya (Apache-2.0 code; RAIL-M weights) for layout detection | **GPL-3.0** (Tier G — see [domain-extraction.md license tier reference](domain-extraction.md#license-tier-reference)) | Python + torch; GPU preferred | PDF, DOCX, images | **Opt-in (gate)** — v1.10.2 (2026-05), 35k stars. Strong on complex PDFs; the GPL-3.0 is marker's own code, **not** inherited from surya (surya's LICENSE is Apache-2.0; its weights are RAIL-M, free < $5M rev). Same gate pattern as PyMuPDF: `pip install doc-pipeline-engine[marker]` only; must not appear in default install. |
 | **LibreOffice / soffice** ([site](https://www.libreoffice.org/)) | Format-faithful Office conversion engine (legacy `.doc`/`.xls`/`.ppt`, ODF `.odt`/`.ods`/`.odp`, complex `.rtf`); `--cat` dumps text to stdout, `--accept=socket,…;urp` enables persistent UNO daemon | **MPL-2.0 OR LGPL-3.0-or-later** (subprocess-safe; copyleft does not propagate through process boundary) | Native binary; ~200–300 MB RSS; 2–20 s cold start | All Office + ODF + RTF + many more (HTML, EPUB, PDF input/output) | **Candidate (landscape only)** — v25.8.7.2 (2026-05); actively maintained by The Document Foundation. Gap-filler for ODF, complex RTF, legacy `.ppt`/`.xls` where docling and Kreuzberg have lower fidelity. Not wired yet — operational complexity (cold start, profile lock contention) defers to [§0.4.0](../roadmap.md#040--adapters). If gaps confirmed there, ship behind `[libreoffice]` extra. |
 | **Apache Tika** | Broad content-extraction server | Apache-2.0 | **JVM** | ~1000+ formats | **Optional (server-mode)** — JVM dep too heavy as default; useful as a remote adapter for enterprise consumers with existing Tika infra. |
+| **LiteParse** ([repo](https://github.com/run-llama/liteparse)) | Spatial PDF/Office/image parse with per-line bounding boxes | Apache-2.0 (Tier A) | **Node.js ≥18 CLI** (Rust core; Python pkg subprocesses it); bundled `tesseract-rs` for OCR; ImageMagick for images/SVG | PDF, Office, images, SVG | **Not adopted** — `lit` v2.0.0, ~10k stars. Spiked 2026-06-11: clean per-line bboxes (976 items from a 15-pp PDF in ~10.5 s), but its layout edge is already covered Python-natively by docling + pdfplumber without the Node runtime + native-dep tax (bundled `tesseract-rs` ignores system Tesseract; SVG needs system ImageMagick). See [ADR-0011](../adr/0011-content-layout-owned-by-docling.md). |
+| **OmniParse** ([repo](https://github.com/adithya-s-k/omniparse)) | GenAI-oriented multi-modal parse server (Surya/Florence-2/Whisper/Marker/Crawl4AI) | **GPL-3.0** code (Tier F) + **cc-by-nc-sa-4.0** weights (Tier E, NonCommercial) | **GPU** 8–10 GB VRAM; Docker/REST server | PDF, Office, images, audio, video, web | **Avoid** — 7.6k stars. NonCommercial weights (Tier E) + GPL-3.0 (Tier F) + GPU server fail the licence and footprint criteria; audio/video/web breadth is out of scope. Not an adapter or an extra. |
 
 ### Notes
 
@@ -55,6 +60,8 @@ Wired as adapters behind `base/adapter.py`. Emit `ExtractionBundle`.
 - **Bonus** — `soffice --script-cat <file>` dumps embedded VBA/JS macros without running them. Distinct from text extraction; relevant for any future security/policy gate that needs to detect macro-bearing documents.
 
 Gate decision deferred to [§0.4.0](../roadmap.md#040--adapters): benchmark Kreuzberg vs. LibreOffice on a real ODF / RTF / legacy `.ppt` sample set; if Kreuzberg fidelity is sufficient, **LibreOffice stays a landscape-only entry**.
+
+**Bounding boxes / `content.layout` ownership** — `ExtractionBundle.content.layout` (a `LayoutBlock` list: `kind`, `page`, `bbox`, `level`, `text`) is the provenance anchor that `CanonicalDoc.Node.source_refs` indexes into; an empty layout severs canonical-node → source traceability. docling is the only surveyed backend that emits geometry **and** semantic `kind` **and** provenance, so it owns layout population; pdfplumber is a pure-Python born-digital cross-check (geometry only — no `kind`). External bbox parsers evaluated and **not** adopted: **LiteParse** (Apache-2.0 but a Node ≥18 subprocess; bbox redundant with docling/pdfplumber) and **OmniParse** (GPL-3.0 + NonCommercial weights + GPU). Full rationale: [ADR-0011](../adr/0011-content-layout-owned-by-docling.md).
 
 ## 2. Source connectors
 
@@ -128,6 +135,11 @@ Produce the file list that becomes `DiscoveryManifest` (`version`, `source`, `di
 - Tesseract: <https://github.com/tesseract-ocr/tesseract>
 - PyMuPDF: <https://github.com/pymupdf/PyMuPDF>
 - MinerU: <https://github.com/opendatalab/MinerU>
+- olmOCR: <https://github.com/allenai/olmocr>
+- pdfplumber: <https://github.com/jsvine/pdfplumber>
+- pdfminer.six: <https://github.com/pdfminer/pdfminer.six>
+- LiteParse: <https://github.com/run-llama/liteparse>
+- OmniParse: <https://github.com/adithya-s-k/omniparse>
 - LibreOffice: <https://www.libreoffice.org/>
 - LibreOffice licences: <https://www.libreoffice.org/about-us/licenses/>
 - Apache Tika: <https://tika.apache.org/>
