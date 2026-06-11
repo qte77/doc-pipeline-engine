@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `.github/dependabot.yaml` — `ignore` `kreuzberg>=4.8` so dependabot stops proposing to cross the ELv2 licence boundary ([ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md)); closed stale PR #111 (which widened `<4.8` → `<4.10`). (#115)
+- `.markdownlint-cli2.jsonc` — allow `<details>`/`<summary>` (MD033 `allowed_elements`) so `make lint_md` passes on the `docs/architecture.md` collapsible. (#113)
 - `docs/assets/architecture-bird.svg` → `docs/assets/images/architecture-bird.svg`: relocated under an `images/` subdirectory to match the cross-repo convention now shared with `qte77/utils-pseudonomyze-text`. Reference in `docs/architecture.md` updated.
 - `docs/architecture.md`: bird's-eye SVG embed wrapped in a collapsed `<details>` block (summary "Architecture overview (click to expand)") so the doc stays scannable.
 - `docs/assets/images/architecture-bird.svg` `<style>`: added `@media (max-width: 600px)` rule that hides the three lane labels (`.lane-label`, `.lane-sub`) below 600 px rendered width, where they become illegible.
@@ -23,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `docs/landscape/ingest.md` marker row — corrected the stale "depends on surya (GPL-3.0)" claim: surya's LICENSE is Apache-2.0 (weights are RAIL-M, free < $5M rev) and marker's GPL-3.0 is its own code. Verified by direct LICENSE-file inspection. (#112)
 - `docs/roadmap.md` § 0.2.2: status `in progress` → `done` — all Delivered items shipped, ADR-0002 Accepted.
 - `docs/roadmap.md` § 0.2.2: stale claim "embedded in `docs/architecture.md` and `README.md`" replaced — SVG now only in `docs/architecture.md` (inside `<details>`) at the new `docs/assets/images/` path.
 - `docs/roadmap.md` § 0.2.3: status updated — PR A (#54) and PR B delivered; only PR C (CC SDK) remains deferred (gated on `claude-agent-sdk` PyPI availability).
@@ -47,6 +50,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `docs/adr/0011-content-layout-owned-by-docling.md` — ADR (MADR 3.x): docling owns `ExtractionBundle.content.layout` (geometry + semantic `kind` + provenance, the shape `CanonicalDoc.source_refs` indexes into); pdfplumber is a born-digital cross-check; **LiteParse** (Node ≥18 subprocess) and **OmniParse** (GPL-3.0 + cc-by-nc-sa NonCommercial weights + GPU) rejected. (#112)
+- `docs/landscape/ingest.md` §1 extraction backends — added **olmOCR** (Apache-2.0 VLM OCR scan stub), **pdfplumber** + **pdfminer.six** (MIT, pure-Python bbox/tables), **LiteParse** (Apache-2.0, not adopted — Node-subprocess tax), **OmniParse** (Tier E+F, avoid), plus a `content.layout` ownership note. LiteParse spiked on a 15-page PDF (976 bbox items, ~10.5 s). (#112)
+- `docs/architecture.md` "Supported input formats" section (Kreuzberg format coverage; **SVG** not supported → pre-rasterize) + extract-stage docstring pointer. Salvaged from the superseded `feat/external-anthropic-and-cc-cli` branch. (#114)
 - Six new ADRs adopting [MADR 3.x](https://adr.github.io/madr/): `0005` Kreuzberg ELv2 licence boundary; `0006` Apache-2.0 + NOTICE over MIT; `0007` two-surface split (engine vs control plane); `0008` Hatchling + uv over setuptools + pip; `0009` 10 contracts with 5 simplified stubs; `0010` samples gitignored via download script as SoT. ADRs 0006–0010 promote decisions previously buried in `docs/architecture.md` lines 78–89. (#97 / #99 / #104)
 - `docs/adr/index.md` — MADR-style index page with status legend, Records table, and "Adding a new ADR" guide. Auto-listing target for `mkdocs.yaml` nav. (#97)
 - `.claude/rules/frontmatter-convention.md` `## ADR Exception (MADR 3.x)` section — ADRs use `## More Information` instead of `## Sources`; bare-URL precedent preserved. Upstreamed as proposal in qte77/claude-code-plugins#160. (#97)
