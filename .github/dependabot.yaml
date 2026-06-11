@@ -6,4 +6,12 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # kreuzberg v4.8+ relicensed from MIT to Elastic License v2 (source-available,
+    # not Apache-compatible). ADR-0005 pins kreuzberg<4.8 to stay on the MIT line;
+    # ELv2 ships only behind the opt-in [kreuzberg-elv2] extra. Ignore >=4.8 so
+    # dependabot stops proposing to cross that licence boundary (e.g. PR #111:
+    # widening <4.8 -> <4.10). See docs/adr/0005-kreuzberg-elv2-license-boundary.md.
+    ignore:
+      - dependency-name: "kreuzberg"
+        versions: [">=4.8"]
 ...
