@@ -6,7 +6,9 @@
     // Line length: disabled globally (per the frontmatter-convention rule import).
     "MD013": false,
     // First-line H1 satisfied by YAML frontmatter `title:` field.
-    "MD041": { "front_matter_title": "^\\s*title\\s*[:=]" }
+    "MD041": { "front_matter_title": "^\\s*title\\s*[:=]" },
+    // Allow GitHub-flavored collapsible blocks (docs/architecture.md overview).
+    "MD033": { "allowed_elements": ["details", "summary"] }
   },
   "globs": [
     "**/*.md"
