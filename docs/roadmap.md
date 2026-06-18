@@ -2,7 +2,7 @@
 title: Roadmap
 purpose: Versioned milestones (0.1 → 0.6+) with status, scope, and reasoning per release
 created: 2026-04-23
-updated: 2026-05-28
+updated: 2026-06-18
 validated_links: 2026-05-31
 category: requirements
 ---
@@ -97,6 +97,8 @@ Two-step refactor:
 
 ## 0.3.0 — Stream
 
+**Status**: done
+
 NDJSON (newline-delimited JSON) interface over the runner. Enables CLI composition, audit logging, and IPC.
 
 **Why now**: runner proves in-process flow; stream wraps it for pipes, logging, and external consumers. Falls out naturally from 0.2.0.
@@ -116,6 +118,8 @@ NDJSON (newline-delimited JSON) interface over the runner. Enables CLI compositi
 
 ## 0.4.0 — Adapters
 
+**Status**: done
+
 Real extraction backends plugged into the runner/stream.
 
 **Why now**: runner and stream define how adapters get called. Building adapters before that means guessing the interface.
@@ -134,6 +138,8 @@ Real extraction backends plugged into the runner/stream.
 
 ## 0.5.0 — Domain packs
 
+**Status**: done
+
 Pluggable per-domain config: policies, prompts, thresholds, input/output formats.
 
 **Goals**:
@@ -144,6 +150,8 @@ Pluggable per-domain config: policies, prompts, thresholds, input/output formats
 - Data-locality policies (local-only, claude-api-extracted-only, cloud-redacted)
 
 ## 0.6.0 — Eval
+
+**Status**: done (gates + failure tests; RAGAs/TruLens/DeepEval harness wrappers and orchestration bench P1–P4 deferred)
 
 Evaluation harnesses and quality gates.
 
