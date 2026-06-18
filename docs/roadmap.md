@@ -2,7 +2,7 @@
 title: Roadmap
 purpose: Versioned milestones (0.1 → 0.6+) with status, scope, and reasoning per release
 created: 2026-04-23
-updated: 2026-05-28
+updated: 2026-06-18
 validated_links: 2026-05-31
 category: requirements
 ---
@@ -97,6 +97,8 @@ Two-step refactor:
 
 ## 0.3.0 — Stream
 
+**Status**: done
+
 NDJSON (newline-delimited JSON) interface over the runner. Enables CLI composition, audit logging, and IPC.
 
 **Why now**: runner proves in-process flow; stream wraps it for pipes, logging, and external consumers. Falls out naturally from 0.2.0.
@@ -115,6 +117,8 @@ NDJSON (newline-delimited JSON) interface over the runner. Enables CLI compositi
 - Works with `jq`, any language, any consumer (polyforge, office-polyforge)
 
 ## 0.4.0 — Adapters
+
+**Status**: done
 
 Real extraction backends plugged into the runner/stream.
 
