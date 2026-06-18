@@ -24,6 +24,35 @@ agents.** For technical workflows and coding standards, see
 - **Tests**: mirror `src/` layout under `tests/`; new functionality requires tests
 - **Commits**: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`)
 
+### Pydantic + TCH (type-checking imports)
+
+The `TCH` ruff rules (`TC001`/`TC002`/`TC003`) suggest moving annotations-only
+imports into `if TYPE_CHECKING:` blocks. This is safe for function-signature
+annotations (deferred by `from __future__ import annotations`), but **breaks
+Pydantic** when applied to Pydantic model field types:
+
+```python
+# WRONG — Pydantic resolves field types at validation time; moving to
+# TYPE_CHECKING makes the class unavailable at runtime.
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from .composite_scores import CompositeScores  # breaks model_validate()
+
+class MyModel(StrictModel):
+    scores: CompositeScores | None = None  # Pydantic cannot resolve this
+```
+
+Keep Pydantic field-type imports at module level and suppress with `# noqa: TCH001`:
+
+```python
+from .composite_scores import CompositeScores  # noqa: TCH001  # pydantic runtime requirement
+```
+
+The models in `src/doc_pipeline_engine/models/` all use `_common.StrictModel`
+(a `pydantic.BaseModel` subclass). Any import used as a Pydantic field type
+must remain at runtime scope. See `docs/architecture.md` boundary-failure table
+for where `model_validate()` is the boundary policy.
+
 ## Escalation
 
 Write to `AGENT_REQUESTS.md` when: user instructions conflict with safety practices, rules contradict each other, required information is missing, or actions would significantly change project architecture.
