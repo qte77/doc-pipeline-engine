@@ -110,7 +110,7 @@ first.
 | Filesystem discovery | `stages/discover.py` (`Path.rglob`) | wrap-continue (bad files dropped from manifest) |
 | External evaluator | `external/*/run_oneshot.{py,sh}` | wrap-degrade (per-sample failure must not abort matrix) |
 
-**Definitions**
+### Definitions
 
 - **fail-loud** — raise immediately; do not swallow the error
 - **wrap-degrade** — catch, log `WARNING`, return a degraded-but-valid result
