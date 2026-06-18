@@ -2,7 +2,7 @@
 title: Architecture
 purpose: Stage graph, contracts, runtime modes, and design decisions for the pipeline engine
 created: 2026-04-23
-updated: 2026-05-25
+updated: 2026-06-18
 validated_links: 2026-05-25
 category: technical
 ---
@@ -91,6 +91,30 @@ No hard dependencies on any orchestrator or consumer. Contracts are the public A
 | **Comprehensive** | Full canonical tree + RAG index + tables/figures/citations | IMRaD / tech-spec | RAGAs + TruLens + human-in-loop |
 
 Quick draft always produced first — doubles as the executive summary inside comprehensive output.
+
+## Boundary failure policies
+
+Every I/O boundary is pinned to exactly one of three policies. Use this table
+as a code-review reference: if a new `try/except` has no row here, add the row
+first.
+
+| Boundary | File / function | Policy |
+| --- | --- | --- |
+| Stage chain | `runner.run()` — halt on gate failure | fail-loud |
+| Contract validation | `base/contracts.py::validate` via Pydantic | fail-loud |
+| Format gate | `base/gates.py::FormatGate.check` | fail-loud (raises `GateError`) |
+| Policy gate | `base/gates.py::PolicyGate.check` | fail-loud (raises `GateError`) |
+| Confidence gate | `base/gates.py::ConfidenceGate.check` | fail-loud (raises `GateError`) |
+| Kreuzberg extraction | `stages/_adapters/kreuzberg.py` | fail-loud (no silent degradation) |
+| Claude CLI adapter | `stages/_adapters/claude_cli.py` | fail-loud (missing CLI or nonzero exit raises) |
+| Filesystem discovery | `stages/discover.py` (`Path.rglob`) | wrap-continue (bad files dropped from manifest) |
+| External evaluator | `external/*/run_oneshot.{py,sh}` | wrap-degrade (per-sample failure must not abort matrix) |
+
+### Definitions
+
+- **fail-loud** — raise immediately; do not swallow the error
+- **wrap-degrade** — catch, log `WARNING`, return a degraded-but-valid result
+- **wrap-continue** — wrap-degrade inside a loop; bad items are skipped, the loop proceeds
 
 ## Design decisions
 
