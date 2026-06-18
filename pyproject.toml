@@ -99,6 +99,9 @@ docs = [
   "mkdocs-autorefs>=1.0",
 ]
 
+[project.scripts]
+doc-pipeline = "doc_pipeline_engine.stream:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

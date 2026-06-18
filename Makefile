@@ -3,9 +3,10 @@
 .PHONY: \
 	install install_models install_image_ocr install_local_nlp install_v2_nlp \
 	setup_uv setup_dev setup_claude_code setup_npm_tools setup_lychee \
-	test test_contracts test_rerun test_fix_snapshots \
+	test test_contracts test_stream test_rerun test_fix_snapshots \
 	lint lint_md lint_links validate clean help \
-	docs docs_serve docs_index docs_contracts
+	docs docs_serve docs_index docs_contracts \
+	stream
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -70,6 +71,16 @@ install_local_nlp:  ## Use case: `local` leg with NER entities — installs spaC
 install_v2_nlp: install_local_nlp  ## Deprecated alias for install_local_nlp; will be removed in §0.5.0
 
 install_models: install_local_nlp  ## Deprecated alias for install_local_nlp; will be removed in §0.5.0
+
+
+# MARK: STREAM
+
+
+stream:  ## Run NDJSON stream pipeline (usage: SEED='{"root":"."}' make stream STAGES=discover)
+	echo '$(SEED)' | uv run doc-pipeline $(STAGES)
+
+test_stream:  ## Run stream interface tests only
+	uv run pytest tests/test_stream.py -v
 
 
 # MARK: QUALITY
