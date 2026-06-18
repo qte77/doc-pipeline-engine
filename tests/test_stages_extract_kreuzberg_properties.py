@@ -16,14 +16,16 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
 
 from doc_pipeline_engine.base.contracts import is_valid
 from doc_pipeline_engine.stages import extract as extract_module
 from doc_pipeline_engine.stages.extract import extract
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @dataclass

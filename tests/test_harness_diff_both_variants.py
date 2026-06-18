@@ -13,8 +13,7 @@ artifact write-out, axes computation, JSON serialisation.
 """
 from __future__ import annotations
 
-from pathlib import Path
-from typing import ClassVar
+from typing import TYPE_CHECKING, ClassVar
 
 import pytest
 
@@ -30,6 +29,9 @@ from doc_pipeline_engine.harness import (
 )
 from doc_pipeline_engine.render.formats import RenderArtifacts
 from doc_pipeline_engine.stages import extract as extract_module
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 SHA = "0" * 64
 

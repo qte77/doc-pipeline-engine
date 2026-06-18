@@ -25,9 +25,10 @@ import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from doc_pipeline_engine.render.formats import RenderArtifacts
+if TYPE_CHECKING:
+    from doc_pipeline_engine.render.formats import RenderArtifacts
 
 
 @dataclass

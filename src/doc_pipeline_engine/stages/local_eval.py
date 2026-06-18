@@ -14,9 +14,10 @@ is needed.
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from doc_pipeline_engine.render.formats import RenderArtifacts
+if TYPE_CHECKING:
+    from doc_pipeline_engine.render.formats import RenderArtifacts
 
 CONTRACT_VERSION = "0.1.0"
 

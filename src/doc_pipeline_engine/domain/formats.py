@@ -12,8 +12,11 @@ The registry is populated when domain pack modules are imported.
 """
 from __future__ import annotations
 
-from doc_pipeline_engine.models.input_format import InputFormat
-from doc_pipeline_engine.models.output_format import OutputFormat
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from doc_pipeline_engine.models.input_format import InputFormat
+    from doc_pipeline_engine.models.output_format import OutputFormat
 
 _INPUT: dict[str, InputFormat] = {}
 _OUTPUT: dict[str, OutputFormat] = {}

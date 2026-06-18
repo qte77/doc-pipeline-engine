@@ -8,11 +8,13 @@
 """Kreuzberg adapter — wraps the existing Kreuzberg-backed extract stage."""
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from doc_pipeline_engine.base.adapter import AdapterBase, register
 from doc_pipeline_engine.stages.extract import extract as _kreuzberg_extract
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class KreuzbergAdapter(AdapterBase):

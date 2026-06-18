@@ -13,7 +13,7 @@ the contract's short name to its model class so the gate validator and the
 """
 from __future__ import annotations
 
-from pydantic import BaseModel
+from typing import TYPE_CHECKING
 
 from .analysis_report import AnalysisReport
 from .canonical_doc import CanonicalDoc
@@ -25,6 +25,9 @@ from .format_conformance import FormatConformance
 from .format_match import FormatMatch
 from .input_format import InputFormat
 from .output_format import OutputFormat
+
+if TYPE_CHECKING:
+    from pydantic import BaseModel
 
 REGISTRY: dict[str, type[BaseModel]] = {
     "AnalysisReport": AnalysisReport,
