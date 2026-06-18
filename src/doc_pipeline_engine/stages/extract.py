@@ -24,12 +24,17 @@ import contextlib
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
+from doc_pipeline_engine.models.extraction_bundle import (
+    AdapterInfo,
+    Content,
+    ExtractionBundle,
+)
+
 if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
 
 ADAPTER_NAME = "kreuzberg"
-CONTRACT_VERSION = "0.1.0"
 
 
 def _load_kreuzberg() -> tuple[Callable[..., Any], str]:
@@ -49,8 +54,8 @@ with contextlib.suppress(RuntimeError):
     _extract_file_sync, _kreuzberg_version = _load_kreuzberg()
 
 
-def extract(file_entry: dict[str, Any], source_root: Path) -> dict[str, Any]:
-    """Run Kreuzberg on ``source_root / file_entry['path']`` → ExtractionBundle dict."""
+def extract(file_entry: dict[str, Any], source_root: Path) -> ExtractionBundle:
+    """Run Kreuzberg on ``source_root / file_entry['path']`` → ExtractionBundle."""
     if _extract_file_sync is None:
         raise RuntimeError(
             "Kreuzberg not installed. Install the extras: uv sync --extra extract"
@@ -59,14 +64,13 @@ def extract(file_entry: dict[str, Any], source_root: Path) -> dict[str, Any]:
     abs_path = source_root / file_entry["path"]
     result = _extract_file_sync(str(abs_path))
 
-    return {
-        "version": CONTRACT_VERSION,
-        "source_path": file_entry["path"],
-        "source_sha256": file_entry["sha256"],
-        "adapter": {"name": ADAPTER_NAME, "version": _kreuzberg_version},
-        "extracted_at": datetime.now(UTC).isoformat(),
-        "content": {
-            "text": getattr(result, "content", "") or "",
-            "layout": [],
-        },
-    }
+    return ExtractionBundle(
+        source_path=file_entry["path"],
+        source_sha256=file_entry["sha256"],
+        adapter=AdapterInfo(name=ADAPTER_NAME, version=_kreuzberg_version),
+        extracted_at=datetime.now(UTC).isoformat(),
+        content=Content(
+            text=getattr(result, "content", "") or "",
+            layout=[],
+        ),
+    )

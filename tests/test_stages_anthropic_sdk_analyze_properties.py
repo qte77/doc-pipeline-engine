@@ -9,9 +9,11 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from types import SimpleNamespace
 
-from doc_pipeline_engine.base.contracts import is_valid
+from doc_pipeline_engine.models.analysis_report import AnalysisReport
+from doc_pipeline_engine.models.canonical_doc import CanonicalDoc, Node, TierSummary
 from doc_pipeline_engine.stages.anthropic_sdk_analyze import analyze_anthropic_sdk
 
 SHA = "0" * 64
@@ -33,30 +35,27 @@ def _stub_client(response_text: str) -> object:
     return SimpleNamespace(messages=SimpleNamespace(create=_create))
 
 
-def _canonical() -> dict:
-    return {
-        "version": "0.1.0",
-        "source_sha256": SHA,
-        "built_at": "2026-04-26T00:00:00+00:00",
-        "root": {
-            "id": "s.0",
-            "level": 0,
-            "kind": "doc",
-            "text": "",
-            "children": [
-                {"id": "s.1", "level": 1, "kind": "section", "title": "T", "text": "b"}
-            ],
-        },
-        "tier_summary": {"l0": "summary", "l1": "long summary"},
-    }
+def _canonical() -> CanonicalDoc:
+    return CanonicalDoc(
+        source_sha256=SHA,
+        built_at=datetime.now(UTC).isoformat(),
+        root=Node(
+            id="s.0",
+            level=0,
+            kind="doc",
+            text="",
+            children=[Node(id="s.1", level=1, kind="section", title="T", text="b")],
+        ),
+        tier_summary=TierSummary(l0="summary", l1="long summary"),
+    )
 
 
-def test_stages_v1_analyze_emits_valid_analysis_report() -> None:
+def test_stages_v1_analyze_returns_analysis_report_instance() -> None:
     client = _stub_client(json.dumps(_VALID_PAYLOAD))
 
     report = analyze_anthropic_sdk(_canonical(), client=client)
 
-    assert is_valid("AnalysisReport", report)
+    assert isinstance(report, AnalysisReport)
 
 
 def test_stages_v1_analyze_records_analyzer_identity() -> None:
@@ -64,8 +63,8 @@ def test_stages_v1_analyze_records_analyzer_identity() -> None:
 
     report = analyze_anthropic_sdk(_canonical(), client=client, model="stub-model")
 
-    assert report["analyzer"]["name"] == "v1_analyze_claude"
-    assert report["analyzer"]["model"] == "stub-model"
+    assert report.analyzer.name == "v1_analyze_claude"
+    assert report.analyzer.model == "stub-model"
 
 
 def test_stages_v1_analyze_propagates_source_sha256() -> None:
@@ -73,4 +72,4 @@ def test_stages_v1_analyze_propagates_source_sha256() -> None:
 
     report = analyze_anthropic_sdk(_canonical(), client=client)
 
-    assert report["source_sha256"] == SHA
+    assert report.source_sha256 == SHA

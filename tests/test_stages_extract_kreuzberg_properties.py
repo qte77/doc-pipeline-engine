@@ -20,7 +20,7 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-from doc_pipeline_engine.base.contracts import is_valid
+from doc_pipeline_engine.models.extraction_bundle import ExtractionBundle
 from doc_pipeline_engine.stages import extract as extract_module
 from doc_pipeline_engine.stages.extract import extract
 
@@ -58,14 +58,14 @@ def _write_pdf(tmp_path: Path, name: str = "a.pdf") -> tuple[Path, dict[str, Any
     return p, file_entry
 
 
-def test_stages_extract_emits_valid_extraction_bundle(
+def test_stages_extract_returns_extraction_bundle_instance(
     tmp_path: Path, fake_kreuzberg: None
 ) -> None:
     _, entry = _write_pdf(tmp_path)
 
     bundle = extract(entry, tmp_path)
 
-    assert is_valid("ExtractionBundle", bundle)
+    assert isinstance(bundle, ExtractionBundle)
 
 
 def test_stages_extract_records_kreuzberg_adapter_identity(
@@ -75,8 +75,8 @@ def test_stages_extract_records_kreuzberg_adapter_identity(
 
     bundle = extract(entry, tmp_path)
 
-    assert bundle["adapter"]["name"] == "kreuzberg"
-    assert bundle["adapter"]["version"] == "stub"
+    assert bundle.adapter.name == "kreuzberg"
+    assert bundle.adapter.version == "stub"
 
 
 def test_stages_extract_propagates_sha256_and_path(
@@ -86,8 +86,8 @@ def test_stages_extract_propagates_sha256_and_path(
 
     bundle = extract(entry, tmp_path)
 
-    assert bundle["source_path"] == entry["path"]
-    assert bundle["source_sha256"] == entry["sha256"]
+    assert bundle.source_path == entry["path"]
+    assert bundle.source_sha256 == entry["sha256"]
 
 
 def test_stages_extract_text_comes_from_kreuzberg_content(
@@ -97,5 +97,5 @@ def test_stages_extract_text_comes_from_kreuzberg_content(
 
     bundle = extract(entry, tmp_path)
 
-    assert bundle["content"]["text"] == "hello world"
-    assert bundle["content"]["layout"] == []
+    assert bundle.content.text == "hello world"
+    assert bundle.content.layout == []

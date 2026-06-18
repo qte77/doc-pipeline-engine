@@ -13,21 +13,23 @@ glued) plus the two fallbacks (zero headings, density cap exceeded).
 """
 from __future__ import annotations
 
-from doc_pipeline_engine.base.contracts import is_valid
+from datetime import UTC, datetime
+
+from doc_pipeline_engine.models.canonical_doc import CanonicalDoc
+from doc_pipeline_engine.models.extraction_bundle import AdapterInfo, Content, ExtractionBundle
 from doc_pipeline_engine.stages.local_normalize import normalize_local
 
 SHA = "0" * 64
 
 
-def _bundle(text: str) -> dict:
-    return {
-        "version": "0.1.0",
-        "source_path": "a.pdf",
-        "source_sha256": SHA,
-        "adapter": {"name": "kreuzberg", "version": "0.0.0"},
-        "extracted_at": "2026-04-26T00:00:00+00:00",
-        "content": {"text": text, "layout": []},
-    }
+def _bundle(text: str) -> ExtractionBundle:
+    return ExtractionBundle(
+        source_path="a.pdf",
+        source_sha256=SHA,
+        adapter=AdapterInfo(name="kreuzberg", version="0.0.0"),
+        extracted_at=datetime.now(UTC).isoformat(),
+        content=Content(text=text, layout=[]),
+    )
 
 
 def test_numbered_with_space_splits_into_sections_with_levels() -> None:
@@ -41,15 +43,15 @@ def test_numbered_with_space_splits_into_sections_with_levels() -> None:
     )
 
     canonical = normalize_local(_bundle(text))
-    children = canonical["root"]["children"]
+    children = canonical.root.children
 
-    assert is_valid("CanonicalDoc", canonical)
+    assert isinstance(canonical, CanonicalDoc)
     assert len(children) == 3
-    assert [c["level"] for c in children] == [1, 1, 2]
-    assert children[0]["title"] == "1 Features"
-    assert children[1]["title"] == "2 Applications"
-    assert children[2]["title"] == "5.1 Specs"
-    assert children[0]["text"] == "Timer features description."
+    assert [c.level for c in children] == [1, 1, 2]
+    assert children[0].title == "1 Features"
+    assert children[1].title == "2 Applications"
+    assert children[2].title == "5.1 Specs"
+    assert children[0].text == "Timer features description."
 
 
 def test_formal_prefix_splits_into_level_one_sections() -> None:
@@ -63,13 +65,13 @@ def test_formal_prefix_splits_into_level_one_sections() -> None:
     )
 
     canonical = normalize_local(_bundle(text))
-    children = canonical["root"]["children"]
+    children = canonical.root.children
 
-    assert is_valid("CanonicalDoc", canonical)
+    assert isinstance(canonical, CanonicalDoc)
     assert len(children) == 3
-    assert all(c["level"] == 1 for c in children)
-    assert children[0]["title"] == "SECTION 1. SHORT TITLE."
-    assert children[1]["title"] == "SEC. 2. FINDINGS."
+    assert all(c.level == 1 for c in children)
+    assert children[0].title == "SECTION 1. SHORT TITLE."
+    assert children[1].title == "SEC. 2. FINDINGS."
 
 
 def test_numbered_glued_splits_into_sections() -> None:
@@ -81,12 +83,12 @@ def test_numbered_glued_splits_into_sections() -> None:
     )
 
     canonical = normalize_local(_bundle(text))
-    children = canonical["root"]["children"]
+    children = canonical.root.children
 
-    assert is_valid("CanonicalDoc", canonical)
+    assert isinstance(canonical, CanonicalDoc)
     assert len(children) == 2
-    assert [c["level"] for c in children] == [1, 1]
-    assert children[0]["title"].startswith("1Definitions")
+    assert [c.level for c in children] == [1, 1]
+    assert children[0].title.startswith("1Definitions")
 
 
 def test_density_cap_falls_back_to_single_leaf() -> None:
@@ -94,20 +96,20 @@ def test_density_cap_falls_back_to_single_leaf() -> None:
     text = "\n".join(f"{i} Heading {i}" for i in range(1, 11))
 
     canonical = normalize_local(_bundle(text))
-    children = canonical["root"]["children"]
+    children = canonical.root.children
 
-    assert is_valid("CanonicalDoc", canonical)
+    assert isinstance(canonical, CanonicalDoc)
     assert len(children) == 1
-    assert children[0]["text"] == text
-    assert "title" not in children[0]
+    assert children[0].text == text
+    assert children[0].title is None
 
 
 def test_zero_headings_falls_back_to_single_leaf() -> None:
     text = "Just a long paragraph with no heading-like lines anywhere."
 
     canonical = normalize_local(_bundle(text))
-    children = canonical["root"]["children"]
+    children = canonical.root.children
 
-    assert is_valid("CanonicalDoc", canonical)
+    assert isinstance(canonical, CanonicalDoc)
     assert len(children) == 1
-    assert children[0]["text"] == text
+    assert children[0].text == text

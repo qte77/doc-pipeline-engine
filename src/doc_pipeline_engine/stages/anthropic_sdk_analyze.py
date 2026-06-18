@@ -12,14 +12,15 @@ import json
 from datetime import UTC, datetime
 from typing import Any
 
+from doc_pipeline_engine.models.analysis_report import AnalysisReport
 from doc_pipeline_engine.stages._anthropic_sdk_client import (
     MODEL_DEFAULT,
     _ClaudeClient,
     call_json,
 )
 
-CONTRACT_VERSION = "0.1.0"
 ANALYZER_NAME = "v1_analyze_claude"
+_ANALYZER_VERSION = "0.1.0"
 
 _SYSTEM = """You are a document analyzer. Extract key claims and entities
 from a CanonicalDoc tree.
@@ -37,18 +38,23 @@ def analyze_anthropic_sdk(
     canonical: dict[str, Any],
     model: str = MODEL_DEFAULT,
     client: _ClaudeClient | None = None,
-) -> dict[str, Any]:
+) -> AnalysisReport:
     """CanonicalDoc → AnalysisReport via a Claude turn."""
+    if isinstance(canonical, dict):
+        source_sha256 = canonical["source_sha256"]
+        root = canonical["root"]
+    else:
+        source_sha256 = canonical.source_sha256
+        root = canonical.root.model_dump(mode="json")
     user = (
-        f"CanonicalDoc source_sha256: {canonical['source_sha256']}\n\n"
-        f"Canonical tree:\n{json.dumps(canonical['root'])}"
+        f"CanonicalDoc source_sha256: {source_sha256}\n\n"
+        f"Canonical tree:\n{json.dumps(root)}"
     )
     payload = call_json(client, model=model, system=_SYSTEM, user=user)
-    return {
-        "version": CONTRACT_VERSION,
-        "source_sha256": canonical["source_sha256"],
+    return AnalysisReport.model_validate({
+        "source_sha256": source_sha256,
         "analyzed_at": datetime.now(UTC).isoformat(),
-        "analyzer": {"name": ANALYZER_NAME, "version": CONTRACT_VERSION, "model": model},
+        "analyzer": {"name": ANALYZER_NAME, "version": _ANALYZER_VERSION, "model": model},
         "claims": payload["claims"],
         "entities": payload["entities"],
-    }
+    })

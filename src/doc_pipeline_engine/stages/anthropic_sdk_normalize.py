@@ -11,13 +11,12 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from typing import Any
 
+from doc_pipeline_engine.models.canonical_doc import CanonicalDoc
 from doc_pipeline_engine.stages._anthropic_sdk_client import (
     MODEL_DEFAULT,
     _ClaudeClient,
     call_json,
 )
-
-CONTRACT_VERSION = "0.1.0"
 
 _SYSTEM = """You are a document-structure normalizer. Convert an
 ExtractionBundle's text content into a hierarchical CanonicalDoc tree.
@@ -36,17 +35,18 @@ def normalize_anthropic_sdk(
     bundle: dict[str, Any],
     model: str = MODEL_DEFAULT,
     client: _ClaudeClient | None = None,
-) -> dict[str, Any]:
+) -> CanonicalDoc:
     """Convert ExtractionBundle → CanonicalDoc via a Claude turn."""
+    source_sha256 = bundle["source_sha256"] if isinstance(bundle, dict) else bundle.source_sha256
+    text = bundle["content"]["text"] if isinstance(bundle, dict) else bundle.content.text
     user = (
-        f"ExtractionBundle source_sha256: {bundle['source_sha256']}\n\n"
-        f"Extracted text:\n{bundle['content']['text']}"
+        f"ExtractionBundle source_sha256: {source_sha256}\n\n"
+        f"Extracted text:\n{text}"
     )
     payload = call_json(client, model=model, system=_SYSTEM, user=user)
-    return {
-        "version": CONTRACT_VERSION,
-        "source_sha256": bundle["source_sha256"],
+    return CanonicalDoc.model_validate({
+        "source_sha256": source_sha256,
         "built_at": datetime.now(UTC).isoformat(),
         "root": payload["root"],
         "tier_summary": payload["tier_summary"],
-    }
+    })

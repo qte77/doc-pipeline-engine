@@ -75,7 +75,14 @@ _KNOWN: dict[str, str] = {
 
 
 def _emit(obj: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(obj, default=str) + "\n")
+    from pydantic import BaseModel
+
+    def _default(v: Any) -> Any:
+        if isinstance(v, BaseModel):
+            return v.model_dump(mode="json")
+        return str(v)
+
+    sys.stdout.write(json.dumps(obj, default=_default) + "\n")
     sys.stdout.flush()
 
 
