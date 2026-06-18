@@ -9,7 +9,7 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from doc_pipeline_engine.stages._anthropic_sdk_client import (
@@ -47,7 +47,7 @@ def analyze_anthropic_sdk(
     return {
         "version": CONTRACT_VERSION,
         "source_sha256": canonical["source_sha256"],
-        "analyzed_at": datetime.now(timezone.utc).isoformat(),
+        "analyzed_at": datetime.now(UTC).isoformat(),
         "analyzer": {"name": ANALYZER_NAME, "version": CONTRACT_VERSION, "model": model},
         "claims": payload["claims"],
         "entities": payload["entities"],

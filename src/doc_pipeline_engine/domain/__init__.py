@@ -31,7 +31,7 @@ from typing import Literal
 
 Policy = Literal["local-only", "claude-api-extracted-only", "cloud-redacted"]
 
-_REGISTRY: dict[str, "DomainPack"] = {}
+_REGISTRY: dict[str, DomainPack] = {}
 
 _BUILTIN: dict[str, str] = {
     "generic": "doc_pipeline_engine.domain._pack_generic",

@@ -18,7 +18,7 @@ the first 200 chars, Comprehensive (l1) the first 1000.
 from __future__ import annotations
 
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 CONTRACT_VERSION = "0.1.0"
@@ -100,7 +100,7 @@ def normalize_local(bundle: dict[str, Any]) -> dict[str, Any]:
     return {
         "version": CONTRACT_VERSION,
         "source_sha256": bundle["source_sha256"],
-        "built_at": datetime.now(timezone.utc).isoformat(),
+        "built_at": datetime.now(UTC).isoformat(),
         "root": {
             "id": "s.0",
             "level": 0,

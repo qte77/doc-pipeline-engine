@@ -8,7 +8,7 @@
 """V1 normalize: ExtractionBundle → CanonicalDoc via Claude API."""
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from doc_pipeline_engine.stages._anthropic_sdk_client import (
@@ -46,7 +46,7 @@ def normalize_anthropic_sdk(
     return {
         "version": CONTRACT_VERSION,
         "source_sha256": bundle["source_sha256"],
-        "built_at": datetime.now(timezone.utc).isoformat(),
+        "built_at": datetime.now(UTC).isoformat(),
         "root": payload["root"],
         "tier_summary": payload["tier_summary"],
     }

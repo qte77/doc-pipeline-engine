@@ -13,7 +13,7 @@ DiscoveryManifest dict ready for gate validation.
 from __future__ import annotations
 
 import hashlib
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -46,6 +46,6 @@ def discover(root: Path, glob: str = "**/*") -> dict[str, Any]:
     return {
         "version": CONTRACT_VERSION,
         "source": {"root": str(root), "kind": "folder"},
-        "discovered_at": datetime.now(timezone.utc).isoformat(),
+        "discovered_at": datetime.now(UTC).isoformat(),
         "files": files,
     }

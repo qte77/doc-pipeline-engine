@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -96,7 +96,7 @@ class ClaudeCliAdapter(AdapterBase):
             "source_path": manifest_file["path"],
             "source_sha256": manifest_file["sha256"],
             "adapter": {"name": ADAPTER_NAME, "version": ADAPTER_VERSION},
-            "extracted_at": datetime.now(timezone.utc).isoformat(),
+            "extracted_at": datetime.now(UTC).isoformat(),
             "content": {"text": text, "layout": []},
         }
 

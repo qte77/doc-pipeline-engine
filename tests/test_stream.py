@@ -9,17 +9,14 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
-from io import StringIO
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import patch
-
-import pytest
 
 from doc_pipeline_engine.stream import main, run_stream
 
 SHA_ZERO = "0" * 64
-NOW = datetime.now(timezone.utc).isoformat()
+NOW = datetime.now(UTC).isoformat()
 
 _MIN_DISCOVERY = {
     "version": "0.1.0",
@@ -39,8 +36,6 @@ _MIN_DISCOVERY = {
 def _capture_stream(stage_names: list[str], seed: dict) -> tuple[int, list[dict]]:
     """Run run_stream and collect emitted NDJSON lines."""
     lines: list[dict] = []
-    original_write = __import__("sys").stdout.write
-
     captured: list[str] = []
 
     def mock_write(s: str) -> None:

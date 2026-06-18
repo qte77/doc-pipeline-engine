@@ -19,7 +19,7 @@ against the same file (integration test, not unit test).
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -30,7 +30,7 @@ from doc_pipeline_engine.base.gates import ConfidenceGate, FormatGate, GateError
 from doc_pipeline_engine.runner import PipelineError, run
 
 SHA_ZERO = "0" * 64
-NOW = datetime.now(timezone.utc).isoformat()
+NOW = datetime.now(UTC).isoformat()
 
 _VALID_BUNDLE = {
     "version": "0.1.0",

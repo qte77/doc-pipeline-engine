@@ -14,7 +14,7 @@ when spaCy is not installed, entities is an empty list (schema-permitted).
 from __future__ import annotations
 
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 CONTRACT_VERSION = "0.1.0"
@@ -116,7 +116,7 @@ def analyze_local(canonical: dict[str, Any]) -> dict[str, Any]:
     return {
         "version": CONTRACT_VERSION,
         "source_sha256": canonical["source_sha256"],
-        "analyzed_at": datetime.now(timezone.utc).isoformat(),
+        "analyzed_at": datetime.now(UTC).isoformat(),
         "analyzer": {"name": ANALYZER_NAME, "version": CONTRACT_VERSION},
         "claims": _extract_claims(root),
         "entities": _maybe_extract_entities(_gather_text(root)),

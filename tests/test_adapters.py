@@ -72,7 +72,8 @@ class TestKreuzbergAdapter:
             "content": {"text": "hello", "layout": []},
         }
         adapter = KreuzbergAdapter()
-        with patch("doc_pipeline_engine.stages._adapters.kreuzberg._kreuzberg_extract", return_value=fake_bundle):
+        target = "doc_pipeline_engine.stages._adapters.kreuzberg._kreuzberg_extract"
+        with patch(target, return_value=fake_bundle):
             result = adapter.extract(_FILE_ENTRY, tmp_path)
 
         assert result == fake_bundle
@@ -83,7 +84,12 @@ class TestClaudeCliAdapter:
     """ClaudeCliAdapter shells out to claude --print --bare."""
 
     def _make_envelope(self, text: str) -> bytes:
-        return json.dumps({"result": text, "usage": {"input_tokens": 10, "output_tokens": 20}, "model": "claude-opus-4-8"}).encode()
+        payload = {
+            "result": text,
+            "usage": {"input_tokens": 10, "output_tokens": 20},
+            "model": "claude-opus-4-8",
+        }
+        return json.dumps(payload).encode()
 
     def test_extract_happy_path(self, tmp_path: Path) -> None:
         from doc_pipeline_engine.stages._adapters.claude_cli import ClaudeCliAdapter

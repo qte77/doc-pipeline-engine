@@ -35,19 +35,26 @@ def _write_fake_claude(shim_dir: Path, summary_text: str = "# Stub summary") -> 
     """
     claude = shim_dir / "claude"
     log = shim_dir / "claude.log"
+    json_line = (
+        f'{{"result": "{summary_text}", "is_error": false,'
+        f' "model": "claude-opus-4-7",'
+        f' "usage": {{"input_tokens": 100, "output_tokens": 50}}}}'
+    )
     claude.write_text(dedent(f"""\
         #!/usr/bin/env bash
         # Record invocation
         echo "ARGV: $*" >> "{log}"
-        # Emit the JSON envelope to stdout (single line, no embedded newlines)
-        printf '%s\\n' '{{"result": "{summary_text}", "is_error": false, "model": "claude-opus-4-7", "usage": {{"input_tokens": 100, "output_tokens": 50}}}}'
+        printf '%s\\n' '{json_line}'
     """))
     claude.chmod(0o755)
     return claude
 
 
 def _write_fake_codeburn(shim_dir: Path, cost_usd: float = 0.0125) -> Path:
-    """Fake `npx codeburn` shim. Reads stdin (claude's JSON), echoes it back, prints cost to stderr."""
+    """Fake `npx codeburn` shim.
+
+    Reads stdin (claude's JSON), echoes it back, prints cost to stderr.
+    """
     codeburn = shim_dir / "npx"
     codeburn.write_text(dedent(f"""\
         #!/usr/bin/env bash
@@ -81,7 +88,9 @@ def shim_env(tmp_path: Path) -> dict[str, str]:
     return env
 
 
-def _run_script(*, sample: Path, config: str, output_dir: Path, env: dict[str, str]) -> subprocess.CompletedProcess[str]:
+def _run_script(
+    *, sample: Path, config: str, output_dir: Path, env: dict[str, str]
+) -> subprocess.CompletedProcess[str]:
     return subprocess.run(  # noqa: S603
         ["bash", str(SCRIPT), str(sample), "--config", config, "--output-dir", str(output_dir)],  # noqa: S607
         env=env,
