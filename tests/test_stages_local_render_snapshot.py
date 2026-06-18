@@ -15,8 +15,8 @@ pytest.importorskip("docx")
 pytest.importorskip("markdown")
 pytest.importorskip("weasyprint")
 
-from doc_pipeline_engine.render.formats import RenderArtifacts  # noqa: E402
-from doc_pipeline_engine.stages.local_render import render_local  # noqa: E402
+from doc_pipeline_engine.render.formats import RenderArtifacts
+from doc_pipeline_engine.stages.local_render import render_local
 
 SHA = "0" * 64
 

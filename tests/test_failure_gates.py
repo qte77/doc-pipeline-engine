@@ -60,11 +60,10 @@ class TestF1CorruptInput:
         with patch(
             "doc_pipeline_engine.stages._adapters.kreuzberg._kreuzberg_extract",
             side_effect=RuntimeError("Kreuzberg: cannot parse file"),
-        ):
-            with pytest.raises(RuntimeError, match="Kreuzberg: cannot parse file"):
-                adapter.extract(
-                    {"path": "corrupt.pdf", "sha256": SHA_ZERO}, tmp_path
-                )
+        ), pytest.raises(RuntimeError, match="Kreuzberg: cannot parse file"):
+            adapter.extract(
+                {"path": "corrupt.pdf", "sha256": SHA_ZERO}, tmp_path
+            )
 
     def test_runner_halts_when_extract_stage_raises(self) -> None:
         def _bad_extract(_manifest: dict) -> dict:

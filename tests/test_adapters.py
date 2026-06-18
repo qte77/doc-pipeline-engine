@@ -117,9 +117,11 @@ class TestClaudeCliAdapter:
         pdf.write_bytes(b"%PDF-1.4")
 
         adapter = ClaudeCliAdapter()
-        with patch("subprocess.run", side_effect=FileNotFoundError("claude not found")):
-            with pytest.raises(RuntimeError, match="Claude Code CLI not found"):
-                adapter.extract({"path": "sample.pdf", "sha256": SHA_ZERO}, tmp_path)
+        with (
+            patch("subprocess.run", side_effect=FileNotFoundError("claude not found")),
+            pytest.raises(RuntimeError, match="Claude Code CLI not found"),
+        ):
+            adapter.extract({"path": "sample.pdf", "sha256": SHA_ZERO}, tmp_path)
 
     def test_extract_nonzero_exit_raises_runtime_error(self, tmp_path: Path) -> None:
         from doc_pipeline_engine.stages._adapters.claude_cli import ClaudeCliAdapter
@@ -133,9 +135,11 @@ class TestClaudeCliAdapter:
         fake_result.stderr = b"auth error"
 
         adapter = ClaudeCliAdapter()
-        with patch("subprocess.run", return_value=fake_result):
-            with pytest.raises(RuntimeError, match="claude exited 1"):
-                adapter.extract({"path": "sample.pdf", "sha256": SHA_ZERO}, tmp_path)
+        with (
+            patch("subprocess.run", return_value=fake_result),
+            pytest.raises(RuntimeError, match="claude exited 1"),
+        ):
+            adapter.extract({"path": "sample.pdf", "sha256": SHA_ZERO}, tmp_path)
 
     def test_extract_invalid_json_falls_back_to_raw(self, tmp_path: Path) -> None:
         from doc_pipeline_engine.stages._adapters.claude_cli import ClaudeCliAdapter

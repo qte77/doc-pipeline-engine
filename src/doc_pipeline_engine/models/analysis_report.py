@@ -63,7 +63,7 @@ class Entity(StrictModel):
 
 
 class Relation(StrictModel):
-    """Subject–predicate–object triple grounded in the document."""
+    """Subject-predicate-object triple grounded in the document."""
 
     subject: str
     predicate: str

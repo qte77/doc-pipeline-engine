@@ -24,7 +24,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 _spec = importlib.util.spec_from_file_location(
     "_gen_contracts_md", REPO_ROOT / "scripts" / "gen_contracts_md.py"
 )
-assert _spec and _spec.loader
+assert _spec
+assert _spec.loader
 _gen = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_gen)
 

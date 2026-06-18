@@ -20,8 +20,8 @@ pytest.importorskip("docx")
 pytest.importorskip("markdown")
 pytest.importorskip("weasyprint")
 
-from doc_pipeline_engine.render.formats import RenderArtifacts  # noqa: E402
-from doc_pipeline_engine.stages.anthropic_sdk_render import render_anthropic_sdk  # noqa: E402
+from doc_pipeline_engine.render.formats import RenderArtifacts
+from doc_pipeline_engine.stages.anthropic_sdk_render import render_anthropic_sdk
 
 SHA = "0" * 64
 _MD = "# Summary\n\nClaude wrote this."
