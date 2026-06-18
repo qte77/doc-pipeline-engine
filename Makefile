@@ -3,7 +3,7 @@
 .PHONY: \
 	install install_models install_image_ocr install_local_nlp install_v2_nlp \
 	setup_uv setup_dev setup_claude_code setup_npm_tools setup_lychee \
-	test test_contracts test_stream test_rerun test_fix_snapshots \
+	test test_contracts test_stream test_adapters test_rerun test_fix_snapshots \
 	lint lint_md lint_links validate clean help \
 	docs docs_serve docs_index docs_contracts \
 	stream
@@ -81,6 +81,9 @@ stream:  ## Run NDJSON stream pipeline (usage: SEED='{"root":"."}' make stream S
 
 test_stream:  ## Run stream interface tests only
 	uv run pytest tests/test_stream.py -v
+
+test_adapters:  ## Run adapter registry and implementation tests only
+	uv run pytest tests/test_adapters.py -v
 
 
 # MARK: QUALITY
