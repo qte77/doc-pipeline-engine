@@ -14,6 +14,7 @@ artifact write-out, axes computation, JSON serialisation.
 from __future__ import annotations
 
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
@@ -21,14 +22,14 @@ pytest.importorskip("docx")
 pytest.importorskip("markdown")
 pytest.importorskip("weasyprint")
 
-from doc_pipeline_engine.harness import (  # noqa: E402
+from doc_pipeline_engine.harness import (
     DiffReport,
     LegResult,
     _to_json,
     run_both,
 )
-from doc_pipeline_engine.render.formats import RenderArtifacts  # noqa: E402
-from doc_pipeline_engine.stages import extract as extract_module  # noqa: E402
+from doc_pipeline_engine.render.formats import RenderArtifacts
+from doc_pipeline_engine.stages import extract as extract_module
 
 SHA = "0" * 64
 
@@ -36,8 +37,8 @@ SHA = "0" * 64
 def _stub_extract_file_sync(_path: str, **_kwargs: object) -> object:
     class R:
         content = "Hello world. Some body."
-        metadata: dict = {}
-        tables: list = []
+        metadata: ClassVar[dict] = {}
+        tables: ClassVar[list] = []
     return R()
 
 

@@ -25,7 +25,8 @@ _spec = importlib.util.spec_from_file_location(
     "_run_oneshot",
     REPO_ROOT / "external" / "anthropic_sdk" / "run_oneshot.py",
 )
-assert _spec and _spec.loader
+assert _spec
+assert _spec.loader
 _run = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_run)
 

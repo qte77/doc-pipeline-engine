@@ -103,7 +103,7 @@ def run_stream(stage_names: list[str], seed: dict[str, Any]) -> int:
         _emit({"stage": exc.stage_name, "contract": exc.contract_name, "error": exc.detail})
         return 1
 
-    for (name, _fn, contract), output in zip(stages, outputs):
+    for (name, _fn, contract), output in zip(stages, outputs, strict=True):
         _emit({"stage": name, "contract": contract, "output": output})
 
     return 0

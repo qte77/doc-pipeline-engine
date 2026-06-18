@@ -12,9 +12,9 @@ import pytest
 
 pytest.importorskip("docx")
 
-from doc_pipeline_engine.base.contracts import is_valid  # noqa: E402
-from doc_pipeline_engine.render.formats import RenderArtifacts  # noqa: E402
-from doc_pipeline_engine.stages.anthropic_sdk_eval import eval_anthropic_sdk  # noqa: E402
+from doc_pipeline_engine.base.contracts import is_valid
+from doc_pipeline_engine.render.formats import RenderArtifacts
+from doc_pipeline_engine.stages.anthropic_sdk_eval import eval_anthropic_sdk
 
 SHA = "0" * 64
 

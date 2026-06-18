@@ -43,9 +43,11 @@ def _capture_stream(stage_names: list[str], seed: dict) -> tuple[int, list[dict]
 
     import sys
 
-    with patch.object(sys.stdout, "write", side_effect=mock_write):
-        with patch.object(sys.stdout, "flush"):
-            code = run_stream(stage_names, seed)
+    with (
+        patch.object(sys.stdout, "write", side_effect=mock_write),
+        patch.object(sys.stdout, "flush"),
+    ):
+        code = run_stream(stage_names, seed)
 
     for chunk in captured:
         for line in chunk.splitlines():
@@ -92,9 +94,11 @@ class TestRunStream:
         def bad_discover(seed: dict) -> dict:
             return bad_output
 
-        with patch.object(stream_mod, "_STAGE_REGISTRY", {}):
-            with patch("doc_pipeline_engine.stages.discover.discover", return_value=bad_output):
-                code, lines = _capture_stream(["discover"], {"root": str(tmp_path)})
+        with (
+            patch.object(stream_mod, "_STAGE_REGISTRY", {}),
+            patch("doc_pipeline_engine.stages.discover.discover", return_value=bad_output),
+        ):
+            code, lines = _capture_stream(["discover"], {"root": str(tmp_path)})
 
         assert code == 1
         assert lines[-1].get("error") or lines[-1].get("stage") == "discover"
@@ -132,10 +136,12 @@ class TestMain:
         def mock_write(s: str) -> None:
             captured.append(s)
 
-        with patch.object(sys.stdin, "read", return_value=seed_json):
-            with patch.object(sys.stdout, "write", side_effect=mock_write):
-                with patch.object(sys.stdout, "flush"):
-                    code = main(["discover"])
+        with (
+            patch.object(sys.stdin, "read", return_value=seed_json),
+            patch.object(sys.stdout, "write", side_effect=mock_write),
+            patch.object(sys.stdout, "flush"),
+        ):
+            code = main(["discover"])
 
         for chunk in captured:
             for line in chunk.splitlines():

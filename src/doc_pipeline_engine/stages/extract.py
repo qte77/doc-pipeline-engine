@@ -20,6 +20,7 @@ SVG is not supported.
 """
 from __future__ import annotations
 
+import contextlib
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -42,11 +43,8 @@ def _load_kreuzberg() -> tuple[Callable[..., Any], str]:
 
 
 _extract_file_sync, _kreuzberg_version = (None, "")
-try:
+with contextlib.suppress(RuntimeError):
     _extract_file_sync, _kreuzberg_version = _load_kreuzberg()
-except RuntimeError:
-    # deferred — extract() will raise on call if still missing
-    pass
 
 
 def extract(file_entry: dict[str, Any], source_root: Path) -> dict[str, Any]:

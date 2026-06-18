@@ -26,7 +26,8 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 _spec = importlib.util.spec_from_file_location(
     "_genfix", REPO_ROOT / "scripts" / "generate-fixtures.py"
 )
-assert _spec and _spec.loader
+assert _spec
+assert _spec.loader
 _genfix = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_genfix)
 
