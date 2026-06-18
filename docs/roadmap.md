@@ -138,6 +138,8 @@ Real extraction backends plugged into the runner/stream.
 
 ## 0.5.0 — Domain packs
 
+**Status**: done
+
 Pluggable per-domain config: policies, prompts, thresholds, input/output formats.
 
 **Goals**:
@@ -148,6 +150,8 @@ Pluggable per-domain config: policies, prompts, thresholds, input/output formats
 - Data-locality policies (local-only, claude-api-extracted-only, cloud-redacted)
 
 ## 0.6.0 — Eval
+
+**Status**: done (gates + failure tests; RAGAs/TruLens/DeepEval harness wrappers and orchestration bench P1–P4 deferred)
 
 Evaluation harnesses and quality gates.
 

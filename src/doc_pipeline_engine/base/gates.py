@@ -95,27 +95,14 @@ def _safe_get_input(fmt_id: str) -> Any:
         return None
 
 
-_POLICY_ALLOWED_ADAPTERS: dict[str, set[str]] = {
-    "local-only": {"kreuzberg", "docling", "glm_ocr", "paddle_ocr"},
-    "claude-api-extracted-only": {
-        "kreuzberg",
-        "claude_cli",
-        "docling",
-        "glm_ocr",
-        "paddle_ocr",
-    },
-    "cloud-redacted": {
-        "kreuzberg",
-        "claude_cli",
-        "docling",
-        "glm_ocr",
-        "paddle_ocr",
-    },
-}
-
-
 class PolicyGate:
     """Reject adapter/pack combinations that violate data-locality policy (F5).
+
+    Policy enforcement is derived from the adapter's ``locality`` attribute
+    (``"local"`` or ``"api"``) — no hardcoded allowlist needed.
+
+    - ``local-only`` — only ``locality="local"`` adapters permitted.
+    - ``claude-api-extracted-only`` / ``cloud-redacted`` — all localities permitted.
 
     Args:
         pack_name: Domain pack name used to look up the policy.
@@ -133,16 +120,25 @@ class PolicyGate:
         Raises:
             GateError: if the adapter is not permitted under the pack's policy.
         """
+        from doc_pipeline_engine.base.adapter import get as get_adapter
         from doc_pipeline_engine.domain import get as get_pack
 
         pack = get_pack(self._pack_name)
-        allowed = _POLICY_ALLOWED_ADAPTERS.get(pack.policy, set())
-        if adapter_name not in allowed:
+        if pack.policy != "local-only":
+            return
+
+        try:
+            adapter = get_adapter(adapter_name)
+            locality = adapter.locality
+        except KeyError:
+            locality = "unknown"
+
+        if locality != "local":
             raise GateError(
                 "F5-policy-violation",
-                f"adapter={adapter_name!r} is not permitted under policy "
-                f"{pack.policy!r} of pack {self._pack_name!r}. "
-                f"Permitted adapters: {sorted(allowed)}",
+                f"adapter={adapter_name!r} (locality={locality!r}) is not permitted "
+                f"under policy {pack.policy!r} of pack {self._pack_name!r}. "
+                f"Only adapters with locality='local' are allowed.",
             )
 
 

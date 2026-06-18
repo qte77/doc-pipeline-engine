@@ -38,6 +38,7 @@ class ClaudeCliAdapter(AdapterBase):
 
     name = ADAPTER_NAME
     version = ADAPTER_VERSION
+    locality = "api"
 
     def __init__(self, model: str = _DEFAULT_MODEL, timeout: int = 120) -> None:
         self._model = model

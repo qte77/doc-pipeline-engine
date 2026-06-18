@@ -139,10 +139,17 @@ class TestF5PolicyViolation:
         gate = PolicyGate("generic")
         gate.check("claude_cli")  # must not raise
 
-    def test_unknown_adapter_rejected_by_any_policy(self) -> None:
-        gate = PolicyGate("generic")
+    def test_unknown_adapter_rejected_by_local_only_policy(self) -> None:
+        # Unknown adapters have no locality attribute; treated as non-local
+        # and therefore blocked under local-only policy.
+        gate = PolicyGate("mech-elec-cert")
         with pytest.raises(GateError, match="F5-policy-violation"):
             gate.check("__unknown_adapter__")
+
+    def test_unknown_adapter_allowed_by_permissive_policy(self) -> None:
+        # Non-local-only policies permit any adapter (including unknown ones).
+        gate = PolicyGate("generic")
+        gate.check("__unknown_adapter__")  # must not raise
 
 
 # ---------------------------------------------------------------------------

@@ -26,11 +26,25 @@ from pathlib import Path
 from typing import Any
 
 
+Locality = str
+"""Data locality of an adapter: ``"local"`` (on-device) or ``"api"`` (external LLM call)."""
+
+
 class AdapterBase(ABC):
-    """Base class every extraction backend implements."""
+    """Base class every extraction backend implements.
+
+    Class attributes:
+        name: Short adapter identifier registered in the adapter registry.
+        version: Adapter implementation version string.
+        locality: Data locality — ``"local"`` for on-device processing,
+            ``"api"`` for adapters that call an external LLM API.
+            Used by :class:`~doc_pipeline_engine.base.gates.PolicyGate` to
+            enforce data-locality policies without a hardcoded allowlist.
+    """
 
     name: str
     version: str
+    locality: Locality = "local"
 
     @abstractmethod
     def extract(self, manifest_file: dict[str, Any], source_root: Path) -> dict[str, Any]:
