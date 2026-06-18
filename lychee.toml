@@ -20,7 +20,7 @@ exclude = [
   "^https?://localhost",
 
   # --- Timeout-prone in CI ---
-  "^https?://www\.gnu\.org",
+  "^https?://www\\.gnu\\.org",
 
   # --- Not yet released ---
   # v0.1.0 release tag URLs in CHANGELOG once tag is cut
