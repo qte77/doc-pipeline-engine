@@ -44,12 +44,16 @@ setup_npm_tools:  ## Install npm-based dev tools (markdownlint-cli2)
 	npm install -gs markdownlint-cli2
 	echo "markdownlint-cli2 version: $$(markdownlint-cli2 --version)"
 
-setup_lychee:  ## Install lychee link checker (Rust binary, requires sudo)
+setup_lychee:  ## Install lychee link checker (~/.local/bin, no sudo)
 	if command -v lychee > /dev/null 2>&1; then
 		echo "lychee already installed: $$(lychee --version)"
 	else
-		curl -sL https://github.com/lycheeverse/lychee/releases/latest/download/lychee-x86_64-unknown-linux-gnu.tar.gz \
-			| sudo tar xz -C /usr/local/bin lychee
+		mkdir -p ~/.local/bin
+		tmp=$$(mktemp -d) \
+			&& curl -sSfL https://github.com/lycheeverse/lychee/releases/latest/download/lychee-x86_64-unknown-linux-gnu.tar.gz \
+				| tar xz -C "$$tmp" \
+			&& install -m 755 "$$tmp"/lychee-*/lychee ~/.local/bin/lychee \
+			&& rm -rf "$$tmp"
 		echo "lychee installed: $$(lychee --version)"
 	fi
 
