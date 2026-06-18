@@ -20,9 +20,10 @@ SVG is not supported.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 ADAPTER_NAME = "kreuzberg"
 CONTRACT_VERSION = "0.1.0"
@@ -30,8 +31,8 @@ CONTRACT_VERSION = "0.1.0"
 
 def _load_kreuzberg() -> tuple[Callable[..., Any], str]:
     try:
-        from kreuzberg import extract_file_sync as fn  # type: ignore[import-not-found]
         from kreuzberg import __version__ as version  # type: ignore[import-not-found]
+        from kreuzberg import extract_file_sync as fn  # type: ignore[import-not-found]
     except ImportError as e:
         raise RuntimeError(
             "Kreuzberg not installed. Install the extras: "
@@ -63,7 +64,7 @@ def extract(file_entry: dict[str, Any], source_root: Path) -> dict[str, Any]:
         "source_path": file_entry["path"],
         "source_sha256": file_entry["sha256"],
         "adapter": {"name": ADAPTER_NAME, "version": _kreuzberg_version},
-        "extracted_at": datetime.now(timezone.utc).isoformat(),
+        "extracted_at": datetime.now(UTC).isoformat(),
         "content": {
             "text": getattr(result, "content", "") or "",
             "layout": [],

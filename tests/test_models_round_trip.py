@@ -15,7 +15,7 @@ named negative case fails via ``is_valid`` returning False.
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
@@ -23,7 +23,7 @@ from doc_pipeline_engine.base.contracts import SCHEMA_NAMES, is_valid, validate
 from doc_pipeline_engine.models import REGISTRY
 
 SHA_ZERO = "0" * 64
-NOW = datetime.now(timezone.utc).isoformat()
+NOW = datetime.now(UTC).isoformat()
 
 
 def _min_discovery() -> dict:

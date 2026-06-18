@@ -10,14 +10,14 @@ gate failure, and surfaces stage and contract names in the error.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pytest
 
 from doc_pipeline_engine.runner import PipelineError, run
 
 SHA_ZERO = "0" * 64
-NOW = datetime.now(timezone.utc).isoformat()
+NOW = datetime.now(UTC).isoformat()
 
 
 def _valid_discovery_manifest(_seed: dict) -> dict:

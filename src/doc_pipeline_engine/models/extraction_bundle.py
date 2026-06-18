@@ -88,7 +88,10 @@ class Content(StrictModel):
 
 
 class ExtractionBundle(StrictModel):
-    """Uniform output schema every Adapter must emit. Contains text, layout tree, tables, figures, images."""
+    """Uniform output schema every Adapter must emit.
+
+    Contains text, layout tree, tables, figures, images.
+    """
 
     version: ContractVersion = CONTRACT_VERSION_LITERAL
     source_path: str
@@ -97,7 +100,10 @@ class ExtractionBundle(StrictModel):
     extracted_at: str
     confidence: Confidence | None = Field(
         default=None,
-        description="Adapter self-reported confidence; gate G_extract rejects < pack threshold (default 0.7)",
+        description=(
+            "Adapter self-reported confidence;"
+            " gate G_extract rejects < pack threshold (default 0.7)"
+        ),
     )
     content: Content
     warnings: list[str] | None = None

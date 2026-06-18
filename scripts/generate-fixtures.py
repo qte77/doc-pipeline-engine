@@ -20,7 +20,7 @@ import hashlib
 import json
 import mimetypes
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -59,7 +59,7 @@ def file_type_for(path: Path) -> str:
 
 
 def iso_utc_now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def collect_files(domain_dir: Path) -> list[dict]:

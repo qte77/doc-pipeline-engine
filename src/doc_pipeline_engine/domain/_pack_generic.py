@@ -46,9 +46,19 @@ register(
         output_format_ids=[f.id for f in _OUTPUT_FORMATS],
         extraction_confidence_threshold=0.7,
         prompts={
-            "normalize": "Normalize this extracted text into clean markdown. Preserve headings, lists, and tables. Remove headers, footers, and page numbers.",
-            "analyze": "Analyze the document and identify its main claims, key entities, and section structure.",
-            "draft": "Write a concise quick-tier summary (3 sentences max) capturing the document's gist.",
+            "normalize": (
+                "Normalize this extracted text into clean markdown."
+                " Preserve headings, lists, and tables."
+                " Remove headers, footers, and page numbers."
+            ),
+            "analyze": (
+                "Analyze the document and identify its main claims,"
+                " key entities, and section structure."
+            ),
+            "draft": (
+                "Write a concise quick-tier summary (3 sentences max)"
+                " capturing the document's gist."
+            ),
         },
     )
 )

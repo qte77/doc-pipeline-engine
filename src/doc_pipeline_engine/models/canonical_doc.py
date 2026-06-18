@@ -56,7 +56,7 @@ class Node(StrictModel):
         default=None,
         description="Back-pointers to ExtractionBundle.content.layout entries",
     )
-    children: list["Node"] | None = None
+    children: list[Node] | None = None
 
 
 class InputFormatRef(StrictModel):

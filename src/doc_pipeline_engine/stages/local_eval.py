@@ -13,7 +13,7 @@ is needed.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from doc_pipeline_engine.render.formats import RenderArtifacts
@@ -31,7 +31,7 @@ def eval_local(
     _ = (bundle, canonical, report, artifacts)
     return {
         "version": CONTRACT_VERSION,
-        "evaluated_at": datetime.now(timezone.utc).isoformat(),
+        "evaluated_at": datetime.now(UTC).isoformat(),
         "tier": "quick",
         "verdict": "pass",
         "scores": {

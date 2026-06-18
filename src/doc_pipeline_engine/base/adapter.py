@@ -25,7 +25,6 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
-
 Locality = str
 """Data locality of an adapter: ``"local"`` (on-device) or ``"api"`` (external LLM call)."""
 
