@@ -19,6 +19,9 @@ exclude = [
   # --- Non-routable / local ---
   "^https?://localhost",
 
+  # --- Timeout-prone in CI ---
+  "^https?://www\\.gnu\\.org",
+
   # --- Not yet released ---
   # v0.1.0 release tag URLs in CHANGELOG once tag is cut
   "^https://github\\.com/qte77/doc-pipeline-engine/releases/tag/v",
