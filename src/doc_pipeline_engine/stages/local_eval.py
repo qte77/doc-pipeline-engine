@@ -14,28 +14,30 @@ is needed.
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+
+from doc_pipeline_engine.models.eval_report import EvalReport, Score
 
 if TYPE_CHECKING:
+    from doc_pipeline_engine.models.analysis_report import AnalysisReport
+    from doc_pipeline_engine.models.canonical_doc import CanonicalDoc
+    from doc_pipeline_engine.models.extraction_bundle import ExtractionBundle
     from doc_pipeline_engine.render.formats import RenderArtifacts
 
 CONTRACT_VERSION = "0.1.0"
 
 
 def eval_local(
-    bundle: dict[str, Any],
-    canonical: dict[str, Any],
-    report: dict[str, Any],
+    bundle: ExtractionBundle,
+    canonical: CanonicalDoc,
+    report: AnalysisReport,
     artifacts: RenderArtifacts,
-) -> dict[str, Any]:
+) -> EvalReport:
     """Emit a minimal EvalReport for the V2 leg."""
     _ = (bundle, canonical, report, artifacts)
-    return {
-        "version": CONTRACT_VERSION,
-        "evaluated_at": datetime.now(UTC).isoformat(),
-        "tier": "quick",
-        "verdict": "pass",
-        "scores": {
-            "schema_valid": {"value": 1.0, "threshold": 1.0, "passed": True}
-        },
-    }
+    return EvalReport(
+        evaluated_at=datetime.now(UTC).isoformat(),
+        tier="quick",
+        verdict="pass",
+        scores={"schema_valid": Score(value=1.0, threshold=1.0, passed=True)},
+    )

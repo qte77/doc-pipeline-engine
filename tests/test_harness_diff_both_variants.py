@@ -27,6 +27,9 @@ from doc_pipeline_engine.harness import (
     _to_json,
     run_both,
 )
+from doc_pipeline_engine.models.analysis_report import AnalysisReport, AnalyzerInfo, Claim
+from doc_pipeline_engine.models.canonical_doc import CanonicalDoc, Node, TierSummary
+from doc_pipeline_engine.models.eval_report import EvalReport, Score
 from doc_pipeline_engine.render.formats import RenderArtifacts
 from doc_pipeline_engine.stages import extract as extract_module
 
@@ -53,27 +56,25 @@ def fake_kreuzberg(monkeypatch: pytest.MonkeyPatch) -> None:
 @pytest.fixture
 def fake_anthropic_sdk(monkeypatch: pytest.MonkeyPatch) -> None:
     """Replace V1 stage functions with deterministic stubs."""
-    valid_canonical = {
-        "version": "0.1.0",
-        "source_sha256": SHA,
-        "built_at": "2026-04-26T00:00:00+00:00",
-        "root": {"id": "s.0", "level": 0, "kind": "doc", "text": ""},
-        "tier_summary": {"l0": "summary", "l1": "longer summary"},
-    }
-    valid_report = {
-        "version": "0.1.0",
-        "source_sha256": SHA,
-        "analyzed_at": "2026-04-26T00:00:00+00:00",
-        "claims": [{"id": "c1", "text": "x is y", "node_refs": ["s.0"]}],
-        "entities": [],
-    }
-    valid_eval = {
-        "version": "0.1.0",
-        "evaluated_at": "2026-04-26T00:00:00+00:00",
-        "tier": "quick",
-        "verdict": "pass",
-        "scores": {"schema_valid": {"value": 1.0, "threshold": 1.0, "passed": True}},
-    }
+    valid_canonical = CanonicalDoc(
+        source_sha256=SHA,
+        built_at="2026-04-26T00:00:00+00:00",
+        root=Node(id="s.0", level=0, kind="doc", text=""),
+        tier_summary=TierSummary(l0="summary", l1="longer summary"),
+    )
+    valid_report = AnalysisReport(
+        source_sha256=SHA,
+        analyzed_at="2026-04-26T00:00:00+00:00",
+        analyzer=AnalyzerInfo(name="stub", version="0.0.0"),
+        claims=[Claim(id="c1", text="x is y", node_refs=["s.0"])],
+        entities=[],
+    )
+    valid_eval = EvalReport(
+        evaluated_at="2026-04-26T00:00:00+00:00",
+        tier="quick",
+        verdict="pass",
+        scores={"schema_valid": Score(value=1.0, threshold=1.0, passed=True)},
+    )
     artifacts = RenderArtifacts(md="# v1 md", docx=b"PK\x03\x04", pdf=b"%PDF-stub")
 
     monkeypatch.setattr(
@@ -133,12 +134,12 @@ def test_harness_extraction_bundle_is_shared_between_legs(
     report = run_both(sample)
 
     # Real extraction bundle from Kreuzberg (stubbed) — single source of truth.
-    assert report.extraction_bundle["adapter"]["name"] == "kreuzberg"
-    assert report.extraction_bundle["source_sha256"] == report.sample_sha256
+    assert report.extraction_bundle.adapter.name == "kreuzberg"
+    assert report.extraction_bundle.source_sha256 == report.sample_sha256
     # V2 (deterministic) propagates sha256 from the bundle into its canonical doc.
     # V1 is stubbed here with a placeholder sha256, so we don't equality-check it
     # against the bundle — that's covered by the real-API integration test.
-    assert report.local.contracts[0]["source_sha256"] == report.extraction_bundle["source_sha256"]
+    assert report.local.contracts[0].source_sha256 == report.extraction_bundle.source_sha256
 
 
 def test_harness_axes_includes_latency_ratio(
