@@ -5,11 +5,28 @@ agents.** For technical workflows and coding standards, see
 [CONTRIBUTING.md](CONTRIBUTING.md). For project overview, see
 [README.md](README.md).
 
-**External References:**
+**External References** (human contributors): [CONTRIBUTING.md](CONTRIBUTING.md) | [AGENT_REQUESTS.md](AGENT_REQUESTS.md) | [AGENT_LEARNINGS.md](AGENT_LEARNINGS.md)
 
-- @CONTRIBUTING.md - Command reference, testing guidelines, code style patterns
-- @AGENT_REQUESTS.md - Escalation and human collaboration
-- @AGENT_LEARNINGS.md - Pattern discovery and knowledge sharing
+## Key Commands
+
+| Command | Purpose |
+| --- | --- |
+| `make install` | `uv sync` — install dev dependencies |
+| `make test` | Full pytest suite |
+| `make test_rerun` | Rerun only failed tests (fast TDD iteration) |
+| `make lint` | Ruff check on Python sources |
+| `make validate` | Pre-commit gate: lint + test + lint_md + lint_links |
+
+## Code Conventions
+
+- **Imports**: absolute (`from doc_pipeline_engine.module import X`)
+- **Comments**: default to none; add `# Reason:` only when the *why* is non-obvious
+- **Tests**: mirror `src/` layout under `tests/`; new functionality requires tests
+- **Commits**: Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`)
+
+## Escalation
+
+Write to `AGENT_REQUESTS.md` when: user instructions conflict with safety practices, rules contradict each other, required information is missing, or actions would significantly change project architecture.
 
 ## Claude Code Infrastructure
 
