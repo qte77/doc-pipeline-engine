@@ -10,10 +10,13 @@ from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
-from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 from doc_pipeline_engine.stream import main, run_stream
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 SHA_ZERO = "0" * 64
 NOW = datetime.now(UTC).isoformat()

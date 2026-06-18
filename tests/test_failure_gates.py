@@ -20,7 +20,7 @@ against the same file (integration test, not unit test).
 from __future__ import annotations
 
 from datetime import UTC, datetime
-from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import patch
 
 import pytest
@@ -28,6 +28,9 @@ import pytest
 from doc_pipeline_engine.base.contracts import is_valid
 from doc_pipeline_engine.base.gates import ConfidenceGate, FormatGate, GateError, PolicyGate
 from doc_pipeline_engine.runner import PipelineError, run
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 SHA_ZERO = "0" * 64
 NOW = datetime.now(UTC).isoformat()

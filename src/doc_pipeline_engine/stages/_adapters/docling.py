@@ -8,10 +8,12 @@
 """Docling adapter stub — not yet implemented."""
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from doc_pipeline_engine.base.adapter import AdapterBase, register
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class DoclingAdapter(AdapterBase):

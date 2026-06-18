@@ -9,13 +9,16 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 from doc_pipeline_engine.base.adapter import AdapterBase, available, get, register
 from doc_pipeline_engine.base.contracts import is_valid
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 SHA_ZERO = "0" * 64
 

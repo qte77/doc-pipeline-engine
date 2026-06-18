@@ -21,10 +21,12 @@ SVG is not supported.
 from __future__ import annotations
 
 import contextlib
-from collections.abc import Callable
 from datetime import UTC, datetime
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from pathlib import Path
 
 ADAPTER_NAME = "kreuzberg"
 CONTRACT_VERSION = "0.1.0"

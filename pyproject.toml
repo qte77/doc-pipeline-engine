@@ -123,7 +123,7 @@ target-version = "py311"
 # Narrow set: only require module / class / function / package docstrings.
 # Google convention; private (_-prefixed) names skipped automatically.
 # S = bandit-equivalent security checks. C90 = McCabe complexity (≤ 10).
-select = ["D100", "D101", "D103", "D104", "S", "C90", "E", "F", "I", "W", "UP", "PGH", "B", "SIM", "RUF", "N", "PT"]
+select = ["D100", "D101", "D103", "D104", "S", "C90", "E", "F", "I", "W", "UP", "PGH", "B", "SIM", "RUF", "N", "PT", "TCH"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

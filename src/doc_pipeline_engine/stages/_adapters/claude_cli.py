@@ -11,10 +11,12 @@ from __future__ import annotations
 import json
 import subprocess
 from datetime import UTC, datetime
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from doc_pipeline_engine.base.adapter import AdapterBase, register
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 ADAPTER_NAME = "claude_cli"
 ADAPTER_VERSION = "0.1.0"

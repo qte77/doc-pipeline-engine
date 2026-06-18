@@ -11,10 +11,13 @@ a valid DiscoveryManifest dict.
 from __future__ import annotations
 
 import hashlib
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from doc_pipeline_engine.base.contracts import is_valid
 from doc_pipeline_engine.stages.discover import discover
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _write(p: Path, content: bytes) -> None:

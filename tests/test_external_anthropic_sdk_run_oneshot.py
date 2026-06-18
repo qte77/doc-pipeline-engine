@@ -17,8 +17,10 @@ import importlib.util
 import json
 from pathlib import Path
 from types import SimpleNamespace
+from typing import TYPE_CHECKING
 
-import pytest
+if TYPE_CHECKING:
+    import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 _spec = importlib.util.spec_from_file_location(
