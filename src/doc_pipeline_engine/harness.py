@@ -27,7 +27,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+from doc_pipeline_engine.models.extraction_bundle import ExtractionBundle  # noqa: TC001
+
 if TYPE_CHECKING:
+    from pydantic import BaseModel
+
+    from doc_pipeline_engine.models.eval_report import EvalReport
     from doc_pipeline_engine.render.formats import RenderArtifacts
 
 
@@ -36,10 +41,10 @@ class LegResult:
     """All artifacts and timings produced by one pipeline leg (anthropic_sdk or local)."""
 
     variant: str  # "anthropic_sdk" | "local"
-    contracts: list[dict[str, Any]]  # all stage outputs in order
+    contracts: list[BaseModel]  # all stage outputs in order
     artifacts: RenderArtifacts
     wall_times: dict[str, float]
-    eval_report: dict[str, Any]
+    eval_report: EvalReport
 
 
 @dataclass
@@ -48,7 +53,7 @@ class DiffReport:
 
     sample_path: str
     sample_sha256: str
-    extraction_bundle: dict[str, Any]
+    extraction_bundle: ExtractionBundle
     anthropic_sdk: LegResult
     local: LegResult
     axes: dict[str, float] = field(default_factory=dict)
@@ -60,7 +65,7 @@ def _time(fn: Any, *args: Any, **kwargs: Any) -> tuple[Any, float]:
     return out, time.perf_counter() - t0
 
 
-def _run_anthropic_sdk_leg(bundle: dict[str, Any], model: str) -> LegResult:
+def _run_anthropic_sdk_leg(bundle: ExtractionBundle, model: str) -> LegResult:
     from doc_pipeline_engine.stages.anthropic_sdk_analyze import analyze_anthropic_sdk
     from doc_pipeline_engine.stages.anthropic_sdk_eval import eval_anthropic_sdk
     from doc_pipeline_engine.stages.anthropic_sdk_normalize import normalize_anthropic_sdk
@@ -80,7 +85,7 @@ def _run_anthropic_sdk_leg(bundle: dict[str, Any], model: str) -> LegResult:
     )
 
 
-def _run_local_leg(bundle: dict[str, Any]) -> LegResult:
+def _run_local_leg(bundle: ExtractionBundle) -> LegResult:
     from doc_pipeline_engine.stages.local_analyze import analyze_local
     from doc_pipeline_engine.stages.local_eval import eval_local
     from doc_pipeline_engine.stages.local_normalize import normalize_local
@@ -133,11 +138,10 @@ def run_both(
 
     root = sample_path.parent
     manifest = discover(root, glob=sample_path.name)
-    files = manifest["files"]
-    if not files:
+    if not manifest.files:
         raise FileNotFoundError(f"no files matched at {sample_path}")
-    file_entry = files[0]
-    bundle = extract(file_entry, root)
+    file_entry = manifest.files[0]
+    bundle = extract(file_entry.model_dump(), root)
 
     anthropic_sdk = _run_anthropic_sdk_leg(bundle, model=anthropic_sdk_model)
     local = _run_local_leg(bundle)
@@ -145,7 +149,7 @@ def run_both(
 
     report = DiffReport(
         sample_path=str(sample_path),
-        sample_sha256=file_entry["sha256"],
+        sample_sha256=file_entry.sha256,
         extraction_bundle=bundle,
         anthropic_sdk=anthropic_sdk,
         local=local,
@@ -154,8 +158,8 @@ def run_both(
 
     if output_dir is not None:
         out = Path(output_dir)
-        _write_artifacts(out, file_entry["sha256"], "anthropic_sdk", anthropic_sdk.artifacts)
-        _write_artifacts(out, file_entry["sha256"], "local", local.artifacts)
+        _write_artifacts(out, file_entry.sha256, "anthropic_sdk", anthropic_sdk.artifacts)
+        _write_artifacts(out, file_entry.sha256, "local", local.artifacts)
 
     return report
 
@@ -165,9 +169,9 @@ def _to_json(report: DiffReport) -> dict[str, Any]:
     def leg(r: LegResult) -> dict[str, Any]:
         return {
             "variant": r.variant,
-            "contracts": r.contracts,
+            "contracts": [c.model_dump(mode="json") for c in r.contracts],
             "wall_times": r.wall_times,
-            "eval_report": r.eval_report,
+            "eval_report": r.eval_report.model_dump(mode="json"),
             "artifacts": {"md_chars": len(r.artifacts.md),
                           "docx_bytes": len(r.artifacts.docx),
                           "pdf_bytes": len(r.artifacts.pdf)},
@@ -175,7 +179,7 @@ def _to_json(report: DiffReport) -> dict[str, Any]:
     return {
         "sample_path": report.sample_path,
         "sample_sha256": report.sample_sha256,
-        "extraction_bundle": report.extraction_bundle,
+        "extraction_bundle": report.extraction_bundle.model_dump(mode="json"),
         "anthropic_sdk": leg(report.anthropic_sdk),
         "local": leg(report.local),
         "axes": report.axes,

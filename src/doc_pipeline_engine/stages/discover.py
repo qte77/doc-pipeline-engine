@@ -5,22 +5,36 @@
 # You may obtain a copy of the License at
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
-"""Discover stage: filesystem walk → DiscoveryManifest.
-
-Walks ``root`` with the given glob, computes sha256 per file, and emits a
-DiscoveryManifest dict ready for gate validation.
-"""
+"""Discover stage: filesystem walk → DiscoveryManifest."""
 from __future__ import annotations
 
 import hashlib
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
+
+from doc_pipeline_engine.models.discovery_manifest import (
+    DiscoveryManifest,
+    FileEntry,
+    Source,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-CONTRACT_VERSION = "0.1.0"
 _HASH_CHUNK = 65536
+
+_EXT_MAP: dict[str, str] = {
+    "pdf": "pdf",
+    "docx": "docx",
+    "xlsx": "xlsx",
+    "txt": "txt",
+    "md": "md",
+    "png": "image",
+    "jpg": "image",
+    "jpeg": "image",
+    "tiff": "image",
+    "bmp": "image",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -31,23 +45,23 @@ def _sha256(path: Path) -> str:
     return h.hexdigest()
 
 
-def discover(root: Path, glob: str = "**/*") -> dict[str, Any]:
-    """Walk ``root`` matching ``glob``, return a DiscoveryManifest dict."""
-    files: list[dict[str, Any]] = []
+def discover(root: Path, glob: str = "**/*") -> DiscoveryManifest:
+    """Walk ``root`` matching ``glob``, return a DiscoveryManifest."""
+    files: list[FileEntry] = []
     for path in sorted(root.glob(glob)):
         if not path.is_file():
             continue
+        ext = path.suffix.lstrip(".").lower()
         files.append(
-            {
-                "path": str(path.relative_to(root)),
-                "size_bytes": path.stat().st_size,
-                "sha256": _sha256(path),
-                "file_type": path.suffix.lstrip(".").lower() or "bin",
-            }
+            FileEntry(
+                path=str(path.relative_to(root)),
+                size_bytes=path.stat().st_size,
+                sha256=_sha256(path),
+                file_type=_EXT_MAP.get(ext, "unknown"),
+            )
         )
-    return {
-        "version": CONTRACT_VERSION,
-        "source": {"root": str(root), "kind": "folder"},
-        "discovered_at": datetime.now(UTC).isoformat(),
-        "files": files,
-    }
+    return DiscoveryManifest(
+        source=Source(root=str(root), kind="folder"),
+        discovered_at=datetime.now(UTC).isoformat(),
+        files=files,
+    )

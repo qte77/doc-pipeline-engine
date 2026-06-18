@@ -14,6 +14,11 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from doc_pipeline_engine.base.adapter import AdapterBase, register
+from doc_pipeline_engine.models.extraction_bundle import (
+    AdapterInfo,
+    Content,
+    ExtractionBundle,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -46,7 +51,7 @@ class ClaudeCliAdapter(AdapterBase):
         self._model = model
         self._timeout = timeout
 
-    def extract(self, manifest_file: dict[str, Any], source_root: Path) -> dict[str, Any]:
+    def extract(self, manifest_file: dict[str, Any], source_root: Path) -> ExtractionBundle:
         """Shell out to ``claude --print --bare`` and parse its JSON envelope.
 
         Args:
@@ -54,7 +59,7 @@ class ClaudeCliAdapter(AdapterBase):
             source_root: Absolute path to the discovered folder.
 
         Returns:
-            ExtractionBundle dict.
+            ExtractionBundle instance.
 
         Raises:
             RuntimeError: if ``claude`` is not on PATH or returns a non-zero exit.
@@ -93,14 +98,13 @@ class ClaudeCliAdapter(AdapterBase):
             # --bare with --output-format json should always be valid; fall back to raw
             text = result.stdout.decode(errors="replace")
 
-        return {
-            "version": "0.1.0",
-            "source_path": manifest_file["path"],
-            "source_sha256": manifest_file["sha256"],
-            "adapter": {"name": ADAPTER_NAME, "version": ADAPTER_VERSION},
-            "extracted_at": datetime.now(UTC).isoformat(),
-            "content": {"text": text, "layout": []},
-        }
+        return ExtractionBundle(
+            source_path=manifest_file["path"],
+            source_sha256=manifest_file["sha256"],
+            adapter=AdapterInfo(name=ADAPTER_NAME, version=ADAPTER_VERSION),
+            extracted_at=datetime.now(UTC).isoformat(),
+            content=Content(text=text, layout=[]),
+        )
 
 
 register(ClaudeCliAdapter())

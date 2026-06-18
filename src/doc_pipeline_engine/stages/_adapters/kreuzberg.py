@@ -16,6 +16,8 @@ from doc_pipeline_engine.stages.extract import extract as _kreuzberg_extract
 if TYPE_CHECKING:
     from pathlib import Path
 
+    from doc_pipeline_engine.models.extraction_bundle import ExtractionBundle
+
 
 class KreuzbergAdapter(AdapterBase):
     """Extraction backend using the Kreuzberg library (opt-in extra)."""
@@ -23,7 +25,7 @@ class KreuzbergAdapter(AdapterBase):
     name = "kreuzberg"
     version = "0.1.0"
 
-    def extract(self, manifest_file: dict[str, Any], source_root: Path) -> dict[str, Any]:
+    def extract(self, manifest_file: dict[str, Any], source_root: Path) -> ExtractionBundle:
         """Delegate to the Kreuzberg-backed extract stage function."""
         return _kreuzberg_extract(manifest_file, source_root)
 

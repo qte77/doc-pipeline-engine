@@ -12,7 +12,7 @@ import pytest
 
 pytest.importorskip("docx")
 
-from doc_pipeline_engine.base.contracts import is_valid
+from doc_pipeline_engine.models.eval_report import EvalReport
 from doc_pipeline_engine.render.formats import RenderArtifacts
 from doc_pipeline_engine.stages.local_eval import eval_local
 
@@ -22,14 +22,14 @@ SHA = "0" * 64
 def test_stages_v2_eval_emits_valid_eval_report() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_local({}, {}, {}, art)
+    report = eval_local(None, None, None, art)  # type: ignore[arg-type]
 
-    assert is_valid("EvalReport", report)
+    assert isinstance(report, EvalReport)
 
 
 def test_stages_v2_eval_records_pass_when_gates_passed() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_local({}, {}, {}, art)
+    report = eval_local(None, None, None, art)  # type: ignore[arg-type]
 
-    assert report["verdict"] == "pass"
+    assert report.verdict == "pass"

@@ -12,56 +12,25 @@ import pytest
 
 pytest.importorskip("docx")
 
-from doc_pipeline_engine.base.contracts import is_valid
+from doc_pipeline_engine.models.eval_report import EvalReport
 from doc_pipeline_engine.render.formats import RenderArtifacts
 from doc_pipeline_engine.stages.anthropic_sdk_eval import eval_anthropic_sdk
 
 SHA = "0" * 64
 
 
-def _bundle() -> dict:
-    return {
-        "version": "0.1.0",
-        "source_path": "a.pdf",
-        "source_sha256": SHA,
-        "adapter": {"name": "stub", "version": "0.0.0"},
-        "extracted_at": "2026-04-26T00:00:00+00:00",
-        "content": {"text": "hi", "layout": []},
-    }
-
-
-def _canonical() -> dict:
-    return {
-        "version": "0.1.0",
-        "source_sha256": SHA,
-        "built_at": "2026-04-26T00:00:00+00:00",
-        "root": {"id": "s.0", "level": 0, "kind": "doc", "text": ""},
-        "tier_summary": {"l0": "x", "l1": "y"},
-    }
-
-
-def _report() -> dict:
-    return {
-        "version": "0.1.0",
-        "source_sha256": SHA,
-        "analyzed_at": "2026-04-26T00:00:00+00:00",
-        "claims": [{"id": "c1", "text": "x", "node_refs": ["s.0"]}],
-        "entities": [],
-    }
-
-
 def test_stages_v1_eval_emits_valid_eval_report() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_anthropic_sdk(_bundle(), _canonical(), _report(), art)
+    report = eval_anthropic_sdk(None, None, None, art)  # type: ignore[arg-type]
 
-    assert is_valid("EvalReport", report)
+    assert isinstance(report, EvalReport)
 
 
 def test_stages_v1_eval_records_pass_when_gates_passed() -> None:
     art = RenderArtifacts(md="# x", docx=b"PK\x03\x04", pdf=b"%PDF-")
 
-    report = eval_anthropic_sdk(_bundle(), _canonical(), _report(), art)
+    report = eval_anthropic_sdk(None, None, None, art)  # type: ignore[arg-type]
 
-    assert report["verdict"] == "pass"
-    assert report["scores"]["schema_valid"]["passed"] is True
+    assert report.verdict == "pass"
+    assert report.scores["schema_valid"].passed is True

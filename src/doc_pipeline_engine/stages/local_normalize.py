@@ -21,7 +21,13 @@ import re
 from datetime import UTC, datetime
 from typing import Any
 
-CONTRACT_VERSION = "0.1.0"
+from doc_pipeline_engine.models.canonical_doc import (
+    CanonicalDoc,
+    Node,
+    TierSummary,
+)
+from doc_pipeline_engine.models.extraction_bundle import ExtractionBundle  # noqa: TC001
+
 _L0_CHARS = 200
 _L1_CHARS = 1000
 _HEADING_MAX_LEN = 100
@@ -78,38 +84,29 @@ def _split_into_sections(text: str) -> list[dict[str, Any]]:
     return sections
 
 
-def normalize_local(bundle: dict[str, Any]) -> dict[str, Any]:
-    """ExtractionBundle → CanonicalDoc dict, deterministic."""
-    text = bundle["content"]["text"]
+def normalize_local(bundle: ExtractionBundle) -> CanonicalDoc:
+    """ExtractionBundle → CanonicalDoc, deterministic."""
+    text = bundle.content.text
     sections = _split_into_sections(text)
     if sections:
         children = [
-            {
-                "id": f"s.{i + 1}",
-                "level": s["level"],
-                "kind": "section",
-                "title": s["title"],
-                "text": s["text"],
-            }
+            Node(
+                id=f"s.{i + 1}",
+                level=s["level"],
+                kind="section",
+                title=s["title"],
+                text=s["text"],
+            )
             for i, s in enumerate(sections)
         ]
     else:
-        children = [
-            {"id": "s.1", "level": 1, "kind": "section", "text": text},
-        ]
-    return {
-        "version": CONTRACT_VERSION,
-        "source_sha256": bundle["source_sha256"],
-        "built_at": datetime.now(UTC).isoformat(),
-        "root": {
-            "id": "s.0",
-            "level": 0,
-            "kind": "doc",
-            "text": "",
-            "children": children,
-        },
-        "tier_summary": {
-            "l0": _truncate(text, _L0_CHARS),
-            "l1": _truncate(text, _L1_CHARS),
-        },
-    }
+        children = [Node(id="s.1", level=1, kind="section", text=text)]
+    return CanonicalDoc(
+        source_sha256=bundle.source_sha256,
+        built_at=datetime.now(UTC).isoformat(),
+        root=Node(id="s.0", level=0, kind="doc", text="", children=children),
+        tier_summary=TierSummary(
+            l0=_truncate(text, _L0_CHARS),
+            l1=_truncate(text, _L1_CHARS),
+        ),
+    )

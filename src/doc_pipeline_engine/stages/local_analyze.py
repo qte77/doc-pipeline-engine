@@ -15,10 +15,17 @@ from __future__ import annotations
 
 import re
 from datetime import UTC, datetime
-from typing import Any
 
-CONTRACT_VERSION = "0.1.0"
+from doc_pipeline_engine.models.analysis_report import (
+    AnalysisReport,
+    AnalyzerInfo,
+    Claim,
+    Entity,
+)
+from doc_pipeline_engine.models.canonical_doc import CanonicalDoc, Node  # noqa: TC001
+
 ANALYZER_NAME = "v2_analyze_local"
+_ANALYZER_VERSION = "0.1.0"
 
 _SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
 
@@ -38,11 +45,11 @@ _SPACY_KIND_MAP = {
 }
 
 
-def _walk_leaves(node: dict[str, Any]) -> list[dict[str, Any]]:
-    children = node.get("children") or []
+def _walk_leaves(node: Node) -> list[Node]:
+    children = node.children or []
     if not children:
         return [node]
-    out: list[dict[str, Any]] = []
+    out: list[Node] = []
     for child in children:
         out.extend(_walk_leaves(child))
     return out
@@ -53,27 +60,23 @@ def _first_sentence(text: str) -> str:
     return parts[0].strip() if parts else ""
 
 
-def _extract_claims(root: dict[str, Any]) -> list[dict[str, Any]]:
-    claims: list[dict[str, Any]] = []
+def _extract_claims(root: Node) -> list[Claim]:
+    claims: list[Claim] = []
     for idx, leaf in enumerate(_walk_leaves(root), start=1):
-        text = (leaf.get("text") or "").strip()
+        text = (leaf.text or "").strip()
         if not text:
             continue
         claim_text = _first_sentence(text)
         if not claim_text:
             continue
-        claims.append(
-            {"id": f"c{idx}", "text": claim_text, "node_refs": [leaf["id"]]}
-        )
+        claims.append(Claim(id=f"c{idx}", text=claim_text, node_refs=[leaf.id]))
     if not claims:
         # schema requires minItems=1; emit a degenerate claim from root
-        claims.append(
-            {"id": "c1", "text": "(no extractable claims)", "node_refs": [root["id"]]}
-        )
+        claims.append(Claim(id="c1", text="(no extractable claims)", node_refs=[root.id]))
     return claims
 
 
-def _maybe_extract_entities(text: str) -> list[dict[str, Any]]:
+def _maybe_extract_entities(text: str) -> list[Entity]:
     try:
         import spacy  # type: ignore[import-not-found]
     except ImportError:
@@ -84,40 +87,38 @@ def _maybe_extract_entities(text: str) -> list[dict[str, Any]]:
         # model not downloaded — make install-models
         return []
     doc = nlp(text)
-    entities: list[dict[str, Any]] = []
-    seen: set[str] = set()
+    entities: list[Entity] = []
+    seen: set[tuple[str, str]] = set()
     for idx, ent in enumerate(doc.ents, start=1):
         key = (ent.text, ent.label_)
         if key in seen:
             continue
         seen.add(key)
         entities.append(
-            {
-                "id": f"e{idx}",
-                "name": ent.text,
-                "kind": _SPACY_KIND_MAP.get(ent.label_, "other"),
-            }
+            Entity(
+                id=f"e{idx}",
+                name=ent.text,
+                kind=_SPACY_KIND_MAP.get(ent.label_, "other"),
+            )
         )
     return entities
 
 
-def _gather_text(node: dict[str, Any]) -> str:
+def _gather_text(node: Node) -> str:
     parts: list[str] = []
-    if node.get("text"):
-        parts.append(node["text"])
-    for child in node.get("children") or []:
+    if node.text:
+        parts.append(node.text)
+    for child in node.children or []:
         parts.append(_gather_text(child))
     return "\n\n".join(p for p in parts if p)
 
 
-def analyze_local(canonical: dict[str, Any]) -> dict[str, Any]:
-    """CanonicalDoc → AnalysisReport dict, deterministic."""
-    root = canonical["root"]
-    return {
-        "version": CONTRACT_VERSION,
-        "source_sha256": canonical["source_sha256"],
-        "analyzed_at": datetime.now(UTC).isoformat(),
-        "analyzer": {"name": ANALYZER_NAME, "version": CONTRACT_VERSION},
-        "claims": _extract_claims(root),
-        "entities": _maybe_extract_entities(_gather_text(root)),
-    }
+def analyze_local(canonical: CanonicalDoc) -> AnalysisReport:
+    """CanonicalDoc → AnalysisReport, deterministic."""
+    return AnalysisReport(
+        source_sha256=canonical.source_sha256,
+        analyzed_at=datetime.now(UTC).isoformat(),
+        analyzer=AnalyzerInfo(name=ANALYZER_NAME, version=_ANALYZER_VERSION),
+        claims=_extract_claims(canonical.root),
+        entities=_maybe_extract_entities(_gather_text(canonical.root)),
+    )

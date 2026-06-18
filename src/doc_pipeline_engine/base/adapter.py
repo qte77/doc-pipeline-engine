@@ -8,7 +8,7 @@
 """Adapter ABC and registry for extraction backends.
 
 An adapter consumes one DiscoveryManifest file entry and emits an
-ExtractionBundle dict. Concrete adapters register themselves via
+ExtractionBundle. Concrete adapters register themselves via
 :func:`register`; callers retrieve them with :func:`get`.
 
 Built-in adapters (lazy-imported on first use):
@@ -26,6 +26,8 @@ from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from pathlib import Path
+
+    from doc_pipeline_engine.models.extraction_bundle import ExtractionBundle
 
 Locality = str
 """Data locality of an adapter: ``"local"`` (on-device) or ``"api"`` (external LLM call)."""
@@ -48,15 +50,15 @@ class AdapterBase(ABC):
     locality: Locality = "local"
 
     @abstractmethod
-    def extract(self, manifest_file: dict[str, Any], source_root: Path) -> dict[str, Any]:
-        """Convert one DiscoveryManifest file entry to an ExtractionBundle dict.
+    def extract(self, manifest_file: dict[str, Any], source_root: Path) -> ExtractionBundle:
+        """Convert one DiscoveryManifest file entry to an ExtractionBundle.
 
         Args:
             manifest_file: One entry from ``DiscoveryManifest.files``.
             source_root: Absolute path to the folder that was discovered.
 
         Returns:
-            A dict that validates against the ``ExtractionBundle`` contract.
+            An ExtractionBundle instance.
         """
         ...
 

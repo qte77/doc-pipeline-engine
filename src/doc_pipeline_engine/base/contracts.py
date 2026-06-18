@@ -55,7 +55,11 @@ def validate(name: str, instance: Any) -> None:
 
 
 def is_valid(name: str, instance: Any) -> bool:
-    """Return ``True`` iff ``instance`` matches the named contract."""
+    """Return ``True`` iff ``instance`` matches the named contract.
+
+    Deprecated: stages now return typed Pydantic instances; use
+    ``isinstance(result, ModelClass)`` instead. Full removal in §0.5.0.
+    """
     try:
         validate(name, instance)
     except ContractValidationError:

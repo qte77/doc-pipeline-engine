@@ -9,9 +9,11 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime
 from types import SimpleNamespace
 
-from doc_pipeline_engine.base.contracts import is_valid
+from doc_pipeline_engine.models.canonical_doc import CanonicalDoc
+from doc_pipeline_engine.models.extraction_bundle import AdapterInfo, Content, ExtractionBundle
 from doc_pipeline_engine.stages.anthropic_sdk_normalize import normalize_anthropic_sdk
 
 SHA = "0" * 64
@@ -37,23 +39,22 @@ def _stub_client(response_text: str) -> object:
     return SimpleNamespace(messages=SimpleNamespace(create=_create))
 
 
-def _bundle() -> dict:
-    return {
-        "version": "0.1.0",
-        "source_path": "a.pdf",
-        "source_sha256": SHA,
-        "adapter": {"name": "stub", "version": "0.0.0"},
-        "extracted_at": "2026-04-26T00:00:00+00:00",
-        "content": {"text": "hello world", "layout": []},
-    }
+def _bundle() -> ExtractionBundle:
+    return ExtractionBundle(
+        source_path="a.pdf",
+        source_sha256=SHA,
+        adapter=AdapterInfo(name="stub", version="0.0.0"),
+        extracted_at=datetime.now(UTC).isoformat(),
+        content=Content(text="hello world", layout=[]),
+    )
 
 
-def test_stages_v1_normalize_emits_valid_canonical_doc() -> None:
+def test_stages_v1_normalize_returns_canonical_doc_instance() -> None:
     client = _stub_client(json.dumps(_VALID_CANONICAL_PAYLOAD))
 
     canonical = normalize_anthropic_sdk(_bundle(), client=client)
 
-    assert is_valid("CanonicalDoc", canonical)
+    assert isinstance(canonical, CanonicalDoc)
 
 
 def test_stages_v1_normalize_propagates_source_sha256() -> None:
@@ -61,4 +62,4 @@ def test_stages_v1_normalize_propagates_source_sha256() -> None:
 
     canonical = normalize_anthropic_sdk(_bundle(), client=client)
 
-    assert canonical["source_sha256"] == SHA
+    assert canonical.source_sha256 == SHA

@@ -16,6 +16,7 @@ import pytest
 
 from doc_pipeline_engine.base.adapter import AdapterBase, available, get, register
 from doc_pipeline_engine.base.contracts import is_valid
+from doc_pipeline_engine.models.extraction_bundle import ExtractionBundle
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -109,9 +110,9 @@ class TestClaudeCliAdapter:
         with patch("subprocess.run", return_value=fake_result):
             result = adapter.extract({"path": "sample.pdf", "sha256": SHA_ZERO}, tmp_path)
 
-        assert result["content"]["text"] == "Extracted text content."
-        assert result["adapter"]["name"] == "claude_cli"
-        assert is_valid("ExtractionBundle", result)
+        assert result.content.text == "Extracted text content."
+        assert result.adapter.name == "claude_cli"
+        assert isinstance(result, ExtractionBundle)
 
     def test_extract_missing_cli_raises_runtime_error(self, tmp_path: Path) -> None:
         from doc_pipeline_engine.stages._adapters.claude_cli import ClaudeCliAdapter
@@ -159,7 +160,7 @@ class TestClaudeCliAdapter:
         with patch("subprocess.run", return_value=fake_result):
             result = adapter.extract({"path": "sample.pdf", "sha256": SHA_ZERO}, tmp_path)
 
-        assert result["content"]["text"] == "plain text output"
+        assert result.content.text == "plain text output"
 
 
 class TestStubAdapters:
