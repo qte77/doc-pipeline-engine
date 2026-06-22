@@ -1,7 +1,7 @@
 # doc-pipeline-engine
 
 [![License](https://img.shields.io/badge/license-Apache_2.0-58f4c2.svg)](LICENSE)
-![Version](https://img.shields.io/badge/version-0.1.0-58f4c2.svg)
+![Version](https://img.shields.io/badge/version-0.2.0-58f4c2.svg)
 [![CodeQL](https://github.com/qte77/doc-pipeline-engine/actions/workflows/codeql.yaml/badge.svg)](https://github.com/qte77/doc-pipeline-engine/actions/workflows/codeql.yaml)
 [![CodeFactor](https://www.codefactor.io/repository/github/qte77/doc-pipeline-engine/badge)](https://www.codefactor.io/repository/github/qte77/doc-pipeline-engine)
 
