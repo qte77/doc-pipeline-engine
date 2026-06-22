@@ -9,9 +9,12 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from doc_pipeline_engine.render.formats import RenderArtifacts, render_artifacts
+
+if TYPE_CHECKING:
+    from doc_pipeline_engine.models.analysis_report import AnalysisReport
 
 _TEMPLATE_DIR = Path(__file__).parent / "_jinja_templates"
 _TEMPLATE_NAME = "quick_summary.md.j2"
@@ -38,9 +41,9 @@ def _load_env() -> Any:
     )
 
 
-def render_local(report: dict[str, Any], title: str = "Quick Summary") -> RenderArtifacts:
+def render_local(report: AnalysisReport, title: str = "Quick Summary") -> RenderArtifacts:
     """AnalysisReport → RenderArtifacts (md + docx + pdf)."""
     env = _load_env()
     template = env.get_template(_TEMPLATE_NAME)
-    md = template.render(claims=report["claims"], entities=report.get("entities", []))
+    md = template.render(claims=report.claims, entities=report.entities)
     return render_artifacts(md, title=title)

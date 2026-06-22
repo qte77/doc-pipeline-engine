@@ -20,6 +20,7 @@ pytest.importorskip("docx")
 pytest.importorskip("markdown")
 pytest.importorskip("weasyprint")
 
+from doc_pipeline_engine.models.analysis_report import AnalysisReport, Claim
 from doc_pipeline_engine.render.formats import RenderArtifacts
 from doc_pipeline_engine.stages.anthropic_sdk_render import render_anthropic_sdk
 
@@ -34,14 +35,13 @@ def _stub_client(response_text: str) -> object:
     return SimpleNamespace(messages=SimpleNamespace(create=_create))
 
 
-def _report() -> dict:
-    return {
-        "version": "0.1.0",
-        "source_sha256": SHA,
-        "analyzed_at": "2026-04-26T00:00:00+00:00",
-        "claims": [{"id": "c1", "text": "x", "node_refs": ["s.1"]}],
-        "entities": [],
-    }
+def _report() -> AnalysisReport:
+    return AnalysisReport(
+        source_sha256=SHA,
+        analyzed_at="2026-04-26T00:00:00+00:00",
+        claims=[Claim(id="c1", text="x", node_refs=["s.1"])],
+        entities=[],
+    )
 
 
 def test_stages_v1_render_returns_render_artifacts() -> None:
