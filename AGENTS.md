@@ -16,6 +16,7 @@ agents.** For technical workflows and coding standards, see
 | `make test_rerun` | Rerun only failed tests (fast TDD iteration) |
 | `make lint` | Ruff check on Python sources |
 | `make validate` | Pre-commit gate: lint + test + lint_md + lint_links |
+| `make run_local SAMPLE=path` | Run the offline local leg on one sample (no API key) |
 
 ## Code Conventions
 

@@ -13,6 +13,7 @@ timings, costs, eval reports, and a small set of comparative axes.
 
 Usage (CLI):
     python -m doc_pipeline_engine.harness <sample_path> [--output-dir DIR]
+    python -m doc_pipeline_engine.harness <sample_path> --local-only   # no API key
 
 Both ``anthropic_sdk`` and ``extract`` extras must be installed for real runs:
     uv sync --extra extract --extra render --extra anthropic_sdk --extra local-render
@@ -164,24 +165,52 @@ def run_both(
     return report
 
 
+def run_local(
+    sample_path: Path,
+    *,
+    output_dir: Path | None = None,
+) -> LegResult:
+    """Run only the offline ``local`` leg on one sample — no ANTHROPIC_API_KEY needed.
+
+    Same discover → extract → local-leg path as :func:`run_both`, but skips the
+    paid ``anthropic_sdk`` leg entirely.
+    """
+    from doc_pipeline_engine.stages.discover import discover
+    from doc_pipeline_engine.stages.extract import extract
+
+    root = sample_path.parent
+    manifest = discover(root, glob=sample_path.name)
+    if not manifest.files:
+        raise FileNotFoundError(f"no files matched at {sample_path}")
+    file_entry = manifest.files[0]
+    bundle = extract(file_entry.model_dump(), root)
+    local = _run_local_leg(bundle)
+    if output_dir is not None:
+        _write_artifacts(Path(output_dir), file_entry.sha256, "local", local.artifacts)
+    return local
+
+
+def _leg_to_json(r: LegResult) -> dict[str, Any]:
+    """Serialise one leg result to a JSON-safe dict; artifact bytes omitted."""
+    return {
+        "variant": r.variant,
+        "contracts": [c.model_dump(mode="json") for c in r.contracts],
+        "wall_times": r.wall_times,
+        "eval_report": r.eval_report.model_dump(mode="json"),
+        "artifacts": {"md_chars": len(r.artifacts.md),
+                      "docx_bytes": len(r.artifacts.docx),
+                      "pdf_bytes": len(r.artifacts.pdf)},
+    }
+
+
 def _to_json(report: DiffReport) -> dict[str, Any]:
     """Serialise DiffReport to a JSON-safe dict; artifact bytes omitted."""
-    def leg(r: LegResult) -> dict[str, Any]:
-        return {
-            "variant": r.variant,
-            "contracts": [c.model_dump(mode="json") for c in r.contracts],
-            "wall_times": r.wall_times,
-            "eval_report": r.eval_report.model_dump(mode="json"),
-            "artifacts": {"md_chars": len(r.artifacts.md),
-                          "docx_bytes": len(r.artifacts.docx),
-                          "pdf_bytes": len(r.artifacts.pdf)},
-        }
     return {
         "sample_path": report.sample_path,
         "sample_sha256": report.sample_sha256,
         "extraction_bundle": report.extraction_bundle.model_dump(mode="json"),
-        "anthropic_sdk": leg(report.anthropic_sdk),
-        "local": leg(report.local),
+        "anthropic_sdk": _leg_to_json(report.anthropic_sdk),
+        "local": _leg_to_json(report.local),
         "axes": report.axes,
     }
 
@@ -194,7 +223,17 @@ def _cli(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, default=None,
                         help="Write rendered md/docx/pdf artifacts under this dir")
     parser.add_argument("--anthropic-sdk-model", default="claude-opus-4-7")
+    parser.add_argument(
+        "--local-only",
+        action="store_true",
+        help="Run only the offline local leg (no ANTHROPIC_API_KEY needed)",
+    )
     args = parser.parse_args(argv)
+    if args.local_only:
+        leg = run_local(args.sample, output_dir=args.output_dir)
+        json.dump(_leg_to_json(leg), sys.stdout, indent=2)
+        sys.stdout.write("\n")
+        return 0
     report = run_both(
         args.sample,
         anthropic_sdk_model=args.anthropic_sdk_model,
@@ -209,4 +248,4 @@ if __name__ == "__main__":
     raise SystemExit(_cli())
 
 
-__all__ = ["DiffReport", "LegResult", "run_both"]
+__all__ = ["DiffReport", "LegResult", "run_both", "run_local"]

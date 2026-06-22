@@ -26,6 +26,7 @@ from doc_pipeline_engine.harness import (
     LegResult,
     _to_json,
     run_both,
+    run_local,
 )
 from doc_pipeline_engine.models.analysis_report import AnalysisReport, AnalyzerInfo, Claim
 from doc_pipeline_engine.models.canonical_doc import CanonicalDoc, Node, TierSummary
@@ -192,3 +193,22 @@ def test_harness_run_both_raises_when_sample_missing(
 
     with pytest.raises(FileNotFoundError):
         run_both(missing)
+
+
+def test_harness_run_local_writes_local_artifacts_without_key(
+    tmp_path: Path, fake_kreuzberg: None
+) -> None:
+    # No ANTHROPIC_API_KEY and no fake_anthropic_sdk fixture: the paid leg must
+    # never run. run_local drives the real local leg only.
+    sample = _write_sample(tmp_path)
+    out = tmp_path / "outputs"
+
+    leg = run_local(sample, output_dir=out)
+
+    assert leg.variant == "local"
+    sha_dir = out / leg.contracts[0].source_sha256
+    assert (sha_dir / "local" / "summary.md").exists()
+    assert (sha_dir / "local" / "summary.docx").exists()
+    assert (sha_dir / "local" / "summary.pdf").exists()
+    # the paid anthropic_sdk leg never ran → no such artifacts
+    assert not (sha_dir / "anthropic_sdk").exists()

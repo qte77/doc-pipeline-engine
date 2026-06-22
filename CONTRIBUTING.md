@@ -56,6 +56,24 @@ uv sync --extra extract --extra render --extra local           # local leg, full
 make install_local_nlp                                         # spaCy en_core_web_sm
 ```
 
+### Running the pipeline
+
+`make run_local SAMPLE=path` runs the offline `local` leg with **no API key**
+(`make help` lists every recipe). It wraps the harness entry point, which runs
+both legs when given a key:
+
+```bash
+python -m doc_pipeline_engine.harness <sample> [--local-only] [--output-dir DIR] [--anthropic-sdk-model M]
+```
+
+| Env | Purpose |
+| --- | --- |
+| `ANTHROPIC_API_KEY` | Required only for the `anthropic_sdk` leg; the `local` leg needs none |
+| `ANTHROPIC_BASE_URL` | Optional — Anthropic SDK `base_url` for a self-hosted / gateway / Bedrock / Vertex endpoint |
+
+Outputs land in `<output-dir>/<sha>/<leg>/summary.{md,docx,pdf}` (`outputs/` for
+`make run_local`; gitignored).
+
 ## Quality commands
 
 | Command | Purpose |

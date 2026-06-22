@@ -14,6 +14,16 @@ make install        # uv sync
 make test_contracts # schema round-trip tests
 ```
 
+## Run
+
+Offline `local` leg — no API key, no cloud:
+
+```bash
+make run_local SAMPLE=samples/legal/us/us-open-government-act-2007.pdf
+```
+
+Full run surface (both legs, CLI switches, `ANTHROPIC_API_KEY` / `ANTHROPIC_BASE_URL`) → [CONTRIBUTING.md § Running the pipeline](CONTRIBUTING.md#running-the-pipeline).
+
 ## Devcontainer
 
 Reproducible dev env at `.devcontainer/devcontainer.json` (Python 3.13 + Claude Code + lint tooling). Optional system deps install on demand per use case:
