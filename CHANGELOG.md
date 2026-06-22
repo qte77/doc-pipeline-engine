@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `docs/landscape/domain-extraction.md` + `docs/roadmap.md` — refresh stale `pseudonymize-text` info: version `v0.0.2 (Planning)` → `v0.2.0`, record the redactor-default decision (chosen, per #107) instead of "upcoming ADR", and fix the `utils-pseudonomyze-text` link-text typo.
 - `pyproject.toml` — add `[tool.uv] conflicts` for the mutually-exclusive `extract` (kreuzberg<4.8) / `kreuzberg-elv2` (kreuzberg>=4.8) extras (the ADR-0005 licence boundary). Without it, `uv lock` / `uv sync` / `make install` / `uv sync --extra …` failed "unsatisfiable" on Python 3.13 **and** 3.14 — the documented install was broken; only `--frozen` worked. `uv.lock` regenerated. (#132)
 - `stages/local_render.py` + `stages/anthropic_sdk_render.py`: accept the typed `AnalysisReport` (attribute access; `model_dump(mode="json")` for the anthropic prompt) instead of dict-subscripting it. The #127 typed-return refactor left these two render stages un-migrated, so the harness legs crashed with `TypeError: 'AnalysisReport' object is not subscriptable`; the render unit tests masked it by passing dicts (now build real models). (#130)
 - `docs/landscape/ingest.md` marker row — corrected the stale "depends on surya (GPL-3.0)" claim: surya's LICENSE is Apache-2.0 (weights are RAIL-M, free < $5M rev) and marker's GPL-3.0 is its own code. Verified by direct LICENSE-file inspection. (#112)
