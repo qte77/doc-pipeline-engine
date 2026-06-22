@@ -18,10 +18,4 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-    # qte77/gha-sbom-action v0.1.1 commits the SBOM PR unsigned (github-actions),
-    # which the required_signatures ruleset rejects (no bypass actors). Stay on the
-    # signed v0.1.0 (see generate-sbom.yaml) until the action signs its commits.
-    ignore:
-      - dependency-name: "qte77/gha-sbom-action"
-        versions: [">=0.1.1"]
 ...
