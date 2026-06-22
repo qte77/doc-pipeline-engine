@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `stages/local_render.py` + `stages/anthropic_sdk_render.py`: accept the typed `AnalysisReport` (attribute access; `model_dump(mode="json")` for the anthropic prompt) instead of dict-subscripting it. The #127 typed-return refactor left these two render stages un-migrated, so the harness legs crashed with `TypeError: 'AnalysisReport' object is not subscriptable`; the render unit tests masked it by passing dicts (now build real models). (#130)
 - `docs/landscape/ingest.md` marker row — corrected the stale "depends on surya (GPL-3.0)" claim: surya's LICENSE is Apache-2.0 (weights are RAIL-M, free < $5M rev) and marker's GPL-3.0 is its own code. Verified by direct LICENSE-file inspection. (#112)
 - `docs/roadmap.md` § 0.2.2: status `in progress` → `done` — all Delivered items shipped, ADR-0002 Accepted.
 - `docs/roadmap.md` § 0.2.2: stale claim "embedded in `docs/architecture.md` and `README.md`" replaced — SVG now only in `docs/architecture.md` (inside `<details>`) at the new `docs/assets/images/` path.

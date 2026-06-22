@@ -14,7 +14,7 @@ is purely about the Markdown content quality.
 from __future__ import annotations
 
 import json
-from typing import Any
+from typing import TYPE_CHECKING
 
 from doc_pipeline_engine.render.formats import RenderArtifacts, render_artifacts
 from doc_pipeline_engine.stages._anthropic_sdk_client import (
@@ -22,6 +22,9 @@ from doc_pipeline_engine.stages._anthropic_sdk_client import (
     _ClaudeClient,
     call_text,
 )
+
+if TYPE_CHECKING:
+    from doc_pipeline_engine.models.analysis_report import AnalysisReport
 
 _SYSTEM = """You are a document summarizer. Given an AnalysisReport
 (claims + entities), write a 1-page Markdown summary suitable for the
@@ -36,16 +39,17 @@ Output MARKDOWN ONLY (no prose, no JSON, no fences). Use:
 
 
 def render_anthropic_sdk(
-    report: dict[str, Any],
+    report: AnalysisReport,
     model: str = MODEL_DEFAULT,
     client: _ClaudeClient | None = None,
     title: str = "Quick Summary",
 ) -> RenderArtifacts:
     """AnalysisReport → RenderArtifacts (md + docx + pdf)."""
+    data = report.model_dump(mode="json")
     user = (
-        f"AnalysisReport source_sha256: {report['source_sha256']}\n\n"
-        f"Claims:\n{json.dumps(report['claims'])}\n\n"
-        f"Entities:\n{json.dumps(report['entities'])}"
+        f"AnalysisReport source_sha256: {data['source_sha256']}\n\n"
+        f"Claims:\n{json.dumps(data['claims'])}\n\n"
+        f"Entities:\n{json.dumps(data['entities'])}"
     )
     md = call_text(client, model=model, system=_SYSTEM, user=user)
     return render_artifacts(md, title=title)

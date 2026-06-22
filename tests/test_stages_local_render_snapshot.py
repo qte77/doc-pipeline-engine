@@ -15,20 +15,22 @@ pytest.importorskip("docx")
 pytest.importorskip("markdown")
 pytest.importorskip("weasyprint")
 
+from doc_pipeline_engine.models.analysis_report import AnalysisReport, Claim, Entity
 from doc_pipeline_engine.render.formats import RenderArtifacts
 from doc_pipeline_engine.stages.local_render import render_local
 
 SHA = "0" * 64
 
 
-def _report(claims: list[dict] | None = None, entities: list[dict] | None = None) -> dict:
-    return {
-        "version": "0.1.0",
-        "source_sha256": SHA,
-        "analyzed_at": "2026-04-26T00:00:00+00:00",
-        "claims": claims or [{"id": "c1", "text": "x is y", "node_refs": ["s.1"]}],
-        "entities": entities or [],
-    }
+def _report(
+    claims: list[Claim] | None = None, entities: list[Entity] | None = None
+) -> AnalysisReport:
+    return AnalysisReport(
+        source_sha256=SHA,
+        analyzed_at="2026-04-26T00:00:00+00:00",
+        claims=claims or [Claim(id="c1", text="x is y", node_refs=["s.1"])],
+        entities=entities or [],
+    )
 
 
 def test_stages_v2_render_returns_render_artifacts() -> None:
@@ -40,7 +42,7 @@ def test_stages_v2_render_returns_render_artifacts() -> None:
 
 
 def test_stages_v2_render_md_contains_claim_text() -> None:
-    claim = {"id": "c1", "text": "Sky is blue.", "node_refs": ["s.1"]}
+    claim = Claim(id="c1", text="Sky is blue.", node_refs=["s.1"])
 
     art = render_local(_report(claims=[claim]))
 
@@ -55,7 +57,7 @@ def test_stages_v2_render_md_omits_entities_section_when_empty() -> None:
 
 
 def test_stages_v2_render_md_includes_entities_section_when_present() -> None:
-    entities = [{"id": "e1", "name": "Acme", "kind": "org"}]
+    entities = [Entity(id="e1", name="Acme", kind="org")]
 
     art = render_local(_report(entities=entities))
 
