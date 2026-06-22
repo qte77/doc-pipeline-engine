@@ -7,38 +7,38 @@
 
 Modular document processing engine with contract-gated pipeline stages. Standalone module — usable independently or as a component in larger systems (e.g. polyforge, office-polyforge).
 
-## Quickstart
+## What
+
+- Turns documents (PDF / Office / images / email / text) into structured summaries through contract-gated pipeline stages.
+- Two interchangeable legs: `local` (offline, no API key — spaCy + Jinja) and `anthropic_sdk` (cloud LLM, vendor-configurable via `base_url` for Bedrock / Vertex / gateways).
+- Every stage boundary is validated against Pydantic v2 contracts ([ADR-0001](docs/adr/0001-pydantic-as-contract-source-of-truth.md)).
+- Renders results to Markdown, DOCX, and PDF.
+- Embeddable data-plane engine — orchestrator-agnostic, no control-plane lock-in ([ADR-0007](docs/adr/0007-two-surface-split-engine-and-control-plane.md)).
+- Runs fully air-gapped on the offline leg for privacy-sensitive documents.
+
+## How
 
 ```bash
-make install        # uv sync
-make test_contracts # schema round-trip tests
+make install                                                           # uv sync
+make run_local SAMPLE=samples/legal/us/us-open-government-act-2007.pdf  # offline leg, no API key
 ```
 
-## Run
+Full run surface (both legs, CLI switches, `ANTHROPIC_API_KEY` / `ANTHROPIC_BASE_URL`), the devcontainer, and on-demand installs → [CONTRIBUTING.md](CONTRIBUTING.md).
 
-Offline `local` leg — no API key, no cloud:
+## Why
 
-```bash
-make run_local SAMPLE=samples/legal/us/us-open-government-act-2007.pdf
-```
+Incumbent document pipelines tend to couple extraction to one cloud vendor or a heavyweight hosted service. doc-pipeline-engine keeps the engine embeddable and contract-gated instead: the same Pydantic contracts drive the offline and cloud legs interchangeably, so you can start air-gapped and add a cloud leg later without rewiring. See [docs/architecture.md](docs/architecture.md).
 
-Full run surface (both legs, CLI switches, `ANTHROPIC_API_KEY` / `ANTHROPIC_BASE_URL`) → [CONTRIBUTING.md § Running the pipeline](CONTRIBUTING.md#running-the-pipeline).
+## Refs
 
-## Devcontainer
+- [Architecture](docs/architecture.md)
+- [Roadmap](docs/roadmap.md)
+- [Decisions (ADRs)](docs/adr/index.md)
+- Landscape: [ingest](docs/landscape/ingest.md) · [process](docs/landscape/process.md) · [output](docs/landscape/output.md) · [E2E systems](docs/landscape/e2e-systems.md) · [domain extraction](docs/landscape/domain-extraction.md)
+- [Scraping landscape](https://github.com/qte77/polyfetch-scrape/blob/main/docs/scraping-landscape.md)
+- [Changelog](CHANGELOG.md)
+- [Contributing](CONTRIBUTING.md)
 
-Reproducible dev env at `.devcontainer/devcontainer.json` (Python 3.13 + Claude Code + lint tooling). Optional system deps install on demand per use case:
+## License
 
-- `make install_image_ocr` — Tesseract for image-sample extraction
-- `make install_local_nlp` — spaCy `en_core_web_sm` for `local`-leg NER entities
-
-`anthropic_sdk` stages work with `ANTHROPIC_API_KEY` set (uses the
-Anthropic SDK). Subscription-only users run `external/cc_cli/run_headless.sh`
-instead — see [ADR-0004](docs/adr/0004-external-evaluators-vs-pipeline.md).
-
-## Docs
-
-- [Architecture](docs/architecture.md) — stage graph, runner vs stream, package layout
-- [Roadmap](docs/roadmap.md) — milestones with reasoning and implementation notes
-- Landscape — pipeline tool surveys: [ingest](docs/landscape/ingest.md), [process](docs/landscape/process.md), [output](docs/landscape/output.md), [E2E systems](docs/landscape/e2e-systems.md), [domain extraction](docs/landscape/domain-extraction.md)
-- [Scraping Landscape](https://github.com/qte77/polyfetch-scrape/blob/main/docs/scraping-landscape.md) — web scraping survey (moved to `polyfetch-scrape`)
-- [Changelog](CHANGELOG.md) — release history ([semver](https://semver.org/))
+[Apache-2.0](LICENSE) (SPDX: `Apache-2.0`). Bundled third-party sample content is attributed in [NOTICE](NOTICE).
