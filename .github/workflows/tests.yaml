@@ -13,14 +13,28 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Full stack (spaCy NER) on the supported full-fat Python.
+          - python-version: "3.13"
+            extras: "--extra extract --extra render --extra local"
+            spacy: true
+          # Render-only subset on 3.14 (spaCy has no 3.14 wheels) — guards the
+          # deliberately-supported degraded path against silent breakage.
+          - python-version: "3.14"
+            extras: "--extra extract --extra render --extra local-render"
+            spacy: false
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python-version }}
           enable-cache: true
       # Documented local-leg install — gates the extract/kreuzberg-elv2 lock conflict.
-      - run: uv sync --extra extract --extra render --extra local
-      - run: uv run python -m spacy download en_core_web_sm
+      - run: uv sync ${{ matrix.extras }}
+      - if: ${{ matrix.spacy }}
+        run: uv run python -m spacy download en_core_web_sm
       - run: uv run ruff check .
       - run: uv run pytest -q

@@ -125,7 +125,7 @@ addopts = "-ra -q"
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py313"
 
 [tool.ruff.lint]
 # D rules enforce docstring presence so mkdocstrings has something to render.

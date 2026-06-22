@@ -64,6 +64,10 @@ jobs:
         REPO_URL=$(echo "${REPO_URL}" | sed 's|/|\\/|g')
         SITE_NAME=$(sed '1!d' README.md | sed '0,/# /{s/# //}')
         SITE_DESC=$(echo "$REPO_INFO" | jq -r .description)
+        # Escape sed replacement metacharacters (\, &, /) — SITE_NAME is README
+        # line 1 and SITE_DESC is the repo description (both editable surfaces).
+        SITE_NAME=$(printf '%s' "$SITE_NAME" | sed -e 's|[\\&/]|\\&|g')
+        SITE_DESC=$(printf '%s' "$SITE_DESC" | sed -e 's|[\\&/]|\\&|g')
         sed -i "s/<gha_sed_repo_url_here>/${REPO_URL}/g" mkdocs.yaml
         sed -i "s/<gha_sed_site_name_here>/${SITE_NAME}/g" mkdocs.yaml
         sed -i "s/<gha_sed_site_description_here>/${SITE_DESC}/g" mkdocs.yaml
