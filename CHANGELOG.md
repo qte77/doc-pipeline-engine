@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `.github/workflows/tests.yaml` — CI gate running the documented `uv sync --extra …` install + `ruff` + `pytest` on Python 3.13 (SHA-pinned actions). Closes the gap that let the broken install (#132) and the render regression (#131) ship — no Python test/lint workflow existed before. (#132)
+- `.python-version` (`3.13`) — pin uv / Codespaces / CI to the supported full-stack Python; `requires-python>=3.11` keeps the 3.14 render-only path. (#132)
+
 ### Changed
 
 - `.github/dependabot.yaml` — `ignore` `kreuzberg>=4.8` so dependabot stops proposing to cross the ELv2 licence boundary ([ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md)); closed stale PR #111 (which widened `<4.8` → `<4.10`). (#115)
@@ -25,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `pyproject.toml` — add `[tool.uv] conflicts` for the mutually-exclusive `extract` (kreuzberg<4.8) / `kreuzberg-elv2` (kreuzberg>=4.8) extras (the ADR-0005 licence boundary). Without it, `uv lock` / `uv sync` / `make install` / `uv sync --extra …` failed "unsatisfiable" on Python 3.13 **and** 3.14 — the documented install was broken; only `--frozen` worked. `uv.lock` regenerated. (#132)
 - `stages/local_render.py` + `stages/anthropic_sdk_render.py`: accept the typed `AnalysisReport` (attribute access; `model_dump(mode="json")` for the anthropic prompt) instead of dict-subscripting it. The #127 typed-return refactor left these two render stages un-migrated, so the harness legs crashed with `TypeError: 'AnalysisReport' object is not subscriptable`; the render unit tests masked it by passing dicts (now build real models). (#130)
 - `docs/landscape/ingest.md` marker row — corrected the stale "depends on surya (GPL-3.0)" claim: surya's LICENSE is Apache-2.0 (weights are RAIL-M, free < $5M rev) and marker's GPL-3.0 is its own code. Verified by direct LICENSE-file inspection. (#112)
 - `docs/roadmap.md` § 0.2.2: status `in progress` → `done` — all Delivered items shipped, ADR-0002 Accepted.

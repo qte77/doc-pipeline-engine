@@ -1,0 +1,26 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      # Documented local-leg install — gates the extract/kreuzberg-elv2 lock conflict.
+      - run: uv sync --extra extract --extra render --extra local
+      - run: uv run python -m spacy download en_core_web_sm
+      - run: uv run ruff check .
+      - run: uv run pytest -q
