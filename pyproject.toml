@@ -106,6 +106,15 @@ doc-pipeline = "doc_pipeline_engine.stream:main"
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.uv]
+# Reason: `extract` (kreuzberg<4.8, MIT) and `kreuzberg-elv2` (kreuzberg>=4.8,
+# ELv2) are a deliberate either/or licence boundary (ADR-0005). Declaring them
+# as conflicting lets uv resolve/lock the project instead of failing
+# "unsatisfiable" on every non-frozen `uv sync` / `make install`.
+conflicts = [
+  [{ extra = "extract" }, { extra = "kreuzberg-elv2" }],
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/doc_pipeline_engine"]
 

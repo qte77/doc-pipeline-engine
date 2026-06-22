@@ -34,6 +34,10 @@ _spec.loader.exec_module(_genfix)
 DOMAIN_DIRS = _genfix.domain_dirs()
 
 
+@pytest.mark.skipif(
+    not DOMAIN_DIRS,
+    reason="samples/ not downloaded — run scripts/download-samples.sh --download",
+)
 def test_domains_discovered() -> None:
     assert len(DOMAIN_DIRS) >= 7, f"expected >=7 domains, found {len(DOMAIN_DIRS)}"
 
