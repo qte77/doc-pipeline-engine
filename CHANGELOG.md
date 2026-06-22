@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `docs/prototype/results/2026-06-22-local-leg-examples.md` — reference `local`-leg summaries (claims + spaCy NER entities) for three redistribution-clean samples (UK-OGL contract, US-PD OPEN Government Act, US-PD NIST SP 800-63B), reproducible via `make run_local`.
 - `harness.run_local()` + `python -m doc_pipeline_engine.harness <sample> --local-only` + `make run_local SAMPLE=…` — run the offline `local` leg with **no `ANTHROPIC_API_KEY`**. The documented run path was all-or-nothing (`run_both` fired the paid `anthropic_sdk` leg first and died without a key). README + CONTRIBUTING now document the run surface: commands, the `--local-only` / `--output-dir` / `--anthropic-sdk-model` switches, and `ANTHROPIC_API_KEY` (anthropic leg only) / `ANTHROPIC_BASE_URL` (self-hosted / gateway / Bedrock / Vertex). (#133)
 - `.github/workflows/tests.yaml` — CI gate running the documented `uv sync --extra …` install + `ruff` + `pytest` on Python 3.13 (SHA-pinned actions). Closes the gap that let the broken install (#132) and the render regression (#131) ship — no Python test/lint workflow existed before. (#132)
 - `.python-version` (`3.13`) — pin uv / Codespaces / CI to the supported full-stack Python; `requires-python>=3.11` keeps the 3.14 render-only path. (#132)
