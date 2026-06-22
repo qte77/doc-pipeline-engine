@@ -25,7 +25,7 @@ jobs:
     steps:
 
     - name: Checkout the repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       with:
         ref:
           ${{
@@ -35,11 +35,11 @@ jobs:
           }}
         fetch-depth: 0
 
-    - uses: actions/configure-pages@v5
+    - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
     # https://docs.astral.sh/uv/guides/integration/github/#caching
     - name: Install uv with cache dependency glob
-      uses: astral-sh/setup-uv@v5
+      uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
       with:
         enable-cache: true
         cache-dependency-glob: "uv.lock"
@@ -100,11 +100,11 @@ jobs:
         fi
 
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
       with:
         path: "${{ env.SITE_DIR }}"
 
     - name: Deploy to GitHub Pages
       id: deployment
-      uses: actions/deploy-pages@v4
+      uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0
 ...
