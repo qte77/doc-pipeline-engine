@@ -6,7 +6,7 @@
 	test test_contracts test_stream test_adapters test_rerun test_fix_snapshots \
 	lint lint_md lint_links validate clean help \
 	docs docs_serve docs_index docs_contracts \
-	stream
+	stream run_local
 .DEFAULT_GOAL := help
 
 VERBOSE ?=
@@ -82,6 +82,10 @@ install_models: install_local_nlp  ## Deprecated alias for install_local_nlp; wi
 
 stream:  ## Run NDJSON stream pipeline (usage: SEED='{"root":"."}' make stream STAGES=discover)
 	echo '$(SEED)' | uv run doc-pipeline $(STAGES)
+
+run_local:  ## Run the offline local leg on one sample, no API key (usage: make run_local SAMPLE=path)
+	test -n "$(SAMPLE)" || (echo "SAMPLE required, e.g. make run_local SAMPLE=samples/legal/us/us-open-government-act-2007.pdf"; exit 2)
+	uv run python -m doc_pipeline_engine.harness $(SAMPLE) --local-only --output-dir outputs
 
 test_stream:  ## Run stream interface tests only
 	uv run pytest tests/test_stream.py -v
