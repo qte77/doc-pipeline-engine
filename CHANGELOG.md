@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `.github/workflows/*` — SHA-pin every action and update pins to latest. Pinned the five previously **floating** tags in `generate-deploy-mkdocs-ghpages.yaml` (`actions/checkout@v4`, `configure-pages@v5`, `setup-uv@v5`, `upload-pages-artifact@v3`, `deploy-pages@v4`), which violated the repo's `sha_pinning_required` policy. Bumped existing pins: `actions/checkout` v6.0.2 → v7.0.0, `github/codeql-action` → v4 head (`8aad20d`), `qte77/gha-sbom-action` v0.1.0 → v0.1.1; the GitHub Pages chain to `configure-pages` v6.0.0 / `upload-pages-artifact` v5.0.0 / `deploy-pages` v5.0.0.
 - `tests/test_fixtures.py::test_domains_discovered` — skip when `samples/` is absent (gitignored corpus), so the suite runs in CI / fresh clones without the download. (#132)
 - `.github/dependabot.yaml` — `ignore` `kreuzberg>=4.8` so dependabot stops proposing to cross the ELv2 licence boundary ([ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md)); closed stale PR #111 (which widened `<4.8` → `<4.10`). (#115)
 - `.markdownlint-cli2.jsonc` — allow `<details>`/`<summary>` (MD033 `allowed_elements`) so `make lint_md` passes on the `docs/architecture.md` collapsible. (#113)
