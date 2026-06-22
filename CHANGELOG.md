@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- `tests/test_fixtures.py::test_domains_discovered` — skip when `samples/` is absent (gitignored corpus), so the suite runs in CI / fresh clones without the download. (#132)
 - `.github/dependabot.yaml` — `ignore` `kreuzberg>=4.8` so dependabot stops proposing to cross the ELv2 licence boundary ([ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md)); closed stale PR #111 (which widened `<4.8` → `<4.10`). (#115)
 - `.markdownlint-cli2.jsonc` — allow `<details>`/`<summary>` (MD033 `allowed_elements`) so `make lint_md` passes on the `docs/architecture.md` collapsible. (#113)
 - `docs/assets/architecture-bird.svg` → `docs/assets/images/architecture-bird.svg`: relocated under an `images/` subdirectory to match the cross-repo convention now shared with `qte77/utils-pseudonomyze-text`. Reference in `docs/architecture.md` updated.
