@@ -6,6 +6,7 @@
 	test test_contracts test_stream test_adapters test_rerun test_fix_snapshots \
 	lint lint_md lint_links validate clean help \
 	docs docs_serve docs_index docs_contracts \
+	changelog_new changelog_preview changelog_release \
 	stream run_local
 .DEFAULT_GOAL := help
 
@@ -161,6 +162,20 @@ docs:  ## Build the mkdocs site under site/ (uses --only-group docs)
 docs_serve:  ## Live-reload mkdocs dev server (requires `uv sync --only-group docs`)
 	$(MAKE) -s docs_index
 	uv run --only-group docs mkdocs serve
+
+
+# MARK: CHANGELOG
+
+
+changelog_new:  ## Create + stage a new changelog fragment under changelog.d/
+	uv run scriv create --add
+
+changelog_preview:  ## Preview the assembled release entry without consuming fragments
+	uv run scriv print
+
+changelog_release:  ## Collect fragments into CHANGELOG.md (VERSION=X.Y.Z required)
+	test -n "$(VERSION)" || (echo "VERSION required, e.g. make changelog_release VERSION=0.2.0"; exit 2)
+	uv run scriv collect --version $(VERSION)
 
 
 # MARK: CLEAN
