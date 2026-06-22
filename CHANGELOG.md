@@ -17,10 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `harness.run_local()` + `python -m doc_pipeline_engine.harness <sample> --local-only` + `make run_local SAMPLE=…` — run the offline `local` leg with **no `ANTHROPIC_API_KEY`**. The documented run path was all-or-nothing (`run_both` fired the paid `anthropic_sdk` leg first and died without a key). README + CONTRIBUTING now document the run surface: commands, the `--local-only` / `--output-dir` / `--anthropic-sdk-model` switches, and `ANTHROPIC_API_KEY` (anthropic leg only) / `ANTHROPIC_BASE_URL` (self-hosted / gateway / Bedrock / Vertex). (#133)
 - `.github/workflows/tests.yaml` — CI gate running the documented `uv sync --extra …` install + `ruff` + `pytest` on Python 3.13 (SHA-pinned actions). Closes the gap that let the broken install (#132) and the render regression (#131) ship — no Python test/lint workflow existed before. (#132)
 - `.python-version` (`3.13`) — pin uv / Codespaces / CI to the supported full-stack Python; `requires-python>=3.11` keeps the 3.14 render-only path. (#132)
+- `.github/dependabot.yaml` — add a `github-actions` ecosystem stanza (weekly) to auto-PR action-SHA bumps; every used action is already on the repo's Actions allowlist.
 
 ### Changed
 
 - `.github/workflows/*` — SHA-pin every action and update pins to latest. Pinned the five previously **floating** tags in `generate-deploy-mkdocs-ghpages.yaml` (`actions/checkout@v4`, `configure-pages@v5`, `setup-uv@v5`, `upload-pages-artifact@v3`, `deploy-pages@v4`), which violated the repo's `sha_pinning_required` policy. Bumped existing pins: `actions/checkout` v6.0.2 → v7.0.0, `github/codeql-action` → v4 head (`8aad20d`), `qte77/gha-sbom-action` v0.1.0 → v0.1.1; the GitHub Pages chain to `configure-pages` v6.0.0 / `upload-pages-artifact` v5.0.0 / `deploy-pages` v5.0.0.
+- `.github/workflows/tests.yaml` — run the suite on a Python **3.13 + 3.14** matrix; the 3.14 row installs the render-only `local-render` subset (no spaCy) so the deliberately-supported degraded path can't silently break.
+- `pyproject.toml` `[tool.ruff] target-version` `py311` → `py313` (matches `.python-version`; zero new violations).
 - `tests/test_fixtures.py::test_domains_discovered` — skip when `samples/` is absent (gitignored corpus), so the suite runs in CI / fresh clones without the download. (#132)
 - `.github/dependabot.yaml` — `ignore` `kreuzberg>=4.8` so dependabot stops proposing to cross the ELv2 licence boundary ([ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md)); closed stale PR #111 (which widened `<4.8` → `<4.10`). (#115)
 - `.markdownlint-cli2.jsonc` — allow `<details>`/`<summary>` (MD033 `allowed_elements`) so `make lint_md` passes on the `docs/architecture.md` collapsible. (#113)
@@ -58,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   restrictions (no managed-service offering, attribution required). Default
   install path stays Apache-2.0-clean. See
   [ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md). Resolves #76.
+- `generate-deploy-mkdocs-ghpages.yaml` — escape `SITE_NAME` (README line 1) and `SITE_DESC` (repo `.description`) before splicing them into `sed -i`, closing a sed-injection where `/`, `&`, or `\` in those editable fields could corrupt or inject into the generated `mkdocs.yaml`.
 
 ### Added
 
