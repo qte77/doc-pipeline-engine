@@ -89,6 +89,7 @@ dev = [
   "pytest-cov>=5.0",
   "ruff>=0.5",
   "scriv[toml]>=1.8",
+  "bump-my-version>=0.29",
 ]
 # Install with: uv sync --only-group docs
 # Used by .github/workflows/generate-deploy-mkdocs-ghpages.yaml to build and
@@ -118,6 +119,31 @@ conflicts = [
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/doc_pipeline_engine"]
+
+# Atomic version bump; [project].version is the source of truth. Tagging is deferred
+# to tag-release.yaml (workflow runs `bump --no-tag`) so the tag lands on main's commit.
+[tool.bumpversion]
+current_version = "0.1.0"
+parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
+serialize = ["{major}.{minor}.{patch}"]
+commit = true
+tag = true
+allow_dirty = false
+ignore_missing_version = false
+sign_tags = false
+tag_name = "v{new_version}"
+tag_message = "v{new_version}"
+message = "chore(release): bump {current_version} -> {new_version}"
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "README.md"
+search = "version-{current_version}-58f4c2"
+replace = "version-{new_version}-58f4c2"
 
 # Per-PR changelog fragments collected into CHANGELOG.md at release. See ADR-0012.
 [tool.scriv]

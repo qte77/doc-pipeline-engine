@@ -136,6 +136,23 @@ Every non-trivial PR adds a fragment: run `make changelog_new`, then pick a cate
 (`(#NNN)`). The other `changelog_*` targets (`make help`) preview and collect fragments;
 collection into `CHANGELOG.md` runs at release time.
 
+## Releasing
+
+SemVer; the version lives only in `pyproject.toml` `[project].version` (synced to the
+README badge by [bump-my-version](https://github.com/callowayproject/bump-my-version)).
+Maintainer flow:
+
+1. Run **bump-my-version** (`patch` / `minor` / `major`) from the Actions tab. It bumps
+   `pyproject.toml` + the README badge, syncs `uv.lock`, collects the
+   [changelog fragments](#changelog-fragments) into `CHANGELOG.md`, and opens a
+   `chore(release): bump …` PR.
+2. The PR is bot-authored, so its checks idle at `action_required` — push any commit to
+   the bump branch (or close + reopen) to trigger them.
+3. Merge on green. **tag-release** then fires on `main` and tags the merge commit
+   `vX.Y.Z` — always reachable from `main`, no tag drift.
+4. Optionally run **publish-release** for a GitHub Release with notes from the
+   `CHANGELOG.md` block. The default flow is tag-only.
+
 ## Documentation hierarchy
 
 Authoritative sources — update these, don't duplicate:
