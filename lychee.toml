@@ -12,6 +12,8 @@ accept = [200, 202, 204, 301, 401, 403, 406, 429]
 exclude_path = [
   ".venv",
   "samples",
+  # scriv fragments — relative links resolve from repo root once collected into CHANGELOG.md
+  "changelog.d",
 ]
 
 # Exclude URLs that are expected to fail in CI

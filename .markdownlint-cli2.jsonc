@@ -23,6 +23,8 @@
     "docs/plans/**",
     // Harness output artifacts (gitignored)
     "outputs/**",
+    // scriv changelog fragments — category-only snippets (no H1, by design)
+    "changelog.d/**",
     // External one-shot prompt — read raw by runners; frontmatter would pollute the LLM context
     "external/PROMPT.md",
     // Auto-generated contracts reference — duplicate ## Fields / ## JSON Schema headings (MD024)

@@ -123,7 +123,18 @@ project commit template.
 - Reference related issues (`Closes #N`)
 - All required CI checks must be green before merge (CodeQL, CodeFactor)
 - Squash-merge only (enforced by ruleset)
-- Update `CHANGELOG.md` for non-trivial changes
+- Add a changelog fragment for non-trivial changes (see below)
+
+## Changelog fragments
+
+`CHANGELOG.md` is assembled by [scriv](https://scriv.readthedocs.io) from per-PR
+fragments under `changelog.d/`, so PRs no longer collide on a shared `## [Unreleased]`
+block (see [ADR-0012](docs/adr/0012-scriv-managed-changelog.md)).
+
+Every non-trivial PR adds a fragment: run `make changelog_new`, then pick a category
+(`Added` / `Changed` / `Fixed` / …) and write a bullet ending with the issue/PR ref
+(`(#NNN)`). The other `changelog_*` targets (`make help`) preview and collect fragments;
+collection into `CHANGELOG.md` runs at release time.
 
 ## Documentation hierarchy
 
