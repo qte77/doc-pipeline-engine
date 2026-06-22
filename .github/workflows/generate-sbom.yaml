@@ -21,6 +21,10 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Generate SBOM
-        uses: qte77/gha-sbom-action@cd873b1278a6793a99cfe199c01d603d72cca717 # v0.1.1
+        # Pinned to v0.1.0 (NOT latest): v0.1.1 commits the SBOM PR as an unsigned
+        # github-actions commit, which the repo's required_signatures ruleset
+        # (no bypass actors) rejects — making the auto-PR unmergeable. v0.1.0
+        # creates a signed (API) commit. Revert when the action signs again.
+        uses: qte77/gha-sbom-action@82becb244dc8ec442a17d5b5e171d0a384909896 # v0.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
