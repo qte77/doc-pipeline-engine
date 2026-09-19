@@ -6,6 +6,15 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      python-security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      python-version-updates:
+        applies-to: version-updates
+        patterns:
+          - "*"
     # kreuzberg v4.8+ relicensed from MIT to Elastic License v2 (source-available,
     # not Apache-compatible). ADR-0005 pins kreuzberg<4.8 to stay on the MIT line;
     # ELv2 ships only behind the opt-in [kreuzberg-elv2] extra. Ignore >=4.8 so
@@ -18,4 +27,13 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      actions-security-updates:
+        applies-to: security-updates
+        patterns:
+          - "*"
+      actions-version-updates:
+        applies-to: version-updates
+        patterns:
+          - "*"
 ...
