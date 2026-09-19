@@ -4,28 +4,28 @@
 
 ## Getting Started
 
-- [README](https://github.com/qte77/doc-pipeline-engine/blob/main/README.md): Project overview and quickstart
-- [Contributing](https://github.com/qte77/doc-pipeline-engine/blob/main/CONTRIBUTING.md): Setup, quality commands, plugins, optional extras
+- [README](https://qte77.github.io/doc-pipeline-engine/): Project overview and quickstart
+- [Contributing](https://qte77.github.io/doc-pipeline-engine/CONTRIBUTING/): Setup, quality commands, plugins, optional extras
 
 ## Architecture & Design
 
-- [Architecture](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/architecture.md): Stage graph, contracts, runtime modes, design decisions
-- [Roadmap](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/roadmap.md): Versioned milestones (0.1 → 0.6+)
-- [Prototype plan](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/prototype/plan.md): Dual-variant E2E prototype (Claude vs Python tools)
+- [Architecture](https://qte77.github.io/doc-pipeline-engine/architecture/): Stage graph, contracts, runtime modes, design decisions
+- [Roadmap](https://qte77.github.io/doc-pipeline-engine/roadmap/): Versioned milestones (0.1 → 0.6+)
+- [Prototype plan](https://qte77.github.io/doc-pipeline-engine/prototype/plan/): Dual-variant E2E prototype (Claude vs Python tools)
 
 ## Tool surveys
 
-- [Landscape — Ingest](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/ingest.md): Extraction backends, source connectors, crawling
-- [Landscape — Process](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/process.md): Chunking, NER, RAG indexing, normalization
-- [Landscape — Output](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/output.md): Rendering, office formats, templating, conformance
-- [Landscape — E2E systems](https://github.com/qte77/doc-pipeline-engine/blob/main/docs/landscape/e2e-systems.md): End-to-end pipeline competitors, prior art, and USP positioning
+- [Landscape — Ingest](https://qte77.github.io/doc-pipeline-engine/landscape/ingest/): Extraction backends, source connectors, crawling
+- [Landscape — Process](https://qte77.github.io/doc-pipeline-engine/landscape/process/): Chunking, NER, RAG indexing, normalization
+- [Landscape — Output](https://qte77.github.io/doc-pipeline-engine/landscape/output/): Rendering, office formats, templating, conformance
+- [Landscape — E2E systems](https://qte77.github.io/doc-pipeline-engine/landscape/e2e-systems/): End-to-end pipeline competitors, prior art, and USP positioning
 
 ## Governance
 
-- [Agent rules](https://github.com/qte77/doc-pipeline-engine/blob/main/AGENTS.md): AI-agent behavioral rules and quality thresholds
-- [Agent learnings](https://github.com/qte77/doc-pipeline-engine/blob/main/AGENT_LEARNINGS.md): Compound learnings across sessions
-- [Agent requests](https://github.com/qte77/doc-pipeline-engine/blob/main/AGENT_REQUESTS.md): Open escalations from agents
+- [Agent rules](https://qte77.github.io/doc-pipeline-engine/AGENTS/): AI-agent behavioral rules and quality thresholds
+- [Agent learnings](https://qte77.github.io/doc-pipeline-engine/AGENT_LEARNINGS/): Compound learnings across sessions
+- [Agent requests](https://qte77.github.io/doc-pipeline-engine/AGENT_REQUESTS/): Open escalations from agents
 
 ## Optional
 
-- [Changelog](https://github.com/qte77/doc-pipeline-engine/blob/main/CHANGELOG.md): Release history (Keep a Changelog)
+- [Changelog](https://qte77.github.io/doc-pipeline-engine/CHANGELOG/): Release history (Keep a Changelog)
