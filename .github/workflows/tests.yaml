@@ -38,3 +38,4 @@ jobs:
         run: uv run python -m spacy download en_core_web_sm
       - run: uv run ruff check .
       - run: uv run pytest -q
+      - run: make docs_contracts
