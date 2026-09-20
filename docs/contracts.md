@@ -238,7 +238,7 @@ Analyze stage output — claims, entities, relations, citations extracted from C
     },
     "Relation": {
       "additionalProperties": false,
-      "description": "Subject\u2013predicate\u2013object triple grounded in the document.",
+      "description": "Subject-predicate-object triple grounded in the document.",
       "properties": {
         "evidence_node_refs": {
           "anyOf": [
@@ -1072,7 +1072,7 @@ Evaluate stage output — scores + gate verdict.
 
 ## ExtractionBundle
 
-Uniform output schema every Adapter must emit. Contains text, layout tree, tables, figures, images.
+Uniform output schema every Adapter must emit.
 
 ### Fields
 
@@ -1331,7 +1331,7 @@ Uniform output schema every Adapter must emit. Contains text, layout tree, table
     }
   },
   "additionalProperties": false,
-  "description": "Uniform output schema every Adapter must emit. Contains text, layout tree, tables, figures, images.",
+  "description": "Uniform output schema every Adapter must emit.\n\nContains text, layout tree, tables, figures, images.",
   "properties": {
     "adapter": {
       "$ref": "#/$defs/AdapterInfo"
