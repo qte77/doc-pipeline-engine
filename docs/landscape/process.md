@@ -2,8 +2,8 @@
 title: Process Landscape
 purpose: Survey of chunking, table/figure extraction, NER, RAG indexing, schema-templated extraction, and CanonicalDoc normalization for the process stage
 created: 2026-04-26
-updated: 2026-09-19
-validated_links: 2026-09-19
+updated: 2026-10-09
+validated_links: 2026-10-09
 category: landscape
 ---
 
@@ -78,6 +78,7 @@ Framework vs vector store are orthogonal. Recommended default: LlamaIndex (frame
 | **LightRAG** ([repo](https://github.com/HKUDS/LightRAG)) | Graph-augmented RAG with KG construction | MIT | Python + torch + local/cloud LLM | local (LLM calls configurable) | **Candidate (graph-RAG)** — v1.5.6 stable (2026-08-06), 38.7k stars. Pairs vector + graph retrieval; builds entity KG from documents. Evaluate alongside LlamaIndex for §0.5.0 cross-doc graph use cases. *(verified 2026-08-09)* |
 | **nano-graphrag** ([repo](https://github.com/gusye1234/nano-graphrag)) | Lightweight GraphRAG reference impl | MIT | Python | local | **Candidate (light graph-RAG)** — v0.0.8 (2024-10-01, corrected from a previously-recorded 2026-01-27; no release since), 4.0k stars. Simpler alternative to LightRAG for single-domain graph use, but treat the maintenance signal as weak. *(verified 2026-08-09)* |
 | **Microsoft GraphRAG** ([repo](https://github.com/microsoft/graphrag)) | Reference graph-RAG pipeline — entity/community graph extraction + hierarchical summarization | MIT | Python | local (LLM calls configurable) | **Candidate (graph-RAG reference impl)** — v3.1.1 (2026-07-18), 35k stars. Microsoft's own README frames it as "a demonstration… not an officially supported Microsoft offering", a weaker maintenance guarantee than the star count implies. Value here is as the reference implementation both LightRAG and nano-graphrag benchmark against — evaluate as a baseline, not a drop-in. *(added 2026-08-09)* |
+| **PageIndex** ([repo](https://github.com/VectifyAI/PageIndex), [site](https://pageindex.ai)) | A third retrieval paradigm — neither vector nor graph-KG: builds a hierarchical tree index from document layout (tree structure extracted without an LLM; an LLM only summarizes/refines nodes), then retrieval is LLM reasoning over that tree instead of embedding-similarity search | MIT | Python ≥3.10 (`pip install pageindex`); optional `anthropic`/`claude`/`openai` extras | local (LLM calls configurable) | **Candidate** — v0.2.22 (2026-10-08), ~39k stars. Tree-build step runs fully on-machine for text-based PDFs; retrieval still needs an LLM API call (OpenAI/Anthropic by default) — self-hosted/Ollama/vLLM backend support is **unconfirmed** (README hints "configure other models" without specifics), so this sits at the same "local (LLM calls configurable)" tier as LightRAG/Microsoft GraphRAG above, not alongside strictly local tools, until resolved. "PageIndex Cloud" (hosted OCR for scanned docs) is a separate, optional, cloud-only add-on, cleanly severable from the core. Structural note: its layout-derived tree maps directly onto `CanonicalDoc.root` (already a layout tree in this pipeline's own contract) — a stronger integration argument than usual. Benchmark tracked in [issue #220](https://github.com/qte77/doc-pipeline-engine/issues/220). *(added 2026-10-09)* |
 
 ## 5. Normalization to CanonicalDoc
 
@@ -182,6 +183,7 @@ Three load-bearing claims a `CanonicalDoc` makes that downstream stages rely on:
 - LightRAG: <https://github.com/HKUDS/LightRAG>
 - nano-graphrag: <https://github.com/gusye1234/nano-graphrag>
 - Microsoft GraphRAG: <https://github.com/microsoft/graphrag>
+- PageIndex: <https://github.com/VectifyAI/PageIndex>
 
 ### Normalization
 
