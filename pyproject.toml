@@ -82,6 +82,13 @@ v2-render = [
 v2-eval = [
   "doc-pipeline-engine[local-eval]",
 ]
+# Install with: uv sync --extra office
+# Lightweight .docx / .xlsx extraction (`office` adapter) without Kreuzberg or
+# its ELv2 line. python-docx (MIT) + openpyxl (MIT), pure-Python.
+office = [
+  "openpyxl>=3.1",
+  "python-docx>=1.1",
+]
 
 [dependency-groups]
 dev = [
