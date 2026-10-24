@@ -82,6 +82,14 @@ v2-render = [
 v2-eval = [
   "doc-pipeline-engine[local-eval]",
 ]
+# Install with: uv sync --extra azure-openai
+# Azure OpenAI transport for the cloud leg (DPE_MODEL_PROVIDER=azure_openai,
+# Entra ID / Managed Identity via DefaultAzureCredential — no API keys). See the
+# ADR-0004 amendment. openai (Apache-2.0) + azure-identity (MIT).
+azure-openai = [
+  "azure-identity>=1.17",
+  "openai>=1.40",
+]
 
 [dependency-groups]
 dev = [
