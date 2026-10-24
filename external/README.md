@@ -2,7 +2,7 @@
 title: External one-shot evaluators
 purpose: Off-the-shelf summarizers (Anthropic SDK, Claude Code CLI/SDK) compared against the in-process pipeline outputs
 created: 2026-04-27
-updated: 2026-04-27
+updated: 2026-10-24
 validated_links: 2026-04-27
 category: implementation
 ---
@@ -24,7 +24,7 @@ for the architectural decision.
 | Anthropic SDK | `external/anthropic-vanilla` | `external/anthropic-project` |
 | CC CLI (headless) | `external/cc-cli-headless-vanilla` | `external/cc-cli-headless-project` |
 | CC CLI (interactive) | — (user-driven; `cc-cli-interactive`) | (same; user follows project workflow) |
-| CC SDK | `external/cc-sdk-vanilla` (deferred) | `external/cc-sdk-project` (deferred) |
+| CC SDK | `external/cc-sdk-vanilla` | `external/cc-sdk-project` |
 
 Vanilla = no `.claude/` skills/rules/plugins loaded. Project = full
 `.claude/` autoloaded (CC) or `.claude/rules/*.md` hand-loaded
@@ -60,9 +60,22 @@ capture (see [github.com/getagentseal/codeburn](https://github.com/getagentseal/
 
 User-driven. See [`cc_cli/interactive.md`](cc_cli/interactive.md).
 
-### CC SDK (deferred)
+### CC SDK
 
-Lands in PR C — gated on `claude-agent-sdk` PyPI availability.
+```bash
+uv sync --extra cc-sdk
+uv run python external/cc_sdk/run_oneshot.py \
+  samples/legal/us/us-open-government-act-2007.pdf \
+  --config vanilla \
+  --output-dir outputs
+```
+
+Vanilla mode runs the agent in an empty temp cwd with no setting
+sources (no CLAUDE.md / `.claude/`); project mode runs it from the
+repo root with the `project` setting source, so `.claude/` is
+autoloaded. Cost comes from the SDK's `ResultMessage.total_cost_usd`.
+Non-interactive SDK calls are metered usage, not covered by a Claude
+subscription.
 
 ## Output layout
 
@@ -74,7 +87,7 @@ outputs/<sample_sha256>/
     anthropic-{vanilla,project}/          summary.md  meta.json
     cc-cli-headless-{vanilla,project}/    summary.md  meta.json
     cc-cli-interactive/                   summary.md  meta.json   (user-dropped)
-    cc-sdk-{vanilla,project}/             summary.md  meta.json   (deferred)
+    cc-sdk-{vanilla,project}/             summary.md  meta.json
 ```
 
 ## Eval dimensions (run-4 prototype results)
