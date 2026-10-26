@@ -2,7 +2,7 @@
 title: Architectural Decision Records
 purpose: Index of all ADRs for doc-pipeline-engine; one line per record with status and scope
 created: 2026-05-25
-updated: 2026-06-22
+updated: 2026-10-24
 validated_links: 2026-06-22
 category: technical
 ---
@@ -35,6 +35,7 @@ from the replacement.
 | [0010](0010-samples-gitignored-with-download-script-as-sot.md) | Samples gitignored via download script as single source of truth | Accepted (2026-05-25) | Samples: `scripts/download-samples.sh` is SoT; binaries not in git |
 | [0011](0011-content-layout-owned-by-docling.md) | docling owns content.layout population (bbox + provenance) | Accepted (2026-06-11) | Extraction: `content.layout` filled from docling; pdfplumber cross-check; LiteParse / OmniParse rejected |
 | [0012](0012-scriv-managed-changelog.md) | scriv-managed changelog via per-PR fragments | Accepted (2026-06-22) | Changelog: `changelog.d/` fragments collected by scriv replace the hand-edited `## [Unreleased]` block |
+| [0013](0013-default-redactor-for-cloud-redacted-profile.md) | pseudonymize-text as the default redactor for the cloud-redacted profile | Accepted (2026-10-24) | Privacy: reversible HMAC pseudonyms between Extract and Analyze; presidio opt-in, philter rejected; wiring deferred |
 
 ## Adding a new ADR
 
