@@ -100,7 +100,7 @@ first.
 
 | Boundary | File / function | Policy |
 | --- | --- | --- |
-| Stage chain | `runner.run()` — halt on gate failure | fail-loud |
+| Stage chain | `runner.run()` / `runner.run_async()` — halt on gate failure | fail-loud |
 | Contract validation | `base/contracts.py::validate` via Pydantic | fail-loud |
 | Format gate | `base/gates.py::FormatGate.check` | fail-loud (raises `GateError`) |
 | Policy gate | `base/gates.py::PolicyGate.check` | fail-loud (raises `GateError`) |
