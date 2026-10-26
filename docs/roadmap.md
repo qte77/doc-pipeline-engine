@@ -2,7 +2,7 @@
 title: Roadmap
 purpose: Versioned milestones (0.1 → 0.6+) with status, scope, and reasoning per release
 created: 2026-04-23
-updated: 2026-06-18
+updated: 2026-10-24
 validated_links: 2026-05-31
 category: requirements
 ---
@@ -77,13 +77,13 @@ mkdocs-material + mkdocstrings serves the public API reference and the existing 
 
 ## 0.2.3 — Rename legs + external evaluators
 
-**Status**: done for PR A (#54) + PR B; PR C (CC SDK) deferred — gated on PyPI availability
+**Status**: done — PR A (#54), PR B, PR C (CC SDK, #62)
 
 Two-step refactor:
 
 - **PR A — rename legs** ✅ (#54). `v1` / `v2` → `anthropic_sdk` / `local`. Forward-looking docs adopt the new names; historical run-1/2/3 results keep `v1` / `v2` wording as snapshots. Deprecated extras + Makefile aliases ship for one release cycle. See [ADR-0003](adr/0003-rename-legs-anthropic-sdk-local.md).
 - **PR B — external evaluators**: Anthropic SDK + Claude Code CLI (headless + interactive) one-shot summarizers under `external/`. Vanilla and project-augmented variants compare against the renamed `anthropic_sdk` / `local` pipeline outputs in the run-4 prototype results doc. The CC-CLI fallback that lived in `_anthropic_sdk_client.py` is removed (rolling back the relevant part of #41) — subscription-only users now run `external/cc_cli/run_headless.sh`. See [ADR-0004](adr/0004-external-evaluators-vs-pipeline.md).
-- **PR C — CC SDK** (deferred): `external/cc_sdk/run_oneshot.py` using `claude-agent-sdk`; gated on PyPI availability.
+- **PR C — CC SDK** ✅ (#62): `external/cc_sdk/run_oneshot.py` using `claude-agent-sdk` (on PyPI); `[cc-sdk]` extra.
 
 **Delivered in PR B**:
 
@@ -147,7 +147,7 @@ Pluggable per-domain config: policies, prompts, thresholds, input/output formats
 - Generic pack fully wired
 - mech-elec-cert and med-research-patents as declared stubs
 - Format registry, ClassificationManifest / FormatMatch / FormatConformance wired
-- Data-locality policies (local-only, claude-api-extracted-only, cloud-redacted)
+- Data-locality policies (local-only, claude-api-extracted-only, cloud-redacted); cloud-redacted default redactor = `pseudonymize-text` ([ADR-0013](adr/0013-default-redactor-for-cloud-redacted-profile.md)), wiring deferred
 
 ## 0.6.0 — Eval
 
@@ -170,4 +170,4 @@ Evaluation harnesses and quality gates.
 - Graph-RAG
 - Certification packages (ISO 13485, IEC 62304, 21 CFR Part 11)
 - CAD/LOB ingest
-- PDF roundtrip pseudonymization — pair Extract with [`pseudonymize-text`](https://github.com/qte77/pseudonymize-text) and rebuild a redacted PDF that preserves layout. Today only the extracted text can be tokenized (`pseudonymize` defers PDF/Office/image input per its [roadmap](https://github.com/qte77/pseudonymize-text/blob/main/docs/roadmap.md)), so for mixed-format inboxes the only viable order is `Discover → Extract → Pseudonymize → Analyze`; the original PDF cannot be reassembled. Redactor-default decision tracked in [issue #107](https://github.com/qte77/doc-pipeline-engine/issues/107).
+- PDF roundtrip pseudonymization — pair Extract with [`pseudonymize-text`](https://github.com/qte77/pseudonymize-text) and rebuild a redacted PDF that preserves layout. Today only the extracted text can be tokenized (`pseudonymize` defers PDF/Office/image input per its [roadmap](https://github.com/qte77/pseudonymize-text/blob/main/docs/roadmap.md)), so for mixed-format inboxes the only viable order is `Discover → Extract → Pseudonymize → Analyze`; the original PDF cannot be reassembled. Redactor default decided in [ADR-0013](adr/0013-default-redactor-for-cloud-redacted-profile.md) (`pseudonymize-text`).
