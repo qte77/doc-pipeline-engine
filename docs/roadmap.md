@@ -77,13 +77,13 @@ mkdocs-material + mkdocstrings serves the public API reference and the existing 
 
 ## 0.2.3 — Rename legs + external evaluators
 
-**Status**: done for PR A (#54) + PR B; PR C (CC SDK) deferred — gated on PyPI availability
+**Status**: done — PR A (#54), PR B, PR C (CC SDK, #62)
 
 Two-step refactor:
 
 - **PR A — rename legs** ✅ (#54). `v1` / `v2` → `anthropic_sdk` / `local`. Forward-looking docs adopt the new names; historical run-1/2/3 results keep `v1` / `v2` wording as snapshots. Deprecated extras + Makefile aliases ship for one release cycle. See [ADR-0003](adr/0003-rename-legs-anthropic-sdk-local.md).
 - **PR B — external evaluators**: Anthropic SDK + Claude Code CLI (headless + interactive) one-shot summarizers under `external/`. Vanilla and project-augmented variants compare against the renamed `anthropic_sdk` / `local` pipeline outputs in the run-4 prototype results doc. The CC-CLI fallback that lived in `_anthropic_sdk_client.py` is removed (rolling back the relevant part of #41) — subscription-only users now run `external/cc_cli/run_headless.sh`. See [ADR-0004](adr/0004-external-evaluators-vs-pipeline.md).
-- **PR C — CC SDK** (deferred): `external/cc_sdk/run_oneshot.py` using `claude-agent-sdk`; gated on PyPI availability.
+- **PR C — CC SDK** ✅ (#62): `external/cc_sdk/run_oneshot.py` using `claude-agent-sdk` (on PyPI); `[cc-sdk]` extra.
 
 **Delivered in PR B**:
 
