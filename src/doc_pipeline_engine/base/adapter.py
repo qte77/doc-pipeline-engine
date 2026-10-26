@@ -15,6 +15,7 @@ Built-in adapters (lazy-imported on first use):
 
 - ``kreuzberg``   — Kreuzberg library (opt-in extra)
 - ``claude_cli``  — Claude Code CLI headless one-shot
+- ``office``      — python-docx / openpyxl for ``.docx`` / ``.xlsx`` (opt-in extra)
 - ``docling``     — Docling (stub; not yet implemented)
 - ``glm_ocr``     — GLM-OCR (stub; not yet implemented)
 - ``paddle_ocr``  — PaddleOCR-VL (stub; not yet implemented)
@@ -68,6 +69,7 @@ _REGISTRY: dict[str, AdapterBase] = {}
 _BUILTIN: dict[str, str] = {
     "kreuzberg": "doc_pipeline_engine.stages._adapters.kreuzberg",
     "claude_cli": "doc_pipeline_engine.stages._adapters.claude_cli",
+    "office": "doc_pipeline_engine.stages._adapters.office",
     "docling": "doc_pipeline_engine.stages._adapters.docling",
     "glm_ocr": "doc_pipeline_engine.stages._adapters.glm_ocr",
     "paddle_ocr": "doc_pipeline_engine.stages._adapters.paddle_ocr",
