@@ -147,7 +147,7 @@ Pluggable per-domain config: policies, prompts, thresholds, input/output formats
 - Generic pack fully wired
 - mech-elec-cert and med-research-patents as declared stubs
 - Format registry, ClassificationManifest / FormatMatch / FormatConformance wired
-- Data-locality policies (local-only, claude-api-extracted-only, cloud-redacted)
+- Data-locality policies (local-only, claude-api-extracted-only, cloud-redacted); cloud-redacted default redactor = `pseudonymize-text` ([ADR-0013](adr/0013-default-redactor-for-cloud-redacted-profile.md)), wiring deferred
 
 ## 0.6.0 — Eval
 
@@ -170,4 +170,4 @@ Evaluation harnesses and quality gates.
 - Graph-RAG
 - Certification packages (ISO 13485, IEC 62304, 21 CFR Part 11)
 - CAD/LOB ingest
-- PDF roundtrip pseudonymization — pair Extract with [`pseudonymize-text`](https://github.com/qte77/pseudonymize-text) and rebuild a redacted PDF that preserves layout. Today only the extracted text can be tokenized (`pseudonymize` defers PDF/Office/image input per its [roadmap](https://github.com/qte77/pseudonymize-text/blob/main/docs/roadmap.md)), so for mixed-format inboxes the only viable order is `Discover → Extract → Pseudonymize → Analyze`; the original PDF cannot be reassembled. Redactor-default decision tracked in [issue #107](https://github.com/qte77/doc-pipeline-engine/issues/107).
+- PDF roundtrip pseudonymization — pair Extract with [`pseudonymize-text`](https://github.com/qte77/pseudonymize-text) and rebuild a redacted PDF that preserves layout. Today only the extracted text can be tokenized (`pseudonymize` defers PDF/Office/image input per its [roadmap](https://github.com/qte77/pseudonymize-text/blob/main/docs/roadmap.md)), so for mixed-format inboxes the only viable order is `Discover → Extract → Pseudonymize → Analyze`; the original PDF cannot be reassembled. Redactor default decided in [ADR-0013](adr/0013-default-redactor-for-cloud-redacted-profile.md) (`pseudonymize-text`).

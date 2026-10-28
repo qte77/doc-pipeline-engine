@@ -12,16 +12,23 @@ threads the output of each stage into the next, validating the output
 against its declared contract via :func:`base.contracts.validate`. The
 chain halts on the first validation failure with a :class:`PipelineError`
 carrying the offending stage name and contract.
+
+:func:`run_async` is the asyncio twin: it awaits async stage callables (sync
+ones are called directly) so async consumers drive the chain without
+thread-bridging. The contract gate stays sync — it is CPU-bound.
 """
 from __future__ import annotations
 
-from collections.abc import Callable
+import inspect
+from collections.abc import Awaitable, Callable
 from typing import Any
 
 from doc_pipeline_engine.base.contracts import ContractValidationError, validate
 
 StageCallable = Callable[[dict[str, Any]], dict[str, Any]]
 Stage = tuple[str, StageCallable, str]
+AsyncStageCallable = Callable[[dict[str, Any]], Awaitable[dict[str, Any]] | dict[str, Any]]
+AsyncStage = tuple[str, AsyncStageCallable, str]
 
 
 class PipelineError(Exception):
@@ -53,11 +60,40 @@ def run(stages: list[Stage], seed: dict[str, Any]) -> list[dict[str, Any]]:
     outputs: list[dict[str, Any]] = []
     current: dict[str, Any] = seed
     for stage_name, fn, contract_name in stages:
-        result = fn(current)
-        try:
-            validate(contract_name, result)
-        except ContractValidationError as e:
-            raise PipelineError(stage_name, contract_name, e.message) from e
-        outputs.append(result)
-        current = result
+        current = _gate(stage_name, contract_name, fn(current))
+        outputs.append(current)
     return outputs
+
+
+async def run_async(stages: list[AsyncStage], seed: dict[str, Any]) -> list[dict[str, Any]]:
+    """Async :func:`run`: await each stage, validating each output against its contract.
+
+    Args:
+        stages: Ordered list of ``(name, fn, contract_name)`` tuples; ``fn`` may be
+            an ``async def`` or a plain sync callable.
+        seed: Initial input handed to the first stage.
+
+    Returns:
+        List of stage outputs in execution order.
+
+    Raises:
+        PipelineError: on the first contract failure; subsequent stages do
+        not run.
+    """
+    outputs: list[dict[str, Any]] = []
+    current: dict[str, Any] = seed
+    for stage_name, fn, contract_name in stages:
+        result = fn(current)
+        if inspect.isawaitable(result):
+            result = await result
+        current = _gate(stage_name, contract_name, result)
+        outputs.append(current)
+    return outputs
+
+
+def _gate(stage_name: str, contract_name: str, result: dict[str, Any]) -> dict[str, Any]:
+    try:
+        validate(contract_name, result)
+    except ContractValidationError as e:
+        raise PipelineError(stage_name, contract_name, e.message) from e
+    return result

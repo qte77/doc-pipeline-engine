@@ -2,7 +2,7 @@
 title: Domain-specific Extraction Models Landscape
 purpose: Survey of fine-tuned and domain-pretrained extraction models per industry (biomedical, legal, financial, cybersecurity, ...) for §0.5.0 domain packs and downstream consumers
 created: 2026-05-21
-updated: 2026-05-26
+updated: 2026-10-24
 validated_links: 2026-05-26
 category: landscape
 ---
@@ -212,7 +212,7 @@ These domains were searched (deep-sweep methodology in the audit notes) and have
 - **`philter`** (UCSF, BSD-3-Clause) — rule-based clinical-note de-identifier; HIPAA Safe Harbor coverage. Strips data; not reversible.
 - **`pseudonymize-text`** ([qte77/pseudonymize-text](https://github.com/qte77/pseudonymize-text), Apache-2.0) — same-governance sibling repo; bulk-pseudonymize names, emails, phones, IBANs, SSNs, credit cards, addresses, organizations across folder trees. **Deterministic** (HMAC-SHA256 + secret key, namespaced per entity type) and **reversible** (mapping file kept separate from output + key). Audit-first two-step CLI: `detect` writes a JSONL plan; `apply` executes byte-identically. GDPR/ENISA/EDPB/NIST framing. Lightweight (stdlib + `python-stdnum` + `phonenumberslite` + Pydantic); optional spaCy via `[ner]` extra. Status: v0.2.0.
 
-All three are pre-NER stage candidates; not currently in the canonical `process.md` stage tables. Consider adding a "de-identification (pre-NER)" subsection to [process.md §3](process.md#3-entity-extraction--ner) once the `§0.5.0 cloud-redacted` deployment profile is wired ([§0.5.0](../roadmap.md#050--domain-packs)). The redactor-default decision was made — `pseudonymize-text` (see [#107](https://github.com/qte77/doc-pipeline-engine/issues/107)); ADR-0012 to be written when the §0.5.0 profile is wired.
+All three are pre-NER stage candidates; not currently in the canonical `process.md` stage tables. Consider adding a "de-identification (pre-NER)" subsection to [process.md §3](process.md#3-entity-extraction--ner) once the `§0.5.0 cloud-redacted` deployment profile is wired ([§0.5.0](../roadmap.md#050--domain-packs)). The redactor default is `pseudonymize-text` — see [ADR-0013](../adr/0013-default-redactor-for-cloud-redacted-profile.md) ([#107](https://github.com/qte77/doc-pipeline-engine/issues/107)); wiring lands with the §0.5.0 profile.
 
 ## License tier reference
 
