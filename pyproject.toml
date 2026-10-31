@@ -88,6 +88,14 @@ v2-eval = [
 cc-sdk = [
   "claude-agent-sdk>=0.2.174",
 ]
+# Install with: uv sync --extra azure-openai
+# Azure OpenAI transport for the cloud leg (DPE_MODEL_PROVIDER=azure_openai,
+# Entra ID / Managed Identity via DefaultAzureCredential — no API keys). See the
+# ADR-0004 amendment. openai (Apache-2.0) + azure-identity (MIT).
+azure-openai = [
+  "azure-identity>=1.17",
+  "openai>=1.40",
+]
 # Install with: uv sync --extra office
 # Lightweight .docx / .xlsx extraction (`office` adapter) without Kreuzberg or
 # its ELv2 line. python-docx (MIT) + openpyxl (MIT), pure-Python.

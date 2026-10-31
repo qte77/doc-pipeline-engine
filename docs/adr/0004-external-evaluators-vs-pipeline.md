@@ -2,14 +2,14 @@
 title: ADR-0004 — External evaluators vs the in-process pipeline
 purpose: Records the decision to ship Anthropic SDK + Claude Code one-shot summarizers as external evaluators in `external/` rather than as in-process pipeline legs
 created: 2026-04-27
-updated: 2026-05-25
+updated: 2026-10-24
 validated_links: 2026-05-25
 category: technical
 ---
 
 ## Status
 
-Accepted — 2026-04-27
+Accepted — 2026-04-27; amended 2026-10-24 (model-spec dispatch for the cloud leg, see [Amendment](#amendment-2026-10-24--model-spec-dispatch-for-the-cloud-leg))
 
 ## Context and Problem Statement
 
@@ -161,6 +161,34 @@ so their summaries can structurally match the pipeline output:
   feasibility, usability, outcomes, quality, speed, and locality
   (airgap-yes / airgap-conditional / airgap-no). The `local` pipeline
   is the only `airgap-yes` variant.
+
+## Amendment 2026-10-24 — model-spec dispatch for the cloud leg
+
+[#162](https://github.com/qte77/doc-pipeline-engine/issues/162): Azure / EU-resident
+consumers need the `anthropic_sdk` leg's reasoning stages (normalize / analyze /
+render / eval) on Azure OpenAI with Entra ID / Managed Identity and no API keys.
+The transport was hardwired to the Anthropic Messages API.
+
+**Decision:** generalise the leg's transport behind a small model spec
+(`stages/_model_spec.py`: provider, model, endpoint, API version, auth) rather than
+add a parallel `azure_openai` leg. `call_text` / `call_json` keep their signatures:
+
+- An explicit OpenAI-shaped client (`client.chat.completions`) is called via Chat
+  Completions; other clients use the Anthropic Messages API as before.
+- With no explicit client, `DPE_MODEL_PROVIDER=azure_openai` selects Azure OpenAI
+  (`AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, optional
+  `AZURE_OPENAI_API_VERSION`), authenticated via `DefaultAzureCredential` bearer
+  tokens. The deployment name replaces the stage's Claude model id.
+- `DPE_MODEL_PROVIDER` unset (or `anthropic`) keeps the existing
+  `ANTHROPIC_API_KEY` path unchanged.
+- New opt-in `[azure-openai]` extra (`openai`, `azure-identity`).
+
+Scope: only the LLM transport. The leg keeps its `anthropic_sdk` name (renaming is
+out of scope), the `extract` stage and the `local` leg are untouched, and external
+evaluators are unaffected. Locality: Azure OpenAI is a cloud endpoint like Anthropic,
+so it sits on the same `airgap-no` / `airgap-conditional` tier as the Anthropic path.
+Known gap: stage outputs still record the `model` argument they were called with,
+not the Azure deployment name.
 
 ## More Information
 
