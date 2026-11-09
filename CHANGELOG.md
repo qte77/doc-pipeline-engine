@@ -11,6 +11,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- scriv-insert-here -->
 
+## [0.3.0] - 2026-11-09
+
+### Added
+
+- Landscape rows for `anydoc`, `Unstructured`, `MarkItDown`, `DeepSeek-OCR`, `Chandra`, `TurboOCR` and `dots.ocr` in [ingest.md](docs/landscape/ingest.md) §1; `gmft` (§2), `Microsoft GraphRAG` (§4) and `LangExtract` (§6) in [process.md](docs/landscape/process.md); `RAGFlow` in [e2e-systems.md](docs/landscape/e2e-systems.md) §2.
+- `ContextGem` documented as a sibling of `instructor` and `GLiNER2` as a successor to the GLiNER/GLiREL/gliner-multitask trio, both in [process.md](docs/landscape/process.md) §3.
+- Per-row `*(added YYYY-MM-DD)*` / `*(verified YYYY-MM-DD)*` markers across the three landscape files, so row-level fact staleness is visible independently of the file-level frontmatter date.
+- ExtractBench ([arXiv:2607.29677](https://arxiv.org/abs/2607.29677)) as the first independent benchmark of NuExtract3, recorded in [process.md](docs/landscape/process.md) §6.
+
+- GLiFormer (Knowledgator, Apache-2.0) documented in [process.md](docs/landscape/process.md) §3 (NER) and §6 (schema-templated extraction) — unified NER + classification + relation extraction + nested-JSON structuring encoder, with a confirmed PDF text+bbox layout path and native Pydantic-model output validation. Benchmark tracked in [#197](https://github.com/qte77/doc-pipeline-engine/issues/197).
+- Jev / TypeSafe System One documented as **Avoid** in [process.md](docs/landscape/process.md) §6 — proprietary, API-only, bounded-label classification/routing model, not a substitute for any extraction tool in this pipeline. Don't-adopt decision tracked in [#196](https://github.com/qte77/doc-pipeline-engine/issues/196).
+
+(#198)
+
+- PageIndex (VectifyAI, MIT) documented in [process.md](docs/landscape/process.md) §4 — a third RAG-indexing paradigm (layout-derived reasoning tree, neither vector nor graph-KG), with a flagged open question on self-hosted-LLM backend support. Benchmark tracked in [#220](https://github.com/qte77/doc-pipeline-engine/issues/220).
+
+- `external/cc_sdk/run_oneshot.py` — Claude Agent SDK one-shot external evaluator (`cc-sdk-{vanilla,project}` variants), completing the ADR-0004 external-evaluator matrix. New `[cc-sdk]` extra pulls `claude-agent-sdk`. Closes [#62](https://github.com/qte77/doc-pipeline-engine/issues/62).
+
+- [ADR-0013](docs/adr/0013-default-redactor-for-cloud-redacted-profile.md) records `pseudonymize-text` as the default redactor for the §0.5.0 `cloud-redacted` profile (presidio opt-in for `<3.14`, philter not adopted); stale "ADR-0012 to be written" / open-choice references in the landscape and roadmap now point at it. Closes [#107](https://github.com/qte77/doc-pipeline-engine/issues/107).
+
+- `office` extraction adapter (`stages/_adapters/office.py`) for `.docx` / `.xlsx` via python-docx + openpyxl, registered as a built-in in `AdapterBase`'s registry; new `[office]` extra. Plain Office files no longer need Kreuzberg or its ELv2 line. Closes [#163](https://github.com/qte77/doc-pipeline-engine/issues/163).
+
+- pypdf recorded in [ingest.md](docs/landscape/ingest.md) §1 as **not adopted (redundant)** for born-digital PDF text — pdfplumber/pdfminer.six and pypdfium2 (via Kreuzberg) already cover it. Closes [#166](https://github.com/qte77/doc-pipeline-engine/issues/166).
+
+- `runner.run_async(stages, seed)` — asyncio twin of `run()` that awaits async stage callables (sync callables also accepted) with the same sync contract gate and halt-on-first-failure behaviour, so async consumers can drive the chain without thread-bridging. Closes [#161](https://github.com/qte77/doc-pipeline-engine/issues/161).
+
+- Model-spec dispatch for the cloud (`anthropic_sdk`) leg: `DPE_MODEL_PROVIDER=azure_openai` routes normalize / analyze / render / eval calls to Azure OpenAI Chat Completions via Entra ID / Managed Identity (`AZURE_OPENAI_ENDPOINT`, `AZURE_OPENAI_DEPLOYMENT`, optional `AZURE_OPENAI_API_VERSION`; no API keys). New `[azure-openai]` extra; ADR-0004 amended. Default Anthropic behaviour unchanged. Closes [#162](https://github.com/qte77/doc-pipeline-engine/issues/162).
+
+### Changed
+
+- **marker licence corrected**: its own code relicensed GPL-3.0 → Apache-2.0 at v2.0.0 (2026-07-20); only the bundled OpenRAIL-M weights remain Tier-G gated. Updated in `ingest.md` §1, `process.md` §2 and the `e2e-systems.md` §5.3 licence-isolation claim.
+- **Kreuzberg upstream moved**: `kreuzberg-dev/kreuzberg` now redirects to `xberg-io/xberg` (MIT, Rust core), with an MIT `kreuzberg-dev/kreuzberg-lts` for the v4 line past the v4.8 ELv2 cut. Recorded as an open question against [ADR-0005](docs/adr/0005-kreuzberg-elv2-license-boundary.md); the pin is unchanged pending a follow-up pass.
+- **NuExtract3 verdict evidence**: ExtractBench measures 47.9% unified value-F1 overall, 8.9% on long documents and 3.7% on enormous tables — the `external/nuextract` benchmark should adopt those hard splits as its pass bar rather than NuMind's self-reported 0.651.
+- Refreshed version, release-date and star figures across `ingest.md` and `process.md` (docling, PaddleOCR-VL, olmOCR, pdfplumber, MinerU, LibreOffice, LiteParse, crawl4ai, trafilatura, watchdog, ColPali, chonkie, Camelot, GLiNER, instructor, Flair, Haystack, LightRAG, nano-graphrag, outlines, docling-core). Corrected two wrong dates: watchdog v6.0.0 is 2024-11-01 (not 2026-05-07) and nano-graphrag v0.0.8 is 2024-10-01 (not 2026-01-27).
+- Tempered the "competitor field has stalled" reading in `e2e-systems.md` §5.1 — RAGFlow is an active competitor at similar scope, so the embeddable-vs-service argument should not lean on competitor decay.
+
+- `dependabot.yaml` now groups updates per ecosystem (`pip`, `github-actions`) into a `*-version-updates` and a separate `*-security-updates` group, so routine bumps land as one grouped PR instead of one PR per dependency.
+
+- `tests.yaml` now runs `make docs_contracts` so contract-doc drift fails CI instead of accumulating silently.
+
+- `generate-deploy-mkdocs-ghpages.yaml` now runs `mkdocs build` with `--locked`, matching the sibling `Agents-eval` pattern, so a stale `uv.lock` fails the docs build loudly instead of silently re-resolving during CI.
+
+- Release workflows (`bump-my-version.yaml`, `tag-release.yaml`, `publish-release.yaml`) are now thin callers of the `qte77/.github` reusables (`bump-version.yml` with `use_uv` / `sync_lockfile` / `collect_scriv`, `tag-release.yml`, `publish-release.yml`), pinned by SHA. The bump commit is now GitHub-signed. Closes [#165](https://github.com/qte77/doc-pipeline-engine/issues/165).
+
+### Fixed
+
+- `codeql.yaml`'s pinned actions (`actions/checkout`, `github/codeql-action/{init,autobuild,analyze}`, `advanced-security/dismiss-alerts`) brought current, applying the version bumps their own now-superseded dependabot PRs had already computed.
+
+(#199)
+
+- `docs/contracts.md` resynced with `src/doc_pipeline_engine/models/` (en-dash escaping + `ExtractionBundle` docstring paragraph split had drifted).
+
+- `.claude/settings.json`: multi-colon `Bash(...)` rules such as `Bash(git:add:*)` never matched,
+  since `:*` is only a trailing wildcard; they are rewritten in space form. Following the
+  qte77/claude-code-plugins#183 template decision, `git commit` is allowed and `git push` now asks
+  (its old deny was never enforced). Read-command denies (`cat`, `find`, `grep`, `head`, `ls`,
+  `tail`) are removed.
+
+### Security
+
+- `dots.ocr` recorded as **Avoid**: the repo ships two contradictory licence files (a 1 KB MIT `LICENSE` and a 15 KB `dots.ocr LICENSE AGREEMENT`) and `requirements.txt` hard-pulls AGPL-3.0 `PyMuPDF`, which would bleed into embedding consumers.
+
 ## [0.2.0] - 2026-06-22
 
 ### Added
