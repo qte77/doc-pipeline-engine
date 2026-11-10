@@ -1,9 +1,11 @@
 ---
 name: Deploy Docs
 
+# Reason: the github-pages environment only lets main deploy. A pull_request
+# run has ref refs/pull/<N>/merge, which the environment rejects before any
+# step starts, so deploy on the push to main that a merge creates.
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches: [main]
   workflow_dispatch:
 
@@ -27,12 +29,6 @@ jobs:
     - name: Checkout the repository
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
-        ref:
-          ${{
-            github.event.pull_request.merged == true &&
-            'main' ||
-            github.ref_name
-          }}
         fetch-depth: 0
 
     - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
