@@ -150,8 +150,9 @@ Maintainer flow:
    the bump branch (or close + reopen) to trigger them.
 3. Merge on green. **tag-release** then fires on `main` and tags the merge commit
    `vX.Y.Z` — always reachable from `main`, no tag drift.
-4. Optionally run **publish-release** for a GitHub Release with notes from the
-   `CHANGELOG.md` block. The default flow is tag-only.
+4. The same **tag-release** run publishes the GitHub Release for the new tag, with notes
+   from the `CHANGELOG.md` block. Run **publish-release** by hand only to retry or to
+   publish an older tag.
 
 ## Documentation hierarchy
 
