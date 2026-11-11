@@ -4,7 +4,8 @@ name: tag-release
 # Watches main for a pyproject.toml version change (the squash-merge of a
 # bump-my-version release PR) and creates the annotated `v$NEW` tag on that main
 # commit via the qte77/.github reusable. Idempotent: no-op without a version change,
-# aborts (never deletes) when the tag already exists.
+# aborts (never deletes) when the tag already exists. A new tag is published as a
+# GitHub Release in the same run (job `publish`).
 
 on:
   push:
@@ -16,6 +17,16 @@ permissions:
 
 jobs:
   tag:
-    uses: qte77/.github/.github/workflows/tag-release.yml@86d329865ce47b43b6e745084c92032b41dcab1b  # main 2026-10-24
+    uses: qte77/.github/.github/workflows/tag-release.yml@43ad1211e962f82fab823377dcc7272054d8196c  # 2026-11-11
     permissions:
       contents: write
+  publish:
+    # Publish the Release in the same run: a tag pushed with GITHUB_TOKEN starts no
+    # `on: push: tags` workflow. Skipped when this push created no tag.
+    needs: tag
+    if: needs.tag.outputs.tag != ''
+    uses: qte77/.github/.github/workflows/publish-release.yml@43ad1211e962f82fab823377dcc7272054d8196c  # 2026-11-11
+    permissions:
+      contents: write
+    with:
+      tag: ${{ needs.tag.outputs.tag }}
