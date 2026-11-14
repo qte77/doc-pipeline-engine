@@ -11,6 +11,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- scriv-insert-here -->
 
+## [0.3.1] - 2026-11-14
+
+### Changed
+
+- Release workflows re-pinned to `qte77/.github@43ad121`. `tag-release` now also publishes the GitHub Release for a new tag in the same run, chained on the reusable's new `tag` output, so a merged bump no longer needs a manual `publish-release` dispatch (it stays as a retry). Upstream, the bump commit is now created through `createCommitOnBranch`, so GitHub signs it; the new optional App-token inputs stay unset.
+
+- Release workflow callers re-pinned from `qte77/.github@43ad121` to `qte77/.github@a32769a` (main, 2026-11-12, qte77/.github#64): `tag-release.yaml` (`tag`/`publish` jobs), `publish-release.yaml`, `bump-my-version.yaml`. Only internal action pins changed upstream between these two commits; inputs/secrets/outputs used by this repo are unchanged.
+
+### Fixed
+
+- "Deploy Docs" runs on the push to `main` instead of on closed pull requests. The `github-pages`
+  environment only allows `main` to deploy, so every `pull_request` run (ref
+  `refs/pull/<N>/merge`) was rejected before any step started.
+
+- SBOM workflow pins `qte77/gha-sbom-action` v0.1.2 (was v0.1.1), which commits SBOM updates through the GitHub API so GitHub signs them; v0.1.1 made unsigned local commits that a required-signatures ruleset blocks. Inputs are unchanged.
+
+### Security
+
+- certifi bumped to 2026.10.23 in uv.lock (GHSA-6q48-6c7w-9gw2, Dependabot alert #103)
+
+- brotlicffi bumped to 1.2.1.0 in uv.lock (GHSA-9v8h-qqgm-4m35, Dependabot alert #99)
+
 ## [0.3.0] - 2026-11-09
 
 ### Added

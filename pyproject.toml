@@ -1,6 +1,6 @@
 [project]
 name = "doc-pipeline-engine"
-version = "0.3.0"
+version = "0.3.1"
 description = "Modular document processing engine with contract-gated pipeline stages"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -144,7 +144,7 @@ packages = ["src/doc_pipeline_engine"]
 # Atomic version bump; [project].version is the source of truth. Tagging is deferred
 # to tag-release.yaml (workflow runs `bump --no-tag`) so the tag lands on main's commit.
 [tool.bumpversion]
-current_version = "0.3.0"
+current_version = "0.3.1"
 parse = "(?P<major>\\d+)\\.(?P<minor>\\d+)\\.(?P<patch>\\d+)"
 serialize = ["{major}.{minor}.{patch}"]
 commit = true
